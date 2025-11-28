@@ -3,8 +3,8 @@
 // 背景音乐播放列表 (可以添加 MP3 文件的 URL)
 const playlist = [
     {
-        title: "Cyberpunk Ambient",
-        src: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=ambient-piano-logo-165357.mp3" 
+        title: "最重要的小事-五月天",
+        src: "static/music/最重要的小事_五月天.mp3" 
     },
     {
         title: "Tech Innovation",
