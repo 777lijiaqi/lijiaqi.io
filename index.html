@@ -35,7 +35,7 @@
                     <span class="prompt">$</span> <span id="typewriter"></span><span class="cursor">_</span>
                 </div>
                 <p class="description">
-                    将代码转化为控制世界的脉冲。
+                    热衷于将代码烧录进硅片，让硬件有了灵魂。专注于 RTOS、Linux 驱动开发与 PCB 设计。
                 </p>
                 <div class="cta-group">
                     <button onclick="scrollToSection('projects')" class="btn primary-btn">查看项目</button>
@@ -80,3 +80,92 @@
                     <p>基于 STM32H7 与 LwIP 协议栈，实现多协议转换。</p>
                     <a href="#" class="card-link">查看详情 &rarr;</a>
                 </div>
+                <!-- 项目卡片 2 -->
+                <div class="card project-card">
+                    <div class="card-icon"><i class="fas fa-robot"></i></div>
+                    <h3>FOC 电机驱动</h3>
+                    <p>基于磁场定向控制算法的高精度无刷电机驱动器。</p>
+                    <a href="#" class="card-link">查看详情 &rarr;</a>
+                </div>
+                <!-- 项目卡片 3 -->
+                <div class="card project-card">
+                    <div class="card-icon"><i class="fab fa-linux"></i></div>
+                    <h3>Linux 驱动移植</h3>
+                    <p>IMX6ULL 平台的摄像头与触摸屏驱动适配。</p>
+                    <a href="#" class="card-link">查看详情 &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. 知识记录板块 -->
+    <section id="knowledge" class="section">
+        <div class="container">
+            <h2 class="section-title">知识技能 <span class="subtitle">Stack</span></h2>
+            <div class="grid-box">
+                <div class="card knowledge-card">
+                    <h3>Firmware</h3>
+                    <div class="skill-bar"><div class="fill" style="width: 90%"></div></div>
+                    <p>C/C++, Assembly, FreeRTOS</p>
+                </div>
+                <div class="card knowledge-card">
+                    <h3>Hardware</h3>
+                    <div class="skill-bar"><div class="fill" style="width: 80%"></div></div>
+                    <p>Altium Designer, KiCad, FPGA</p>
+                </div>
+                <div class="card knowledge-card">
+                    <h3>Tools</h3>
+                    <div class="skill-bar"><div class="fill" style="width: 85%"></div></div>
+                    <p>Git, CMake, GDB, Logic Analyzer</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. 资源链接板块 -->
+    <section id="resources" class="section">
+        <div class="container">
+            <h2 class="section-title">资源下载 <span class="subtitle">Download</span></h2>
+            <div class="resource-list">
+                <a href="#" class="resource-item">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>STM32 常用封装库.IntLib</span>
+                    <button class="download-btn">下载</button>
+                </a>
+                <a href="#" class="resource-item">
+                    <i class="fas fa-code-branch"></i>
+                    <span>Modbus 协议栈源码模板</span>
+                    <button class="download-btn">跳转</button>
+                </a>
+                <a href="#" class="resource-item">
+                    <i class="fas fa-book"></i>
+                    <span>嵌入式 Linux 学习路线图</span>
+                    <button class="download-btn">查看</button>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 音乐播放器悬浮窗 -->
+    <div class="music-player-widget">
+        <div class="player-controls">
+            <button id="prev-btn" title="上一首"><i class="fas fa-step-backward"></i></button>
+            <button id="play-btn" title="播放/暂停"><i class="fas fa-play"></i></button>
+            <button id="next-btn" title="下一首"><i class="fas fa-step-forward"></i></button>
+            <button id="mute-btn" title="静音/取消"><i class="fas fa-volume-up"></i></button>
+        </div>
+        <div class="song-info">
+            <span id="song-title">Music Player Ready</span>
+        </div>
+        <!-- 隐藏的 Audio 标签 -->
+        <audio id="bg-music"></audio>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 Embedded Portfolio. Built with Logic & Voltage.</p>
+    </footer>
+
+    <!-- 引入自定义JS -->
+    <script src="static/js/script.js"></script>
+</body>
+</html>
