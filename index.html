@@ -3,579 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>嵌入式开发工程师 | 个人主页</title>
-    <!-- 引入图标库 (FontAwesome) -->
+    <title>Embedded Developer Portfolio</title>
+    <!-- 引入图标库 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* --- 1. 全局定义 (CSS Variables) --- */
-        :root {
-            --bg-color: #0b1120; /* 深邃蓝黑背景 */
-            --card-bg: rgba(30, 41, 59, 0.6); /* 毛玻璃背景 */
-            --text-main: #e2e8f0;
-            --text-muted: #94a3b8;
-            --primary: #06b6d4; /* 科技蓝 */
-            --accent: #10b981; /* 电路板绿 */
-            --border-color: rgba(255, 255, 255, 0.1);
-            --font-code: 'Fira Code', 'Consolas', monospace; /* 代码字体 */
-            --font-body: 'Inter', system-ui, sans-serif;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            scroll-behavior: smooth; /* 平滑滚动 */
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: var(--font-body);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* 动态网格背景效果 */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                linear-gradient(rgba(6, 182, 212, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(6, 182, 212, 0.05) 1px, transparent 1px);
-            background-size: 50px 50px;
-            z-index: -2;
-            pointer-events: none;
-        }
-
-        /* --- 2. 导航栏 --- */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 1.2rem 5%;
-            background: rgba(11, 17, 32, 0.85);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border-color);
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-family: var(--font-code);
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-        
-        .logo span { color: var(--accent); }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-
-        nav a {
-            color: var(--text-main);
-            text-decoration: none;
-            font-size: 0.95rem;
-            position: relative;
-            padding: 0.5rem 0;
-            transition: color 0.3s;
-        }
-
-        nav a:hover, nav a.active {
-            color: var(--primary);
-        }
-
-        nav a::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 0; width: 0; height: 2px;
-            background: var(--accent);
-            transition: width 0.3s;
-        }
-
-        nav a:hover::after { width: 100%; }
-
-        /* --- 3. 通用板块布局 --- */
-        section {
-            min-height: 100vh;
-            padding: 6rem 10% 4rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .section-title {
-            font-size: 2rem;
-            margin-bottom: 3rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            color: var(--text-main);
-        }
-
-        .section-title::before {
-            content: '#';
-            color: var(--accent);
-            font-family: var(--font-code);
-        }
-
-        /* --- 4. 个人介绍 (左右布局) --- */
-        #intro {
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            gap: 4rem;
-        }
-
-        .intro-text {
-            flex: 1;
-        }
-
-        .intro-text h1 {
-            font-size: 3.5rem;
-            line-height: 1.2;
-            margin-bottom: 1rem;
-            background: linear-gradient(to right, #fff, var(--text-muted));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .typing-container {
-            font-family: var(--font-code);
-            color: var(--primary);
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            min-height: 1.6em;
-        }
-
-        .intro-pic-frame {
-            flex: 0 0 400px; /* 固定宽度 */
-            height: 400px;
-            position: relative;
-            /* 边框设计 - 模拟芯片引脚 */
-            border: 2px solid var(--border-color);
-            border-radius: 20px;
-            background: rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            box-shadow: 0 0 30px rgba(6, 182, 212, 0.1);
-            transition: transform 0.3s;
-        }
-
-        .intro-pic-frame:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-        }
-
-        /* 照片占位符样式 */
-        .photo-placeholder {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* 保证图片填满不变形 */
-            opacity: 0.9;
-        }
-
-        /* --- 5. 项目展示 (卡片网格) --- */
-        .grid-box {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 2rem;
-            border-radius: 12px;
-            transition: 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card:hover {
-            border-color: var(--primary);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transform: translateY(-5px);
-        }
-
-        .card h3 {
-            color: var(--primary);
-            margin-bottom: 1rem;
-            font-family: var(--font-code);
-        }
-
-        .tech-tags {
-            margin-top: 1.5rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .tag {
-            font-size: 0.75rem;
-            padding: 0.2rem 0.6rem;
-            border-radius: 4px;
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--accent);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-        }
-
-        /* --- 6. 知识记录 (进度条风) --- */
-        .skill-item {
-            margin-bottom: 1.5rem;
-        }
-        .skill-info {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-            font-family: var(--font-code);
-        }
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            width: 0%; /* JS 动态控制 */
-            transition: width 1.5s ease-out;
-        }
-
-        /* --- 7. 资源链接 --- */
-        .resource-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .resource-link {
-            display: flex;
-            align-items: center;
-            padding: 1.5rem;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            text-decoration: none;
-            color: var(--text-main);
-            transition: 0.3s;
-        }
-        .resource-link:hover {
-            background: rgba(6, 182, 212, 0.1);
-            border-color: var(--primary);
-            padding-left: 2rem; /* 滑动效果 */
-        }
-        .resource-icon {
-            font-size: 1.5rem;
-            margin-right: 1.5rem;
-            color: var(--accent);
-        }
-
-        /* --- 8. 音乐控制控件 --- */
-        .music-control {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            background: rgba(15, 23, 42, 0.9);
-            border: 1px solid var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 2000;
-            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
-            transition: all 0.3s;
-            animation: pulse 2s infinite;
-        }
-
-        .music-control:hover {
-            transform: scale(1.1);
-            background: var(--primary);
-            color: #000;
-        }
-
-        .music-icon {
-            font-size: 1.2rem;
-        }
-
-        /* 音乐波纹动画 */
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(6, 182, 212, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0); }
-        }
-
-        /* 旋转动画（播放时） */
-        .rotating {
-            animation: spin 3s linear infinite;
-        }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        /* --- 移动端适配 --- */
-        @media (max-width: 900px) {
-            #intro { flex-direction: column-reverse; text-align: center; }
-            .intro-pic-frame { flex: 0 0 300px; height: 300px; width: 300px; margin-bottom: 2rem; }
-            .intro-text h1 { font-size: 2.5rem; }
-            nav ul { display: none; } /* 移动端简化 */
-            section { padding: 4rem 5%; }
-        }
-
-        .fade-in { opacity: 0; transform: translateY(20px); transition: 0.6s ease-out; }
-        .fade-in.visible { opacity: 1; transform: translateY(0); }
-
-    </style>
+    <!-- 引入自定义CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- 顶部导航 -->
+    <!-- 顶部导航栏 -->
     <header>
-        <div class="logo">Embedded<span>_Dev</span></div>
+        <div class="logo">&lt;Dev/&gt;</div>
         <nav>
             <ul>
-                <li><a href="#intro" class="active">个人介绍</a></li>
-                <li><a href="#projects">项目展示</a></li>
-                <li><a href="#knowledge">知识技能</a></li>
-                <li><a href="#resources">资源链接</a></li>
+                <li><a href="#intro" class="nav-btn">首页</a></li>
+                <li><a href="#projects" class="nav-btn">项目</a></li>
+                <li><a href="#knowledge" class="nav-btn">知识库</a></li>
+                <li><a href="#resources" class="nav-btn">资源</a></li>
             </ul>
         </nav>
     </header>
 
-    <!-- 1. 个人介绍板块 -->
-    <section id="intro">
-        <div class="intro-text fade-in">
-            <h5>Hello, World!</h5>
-            <h1>我是 <span style="color: var(--primary)">张三</span></h1>
-            <div class="typing-container">
-                > <span id="typewriter"></span><span class="cursor">|</span>
-            </div>
-            <p style="color: var(--text-muted); margin-bottom: 2rem; max-width: 600px;">
-                专注于嵌入式底层驱动开发、RTOS移植与硬件电路设计。
-                致力于将代码转化为控制世界的脉冲。
-            </p>
-            <div style="display: flex; gap: 1rem; justify-content: flex-start;">
-                <button onclick="document.getElementById('projects').scrollIntoView()" style="padding: 0.8rem 2rem; background: var(--primary); border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">
-                    查看项目
-                </button>
-                <button onclick="document.getElementById('resources').scrollIntoView()" style="padding: 0.8rem 2rem; background: transparent; border: 1px solid var(--primary); color: var(--primary); border-radius: 4px; cursor: pointer;">
-                    联系我
-                </button>
-            </div>
-        </div>
-
-        <!-- 右侧照片框架 -->
-        <div class="intro-pic-frame fade-in">
-            <!-- ⬇️ 这里修改照片：将 src 替换为你的图片路径或 URL -->
-            <!-- 如果没有图片，可以使用以下在线占位图，或者放一张电路板的图片 -->
-            <img src="static/images/myself.jpg" 
-                 alt="Profile Photo" 
-                 class="photo-placeholder">
-        </div>
-    </section>
-
-    <!-- 2. 项目展示板块 -->
-    <section id="projects">
-        <h2 class="section-title fade-in">Projects</h2>
-        <div class="grid-box">
-            <!-- 项目 1 -->
-            <div class="card fade-in">
-                <h3>基于 STM32 的智能网关</h3>
-                <p style="color: #cbd5e1; font-size: 0.9rem;">设计并实现了一个基于 MQTT 协议的物联网网关。包含 PCB 绘制（4层板）与 LwIP 协议栈移植。</p>
-                <div class="tech-tags">
-                    <span class="tag">STM32H7</span>
-                    <span class="tag">FreeRTOS</span>
-                    <span class="tag">Altium Designer</span>
+    <!-- 1. 个人介绍板块 (Hero Section) -->
+    <section id="intro" class="section">
+        <div class="container intro-layout">
+            <!-- 左侧：文字介绍 -->
+            <div class="intro-left fade-in">
+                <span class="badge">V1.0.0 Online</span>
+                <h1>你好，我是 <span class="highlight">嵌入式工程师</span></h1>
+                <div class="typing-box">
+                    <span class="prompt">$</span> <span id="typewriter"></span><span class="cursor">_</span>
+                </div>
+                <p class="description">
+                    将代码转化为控制世界的脉冲。
+                </p>
+                <div class="cta-group">
+                    <button onclick="scrollToSection('projects')" class="btn primary-btn">查看项目</button>
+                    <button onclick="scrollToSection('resources')" class="btn secondary-btn">获取资源</button>
                 </div>
             </div>
-            <!-- 项目 2 -->
-            <div class="card fade-in">
-                <h3>无刷电机 FOC 控制器</h3>
-                <p style="color: #cbd5e1; font-size: 0.9rem;">高精度电机驱动算法实现，采用 SVPWM 调制技术，实现了速度环与电流环的双闭环控制。</p>
-                <div class="tech-tags">
-                    <span class="tag">C语言</span>
-                    <span class="tag">Matlab/Simulink</span>
-                    <span class="tag">PID算法</span>
-                </div>
-            </div>
-            <!-- 项目 3 -->
-            <div class="card fade-in">
-                <h3>Linux 嵌入式QT仪表盘</h3>
-                <p style="color: #cbd5e1; font-size: 0.9rem;">基于 i.MX6ULL 平台开发的汽车仪表盘界面，通过 CAN 总线实时读取车辆数据。</p>
-                <div class="tech-tags">
-                    <span class="tag">Linux驱动</span>
-                    <span class="tag">QT/C++</span>
-                    <span class="tag">CAN Bus</span>
+
+            <!-- 右侧：个人信息框架 (照片+链接) -->
+            <div class="intro-right fade-in">
+                <div class="profile-card">
+                    <div class="profile-img-box">
+                        <!-- 这里的 src 修改为你的照片路径 -->
+                        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1000&auto=format&fit=crop" alt="Profile" id="my-photo">
+                        <div class="status-indicator"></div>
+                    </div>
+                    <div class="profile-info">
+                        <h3>我的 ID / 昵称</h3>
+                        <p>Embedded Linux / STM32 / FPGA</p>
+                        <div class="social-links">
+                            <!-- 博客链接 -->
+                            <a href="#" target="_blank" title="我的博客"><i class="fas fa-blog"></i></a>
+                            <!-- GitHub链接 -->
+                            <a href="#" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                            <!-- 邮箱链接 -->
+                            <a href="mailto:example@mail.com" title="发送邮件"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 3. 知识记录板块 -->
-    <section id="knowledge">
-        <h2 class="section-title fade-in">Skills & Stack</h2>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; width: 100%;">
-            <div class="fade-in">
-                <h3 style="margin-bottom: 2rem; color: var(--text-main);">Firmware</h3>
-                
-                <div class="skill-item">
-                    <div class="skill-info"><span>C / C++ / Assembly</span><span>90%</span></div>
-                    <div class="progress-bar"><div class="progress-fill" style="width: 90%"></div></div>
+    <!-- 2. 项目板块 -->
+    <section id="projects" class="section">
+        <div class="container">
+            <h2 class="section-title">精选项目 <span class="subtitle">Projects</span></h2>
+            <div class="grid-box">
+                <!-- 项目卡片 1 -->
+                <div class="card project-card">
+                    <div class="card-icon"><i class="fas fa-microchip"></i></div>
+                    <h3>智能网关设计</h3>
+                    <p>基于 STM32H7 与 LwIP 协议栈，实现多协议转换。</p>
+                    <a href="#" class="card-link">查看详情 &rarr;</a>
                 </div>
-                <div class="skill-item">
-                    <div class="skill-info"><span>RTOS (FreeRTOS/RT-Thread)</span><span>85%</span></div>
-                    <div class="progress-bar"><div class="progress-fill" style="width: 85%"></div></div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-info"><span>Linux Kernel & Drivers</span><span>60%</span></div>
-                    <div class="progress-bar"><div class="progress-fill" style="width: 60%"></div></div>
-                </div>
-            </div>
-
-            <div class="fade-in">
-                <h3 style="margin-bottom: 2rem; color: var(--text-main);">Hardware</h3>
-                
-                <div class="skill-item">
-                    <div class="skill-info"><span>PCB Design (AD/KiCad)</span><span>80%</span></div>
-                    <div class="progress-bar"><div class="progress-fill" style="width: 80%"></div></div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-info"><span>Communication (I2C/SPI/UART)</span><span>95%</span></div>
-                    <div class="progress-bar"><div class="progress-fill" style="width: 95%"></div></div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-info"><span>FPGA (Verilog)</span><span>50%</span></div>
-                    <div class="progress-bar"><div class="progress-fill" style="width: 50%"></div></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 4. 资源链接板块 -->
-    <section id="resources">
-        <h2 class="section-title fade-in">Resources</h2>
-        <div class="grid-box" style="grid-template-columns: 1fr 1fr;">
-            <a href="https://github.com" target="_blank" class="resource-link fade-in">
-                <i class="fab fa-github resource-icon"></i>
-                <div>
-                    <h4>GitHub 仓库</h4>
-                    <p style="font-size: 0.8rem; color: var(--text-muted);">查看我的开源项目源码</p>
-                </div>
-            </a>
-            <a href="#" class="resource-link fade-in">
-                <i class="fas fa-microchip resource-icon"></i>
-                <div>
-                    <h4>硬件设计开源平台</h4>
-                    <p style="font-size: 0.8rem; color: var(--text-muted);">我的立创EDA / EasyEDA 主页</p>
-                </div>
-            </a>
-            <a href="#" class="resource-link fade-in">
-                <i class="fas fa-book resource-icon"></i>
-                <div>
-                    <h4>技术博客 (CSDN/知乎)</h4>
-                    <p style="font-size: 0.8rem; color: var(--text-muted);">嵌入式学习笔记与踩坑记录</p>
-                </div>
-            </a>
-            <a href="#" class="resource-link fade-in">
-                <i class="fas fa-envelope resource-icon"></i>
-                <div>
-                    <h4>Email Me</h4>
-                    <p style="font-size: 0.8rem; color: var(--text-muted);">project@example.com</p>
-                </div>
-            </a>
-        </div>
-    </section>
-
-    <!-- 底部 -->
-    <footer style="text-align: center; padding: 2rem; border-top: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-muted);">
-        <p>&copy; 2023 Embedded Portfolio. Built with Logic & Voltage.</p>
-    </footer>
-
-    <!-- --- 🎵 背景音乐控件 --- -->
-    <!-- 
-      controls: 显示原生控件（我们隐藏了，用JS控制）
-      loop: 循环播放
-      id: 用于JS控制
-    -->
-    <audio id="bg-music" loop>
-        <!-- ⬇️ 在这里修改音乐文件地址 -->
-        <!-- 建议使用 .mp3 格式。如果是本地文件，写 'music/song.mp3' -->
-        <source src="static/music/最重要的小事_五月天.mp3" type="audio/mpeg">
-        您的浏览器不支持 audio 标签。
-    </audio>
-
-    <div class="music-control" id="music-btn" title="播放/暂停">
-        <i class="fas fa-play music-icon" id="music-icon"></i>
-    </div>
-
-    <!-- 脚本逻辑 -->
-    <script>
-        // 1. 打字机效果
-        const textToType = "Firmware Engineer | IoT Developer | PCB Designer";
-        const typeWriterElement = document.getElementById('typewriter');
-        let i = 0;
-
-        function typeWriter() {
-            if (i < textToType.length) {
-                typeWriterElement.innerHTML += textToType.charAt(i);
-                i++;
-                setTimeout(typeWriter, 80); // 打字速度
-            }
-        }
-        
-        // 2. 滚动监听与动画
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-        // 3. 音乐控制逻辑
-        const music = document.getElementById('bg-music');
-        const musicBtn = document.getElementById('music-btn');
-        const musicIcon = document.getElementById('music-icon');
-        let isPlaying = false;
-
-        // 设置初始音量 (0.0 - 1.0)
-        music.volume = 0.4;
-
-        musicBtn.addEventListener('click', () => {
-            if (isPlaying) {
-                music.pause();
-                musicIcon.classList.remove('fa-pause');
-                musicIcon.classList.add('fa-play');
-                musicIcon.classList.remove('rotating'); // 停止旋转动画
-                isPlaying = false;
-            } else {
-                music.play().then(() => {
-                    musicIcon.classList.remove('fa-play');
-                    musicIcon.classList.add('fa-pause');
-                    musicIcon.classList.add('rotating'); // 开始旋转
-                    isPlaying = true;
-                }).catch(error => {
-                    console.log("浏览器策略阻止了自动播放，需用户交互:", error);
-                });
-            }
-        });
-
-        // 页面加载完成后启动
-        window.onload = function() {
-            typeWriter();
-        }
-    </script>
-</body>
-</html>
