@@ -7,8 +7,8 @@ const playlist = [
         src: "static/music/最重要的小事_五月天.mp3" 
     },
     {
-        title: "Tech Innovation",
-        src: "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=tech-soft-15413.mp3"
+        title: "步步-五月天",
+        src: "static/music/步步-五月天.mp3"
     }
 ];
 
