@@ -377,3 +377,46 @@ h1 {
     h1 { font-size: 2rem; }
     .music-player-widget { bottom: 10px; right: 10px; max-width: 90%; }
 }
+
+
+/* --- 修复卡片变成链接后的样式问题 --- */
+
+a.card {
+    /* 1. 去掉链接默认下划线 */
+    text-decoration: none;
+    
+    /* 2. 强制继承原本的文字颜色 (防止变成蓝色) */
+    color: inherit; 
+    color: inherit; 
+    
+    /* 3. 确保卡片依然是块级元素 */
+    display: block; 
+    
+    /* 4. 鼠标放上去显示小手图标 */
+    cursor: pointer;
+}
+
+/* 确保卡片内部的所有文字也继承颜色，不被浏览器默认链接色覆盖 */
+a.card h3, 
+a.card p, 
+a.card span {
+    color: inherit; 
+}
+
+/* (可选) 如果你加了 click-hint 提示文字，给它加点样式 */
+.click-hint {
+    display: block;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--primary); /* 使用你的主题色 */
+    opacity: 0;            /* 默认隐藏 */
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+}
+
+/* 鼠标悬停在卡片上时，显示提示文字并稍微移动 */
+a.card:hover .click-hint {
+    opacity: 1;
+    transform: translateX(0);
+}
