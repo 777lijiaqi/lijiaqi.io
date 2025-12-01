@@ -16,10 +16,10 @@
         <div class="logo">&lt;Dev/&gt;</div>
         <nav>
             <ul>
-                <li><a href="#intro" class="nav-btn">首页</a></li>
-                <li><a href="#projects" class="nav-btn">项目</a></li>
-                <li><a href="#knowledge" class="nav-btn">知识库</a></li>
-                <li><a href="#resources" class="nav-btn">资源链接</a></li>
+                <li><a href="#intro" class="nav-btn"><i class="fas fa-home"></i>首页</a></li>
+                <li><a href="#projects" class="nav-btn"><i class="fas fa-code"></i>项目</a></li>
+                <li><a href="#knowledge" class="nav-btn"><i class="fas fa-book"></i>知识库</a></li>
+                <li><a href="#resources" class="nav-btn"><i class="fas fa-box-open"></i>资源链接</a></li>
             </ul>
         </nav>
     </header>
@@ -30,16 +30,19 @@
             <!-- 左侧：文字介绍 -->
             <div class="intro-left fade-in">
                 <span class="badge">V1.0.0 Online</span>
-                <h1>Hello，我是李家琦<span class="highlight">嵌入式工程师</span></h1>
+                <h1>Hello，我是李家琦</h1>
+                <p><span class="highlight">一名嵌入式工程师</span></p>
                 <div class="typing-box">
                     <span class="prompt">$</span> <span id="typewriter"></span><span class="cursor">_</span>
                 </div>
-                <p class="description">
-                    将代码转化为控制世界的脉冲。
+                <p class="description , highlight">
+                    #代码转化为控制世界的脉冲
+                    #走线搭建电子世界的桥梁
                 </p>
                 <div class="cta-group">
-                    <button onclick="scrollToSection('projects')" class="btn primary-btn">查看项目</button>
-                    <button onclick="scrollToSection('resources')" class="btn secondary-btn">获取资源</button>
+                    <button onclick="scrollToSection('projects')" class="btn primary-btn" type="button">查看项目</button>
+                    <button onclick="scrollToSection('knowledge')" class="btn sucess-btn" type="button">知识文档</button>
+                    <button onclick="scrollToSection('resources')" class="btn danger-btn" type="button">获取资源</button>
                 </div>
             </div>
 
@@ -60,7 +63,7 @@
                             <!-- GitHub链接 -->
                             <a href="https://github.com/777lijiaqi" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
                             <!-- 邮箱链接 -->
-                            <a href="2001lijiaqi@gmail.com" title="发送邮件"><i class="fas fa-envelope"></i></a>
+                            <a href="www.2001lijiaqi@gmail.com" target="_blank" title="发送邮件"><i class="fas fa-envelope"></i></a>
                         </div>
                     </div>
                 </div>
@@ -71,7 +74,7 @@
     <!-- 2. 项目板块 -->
     <section id="projects" class="section">
         <div class="container">
-            <h2 class="section-title">精选项目 <span class="subtitle">Projects</span></h2>
+            <h2 class="section-title">My_Project<span class="subtitle">Repository</span></h2>
             <div class="grid-box">
                 <!-- 项目卡片 1 -->
                 <div class="card project-card">
@@ -101,7 +104,7 @@
     <!-- 3. 知识记录板块 -->
     <section id="knowledge" class="section">
         <div class="container">
-            <h2 class="section-title">知识技能 <span class="subtitle">Stack</span></h2>
+            <h2 class="section-title">Knowledge<span class="subtitle">Stack</span></h2>
             <div class="grid-box">
                 <a href="archive/Makefile_learn.html" class="card knowledge-card">
                     <h3>Makefile学习</h3>
@@ -127,7 +130,7 @@
     <!-- 4. 资源链接板块 -->
     <section id="resources" class="section">
         <div class="container">
-            <h2 class="section-title">资源下载 <span class="subtitle">Download</span></h2>
+            <h2 class="section-title">Download<span class="subtitle">Link</span></h2>
             <div class="resource-list">
                 <a href="#" class="resource-item">
                     <i class="fas fa-file-pdf"></i>
@@ -169,5 +172,21 @@
 
     <!-- 引入自定义JS -->
     <script src="static/js/script.js"></script>
+	
+    <!-- 电流背景特效容器 -->
+<div class="circuit-bg">
+    <!-- 竖向电流线 -->
+    <div class="line v-line" style="--delay: 0s; --left: 10%;"></div>
+    <div class="line v-line" style="--delay: 3s; --left: 30%;"></div>
+    <div class="line v-line" style="--delay: 7s; --left: 50%;"></div>
+    <div class="line v-line" style="--delay: 5s; --left: 70%;"></div>
+    <div class="line v-line" style="--delay: 2s; --left: 90%;"></div>
+    
+    <!-- 横向电流线 -->
+    <div class="line h-line" style="--delay: 1s; --top: 20%;"></div>
+    <div class="line h-line" style="--delay: 4s; --top: 40%;"></div>
+    <div class="line h-line" style="--delay: 6s; --top: 60%;"></div>
+    <div class="line h-line" style="--delay: 8s; --top: 80%;"></div>
+</div>
 </body>
 </html>
