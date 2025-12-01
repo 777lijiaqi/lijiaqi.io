@@ -24,15 +24,25 @@
     box-shadow: 0 5px 20px rgba(0,0,0,0.5);
 }
 
+/* --- 顶部区域 (Top Bar) --- */
+
 .header-top {
     display: flex;
-    /* justify-content: space-between; */
     align-items: center;
+    /* 修改点 1：改为两端对齐/自动分配空间，防止重叠 */
+    justify-content: space-between; 
     margin-bottom: 1.5rem;
+    position: relative;
+    min-height: 40px;
+    /* 修改点 2：增加 gap，确保两个元素至少有 20px 的安全距离 */
+    gap: 20px; 
 }
 
 /* 返回按钮 */
 .back-home-btn {
+    /* 修改点 3：删除 position: absolute; 和 left: 0; */
+    position: relative; /* 恢复到正常的文档流中 */
+    
     text-decoration: none;
     color: var(--primary);
     font-family: 'Orbitron', sans-serif;
@@ -42,6 +52,27 @@
     align-items: center;
     gap: 10px;
     transition: 0.3s;
+    z-index: 10;
+    
+    /* 修改点 4：防止按钮被压缩换行 */
+    white-space: nowrap;
+    flex-shrink: 0; 
+}
+
+.back-home-btn:hover {
+    color: #fff;
+    text-shadow: 0 0 10px var(--primary);
+}
+
+/* --- 搜索框 --- */
+.search-container {
+    position: relative;
+    width: 400px;
+    
+    /* 修改点 5：保留 margin: 0 auto; 
+       在 Flex 布局中，这会让搜索框尽可能居中，
+       但因为左边有了实体按钮占位，它会自动向右让位，不会重叠 */
+    margin: 0 auto; 
 }
 
 .back-home-btn:hover {
