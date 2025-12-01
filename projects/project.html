@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>lijiaqi`s web | ÏîÄ¿Õ¹Ê¾</title>
-    <!-- ÒýÈëÍøÕ¾Í¼±ê -->
+    <title>Project Gallery | é¡¹ç›®å±•ç¤º</title>
+    <!-- å¼•å…¥ç½‘ç«™å›¾æ ‡ -->
     <link rel="icon" type="image/svg+xml" href="../static/images/favicon.svg">
-    <!-- ÒýÈë×ÖÌå -->
+    <!-- å¼•å…¥å­—ä½“ -->
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
-    <!-- ÒýÈëÍ¼±ê -->
+    <!-- å¼•å…¥å›¾æ ‡ (å›½å†…æº) -->
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- ÒýÈëÑùÊ½ (¸´ÓÃÈ«¾Ö + ×¨ÓÃÑùÊ½) -->
+    <!-- å¼•å…¥æ ·å¼ -->
     <link rel="stylesheet" href="../static/css/style.css">
     <link rel="stylesheet" href="../static/css/project.css">
 </head>
 <body>
 
-    <!-- ¶¯Ì¬±³¾°ÈÝÆ÷ -->
+    <!-- åŠ¨æ€èƒŒæ™¯å®¹å™¨ -->
     <div class="circuit-bg">
         <div class="line v-line" style="--delay: 1s; --left: 15%;"></div>
         <div class="line v-line" style="--delay: 4s; --left: 85%;"></div>
@@ -25,22 +25,23 @@
         <div class="line h-line" style="--delay: 6s; --top: 75%;"></div>
     </div>
 
-    <!-- Í·²¿ÇøÓò -->
+    <!-- å¤´éƒ¨åŒºåŸŸ -->
     <header class="archive-header">
         <div class="header-top">
-            <!-- ·µ»ØÖ÷Ò³ -->
-            <a href="../index.html" class="back-home-btn">
-                <i class="fas fa-chevron-left"></i> <span class="logo-text">Back</span>
+            <!-- è¿”å›žä¸»é¡µ -->
+            <!-- å¢žåŠ  style="z-index: 20" ç¡®ä¿ç»å¯¹å¤„äºŽæœ€ä¸Šå±‚ï¼Œè§£å†³æ— æ³•ç‚¹å‡»é—®é¢˜ -->
+            <a href="../index.html" class="back-home-btn" style="z-index: 20;">
+                <i class="fas fa-chevron-left"></i> <span class="logo-text">Main_System</span>
             </a>
             
-            <!-- ËÑË÷¿ò -->
+            <!-- æœç´¢æ¡† -->
             <div class="search-container">
                 <i class="fas fa-search search-icon"></i>
                 <input type="text" id="search-input" placeholder="Search projects..." autocomplete="off">
             </div>
         </div>
 
-        <!-- ·ÖÀàÉ¸Ñ¡Æ÷ (Project Categories) -->
+        <!-- åˆ†ç±»ç­›é€‰å™¨ (Project Categories) -->
         <div class="category-filter">
             <button class="cat-btn active" data-category="all">ALL</button>
             <button class="cat-btn" data-category="mcu">MCU</button>
@@ -50,7 +51,7 @@
         </div>
     </header>
 
-    <!-- ÁÐ±íÈÝÆ÷ -->
+    <!-- åˆ—è¡¨å®¹å™¨ -->
     <main class="archive-container">
         <div class="result-count">Found <span id="doc-count">0</span> projects</div>
         
@@ -59,7 +60,7 @@
         </div>
     </main>
 
-    <!-- ÒýÈë JS -->
+    <!-- å¼•å…¥ JS -->
     <script src="../static/js/project.js"></script>
 </body>
 </html>

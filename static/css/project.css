@@ -33,6 +33,9 @@
     align-items: center;
     gap: 10px;
     transition: 0.3s;
+    
+    /* --- 新增这一行 --- */
+    z-index: 10; /* 提高层级，防止被搜索框遮挡 */
 }
 
 .back-home-btn:hover {
