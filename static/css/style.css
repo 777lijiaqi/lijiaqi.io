@@ -220,6 +220,46 @@ nav ul {
     transition: 0.3s;
 }
 
+/* --- 修复图标字体显示问题 --- */
+
+/* 1. 确保图标容器有足够的宽度，且不会被挤压 */
+.item-icon {
+    display: inline-block;
+    min-width: 20px; /* 给图标留位置 */
+    text-align: center;
+    margin-right: 12px;
+    font-size: 1rem;
+    color: #475569;
+    transition: 0.3s;
+    
+    /* 关键：防止被父元素的 Fira Code 字体覆盖 */
+    font-style: normal;
+    font-variant: normal;
+    line-height: 1;
+    text-rendering: auto;
+}
+
+/* 2. 针对实心图标 (fas) 强制指定字体和字重 */
+.fas.item-icon {
+    font-family: "Font Awesome 6 Free" !important;
+    font-weight: 900 !important;
+}
+
+/* 3. 针对品牌图标 (fab, 如 Linux) 强制指定字体 */
+.fab.item-icon {
+    font-family: "Font Awesome 6 Brands" !important;
+    font-weight: 400 !important;
+}
+
+/* 4. 修复下拉菜单右侧的小箭头 (确保它也用对字体) */
+.dropdown-item::after {
+    /* 原有代码... */
+    content: '\f105'; 
+    font-family: "Font Awesome 6 Free" !important; /* 加上 !important */
+    font-weight: 900 !important;
+    /* ...原有代码 */
+}
+
 /* 文本样式 */
 .item-text {
     position: relative;
