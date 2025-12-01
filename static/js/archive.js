@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("Archive.js: System Online.");
 
     /* --- 1. 文档数据源 --- */
+    // 【修改点】：link 字段只写纯净路径，不要带参数，参数由 JS 动态生成
     const documents = [
         {
             title: "Makefile 构建指南",
@@ -11,8 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
             desc: "深入理解 Makefile 编译原理、规则、伪目标及常用函数。",
             tags: ["Makefile", "GCC"],
             icon: "fas fa-file-code",
-            // 【关键修改】在链接后追加 ?from=linux，告诉详情页我是从 linux 分类来的
-            link: "linux/Makefile学习.html?from=linux" 
+            link: "linux/Makefile学习.html" // 纯净路径
         },
         {
             title: "STM32 HAL库开发",
@@ -20,15 +20,23 @@ document.addEventListener('DOMContentLoaded', function() {
             desc: "基于 STM32H7 的外设驱动开发。",
             tags: ["Embedded", "ARM"],
             icon: "fas fa-microchip",
-            link: "stm32/index.html?from=stm32"
+            link: "stm32/index.html"
         },
         {
             title: "C语言指针详解",
-            category: "c/cpp", // 您指定的 c/cpp 参数
+            category: "cpp", // 对应 c/cpp
             desc: "深度解析指针数组与内存管理。",
             tags: ["C/C++", "Memory"],
             icon: "fas fa-code",
-            link: "lang/pointer.html?from=c/cpp" // 注意这里传参
+            link: "lang/pointer.html"
+        },
+        {
+            title: "Altium Designer 实战",
+            category: "hardware",
+            desc: "PCB 多层板设计技巧。",
+            tags: ["PCB", "Hardware"],
+            icon: "fas fa-layer-group",
+            link: "hardware/pcb.html"
         }
     ];
 
@@ -41,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentCategory = 'all';
     let currentSearch = '';
 
-    /* --- 3. 渲染函数 --- */
+    /* --- 3. 渲染函数 (动态生成 from 参数) --- */
     function renderList(data) {
         listContainer.innerHTML = '';
         
@@ -55,7 +63,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         data.forEach((doc, index) => {
             const card = document.createElement('a');
-            card.href = doc.link;
+            
+            // 【核心修改逻辑】：动态拼接 from 参数
+            // 如果当前在 "all" 分类下，就传 from=all
+            // 如果当前在 "linux" 分类下，就传 from=linux
+            // encodeURIComponent 用于处理 c/cpp 这种特殊字符
+            const dynamicLink = `${doc.link}?from=${encodeURIComponent(currentCategory)}`;
+            
+            card.href = dynamicLink;
             card.className = 'doc-item';
             card.style.opacity = '0';
             card.style.animation = `fadeIn 0.5s ease forwards ${index * 0.1}s`;
@@ -89,14 +104,17 @@ document.addEventListener('DOMContentLoaded', function() {
             return matchCat && matchSearch;
         });
 
+        // 筛选完数据后，重新渲染列表 (此时 renderList 会使用最新的 currentCategory 生成链接)
         renderList(filtered);
     }
 
-    /* --- 5. 更新 URL 地址栏 (不刷新页面) --- */
+    /* --- 5. 更新浏览器地址栏 (不刷新页面) --- */
     function updateUrl(cat) {
-        // 使用 encodeURIComponent 处理 c/cpp 这种含特殊字符的参数
-        const newUrl = `${window.location.pathname}?cat=${encodeURIComponent(cat)}`;
-        window.history.pushState({path: newUrl}, '', newUrl);
+        // 使用 HTML5 History API 修改 URL
+        if (history.pushState) {
+            const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + `?cat=${encodeURIComponent(cat)}`;
+            window.history.pushState({path:newUrl},'',newUrl);
+        }
     }
 
     /* --- 6. 事件监听 --- */
@@ -105,12 +123,14 @@ document.addEventListener('DOMContentLoaded', function() {
             catBtns.forEach(b => b.classList.remove('active'));
             this.classList.add('active');
             
+            // 更新当前分类变量
             currentCategory = this.getAttribute('data-category');
             
-            // 立即筛选
-            filterDocuments();
-            // 立即更新 URL
+            // 1. 改变地址栏参数 (解决您的问题：点击按钮 URL 没变)
             updateUrl(currentCategory);
+            
+            // 2. 重新筛选并渲染列表 (解决您的问题：卡片链接根据当前筛选状态生成)
+            filterDocuments();
         });
     });
 
@@ -121,23 +141,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // 注入动画 CSS
     const styleSheet = document.createElement("style");
     styleSheet.innerText = `@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }`;
     document.head.appendChild(styleSheet);
 
-    /* --- 7. 初始化 (处理 URL 参数) --- */
+    /* --- 7. 初始化 --- */
     const urlParams = new URLSearchParams(window.location.search);
-    const targetCategory = urlParams.get('cat');
+    const targetCategory = urlParams.get('cat') ? urlParams.get('cat').toLowerCase() : 'all';
 
-    // 注意：如果是 c/cpp，URL中可能是 c%2Fcpp，get会自动解码，所以这里不需要额外操作
-    const safeCategory = targetCategory ? targetCategory.toLowerCase() : 'all';
-
-    console.log("初始化筛选参数:", safeCategory);
-    currentCategory = safeCategory;
+    console.log("初始化筛选参数:", targetCategory);
+    currentCategory = targetCategory;
 
     catBtns.forEach(btn => {
         btn.classList.remove('active');
-        if (btn.getAttribute('data-category').toLowerCase() === safeCategory) {
+        if (btn.getAttribute('data-category').toLowerCase() === targetCategory) {
             btn.classList.add('active');
         }
     });
