@@ -1,3 +1,17 @@
+/* --- 全局变量定义 --- */
+:root {
+    --bg-color: #0b1120;       /* 深空蓝黑 */
+    --card-bg: rgba(30, 41, 59, 0.7); /* 半透明卡片 */
+    --primary: #0ea5e9;        /* 科技蓝 */
+    --accent: #10b981;         /* 电路绿 */
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+    --border: rgba(255, 255, 255, 0.1);
+    --font-code: 'Consolas', 'Monaco', monospace;
+}
+
+
+
 /* --- 顶部区域 --- */
 .archive-header {
     background: rgba(11, 17, 32, 0.95);
