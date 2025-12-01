@@ -131,3 +131,31 @@ audio.addEventListener('ended', nextTrack);
 loadTrack(currentTrackIndex);
 // 设置默认音量
 audio.volume = 0.5;
+
+
+// --- 导航栏滚动监听 (Scroll Spy) ---
+const sections = document.querySelectorAll('section');
+const navLinks = document.querySelectorAll('.nav-btn');
+
+window.addEventListener('scroll', () => {
+    let current = '';
+    
+    // 遍历所有板块，判断当前视口在哪里
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        // -150 是为了提前一点点触发高亮，体验更好
+        if (scrollY >= (sectionTop - 150)) {
+            current = section.getAttribute('id');
+        }
+    });
+
+    // 移除所有 active，给当前对应的加 active
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        // 检查链接 href 是否包含当前板块 id
+        if (link.getAttribute('href').includes(current)) {
+            link.classList.add('active');
+        }
+    });
+});
