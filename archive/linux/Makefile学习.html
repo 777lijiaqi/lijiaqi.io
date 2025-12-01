@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Makefile 学习笔记</title>
+    <!-- 引入 FontAwesome 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 引入 Prism.js 代码高亮主题 (Tomorrow Night) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    
+    <style>
+        /* --- 全局变量 --- */
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: rgba(22, 27, 34, 0.8);
+            --primary: #58a6ff;
+            --accent: #238636;
+            --text-main: #c9d1d9;
+            --text-muted: #8b949e;
+            --border: #30363d;
+            --code-bg: #161b22;
+            --font-code: 'Fira Code', 'Consolas', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            background-image: radial-gradient(#1f2428 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        /* --- 导航栏 --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 5%;
+            background: rgba(13, 17, 23, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #fff;
+        }
+
+        /* --- 主容器布局 --- */
+        .layout {
+            display: flex;
+            max-width: 1400px;
+            margin: 80px auto 40px;
+            padding: 0 20px;
+            gap: 40px;
+        }
+
+        /* 文章主体 */
+        article {
+            flex: 1;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            max-width: 900px; /* 限制文章宽度以提升阅读体验 */
+        }
+
+        /* 侧边目录栏 */
+        aside {
+            flex: 0 0 250px;
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+            display: none; /* 移动端隐藏 */
+        }
+
+        @media (min-width: 1100px) {
+            aside { display: block; }
+        }
+
+        /* --- 排版样式 --- */
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #fff;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            border-left: 5px solid var(--primary);
+            padding-left: 15px;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            margin-bottom: 0.8rem;
+            color: #fff;
+        }
+
+        p, li {
+            color: var(--text-main);
+            margin-bottom: 1rem;
+        }
+
+        a { color: var(--primary); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* 引用块 */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            background: rgba(35, 134, 54, 0.1);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            color: #d1d5db;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* 表格样式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: #161b22;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        th {
+            background-color: #21262d;
+            color: #fff;
+        }
+
+        /* 代码块微调 */
+        code {
+            font-family: var(--font-code);
+            background: rgba(110, 118, 129, 0.2);
+            padding: 0.2em 0.4em;
+            border-radius: 6px;
+            font-size: 0.85em;
+            color: #ff7b72;
+        }
+        
+        pre {
+            border-radius: 8px !important;
+            border: 1px solid var(--border) !important;
+            margin: 1.5rem 0 !important;
+        }
+
+        /* 目录样式 */
+        .toc-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #fff;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+        }
+        .toc-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+        .toc-list a {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: 0.2s;
+            display: block;
+            border-left: 2px solid transparent;
+            padding-left: 10px;
+        }
+        .toc-list a:hover, .toc-list a.active {
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .layout { padding: 0 10px; display: block; }
+            article { padding: 20px; }
+            h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 导航栏 -->
+    <nav>
+        <!-- 这里设置返回上一级目录，假设你的主页在上一级 -->
+        <a href="../index.html" class="card knowledge-card">
+            <i class="fas fa-arrow-left"></i> 返回主页
+        </a>
+    </nav>
+
+    <div class="layout">
+        <!-- 侧边目录 (TOC) -->
+        <aside>
+            <div class="toc-title">目录导航</div>
+            <ul class="toc-list">
+                <li><a href="#sec-1">一、什么是 Makefile</a></li>
+                <li><a href="#sec-2">二、编译过程 & 原理</a></li>
+                <li><a href="#sec-3">三、基本格式与规则</a></li>
+                <li><a href="#sec-4">四、Makefile 变量</a></li>
+                <li><a href="#sec-5">五、常用符号</a></li>
+                <li><a href="#sec-6">六、常用函数</a></li>
+                <li><a href="#sec-7">七、Makefile 编译</a></li>
+            </ul>
+        </aside>
+
+        <!-- 文章内容 -->
+        <article>
+            <h1>Makefile Learn</h1>
+
+            <h2 id="sec-1">一、什么是 Makefile</h2>
+            <p>
+                <a href="https://www.gnu.org/savannah-checkouts/gnu/make/manual/make.html" target="_blank">
+                    <i class="fas fa-book"></i> Makefile 官方手册
+                </a>
+            </p>
+
+            <h2 id="sec-2">二、编译过程 & 原理</h2>
+            <blockquote>
+                hello.c -> 预处理(cpp) -> hello.i -> 编译器(ccl) -> hello.s -> 汇编器(as) -> hello.o -> 链接器(ld) -> hello可执行二进制目标程序
+            </blockquote>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>文件后缀</th>
+                        <th>后缀含义</th>
+                        <th>文件后缀</th>
+                        <th>后缀含义</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>.a</td><td>静态库文件</td>
+                        <td>.c</td><td>C语言源程序文件</td>
+                    </tr>
+                    <tr>
+                        <td>.h</td><td>C语言头文件</td>
+                        <td>.i</td><td>预处理文件</td>
+                    </tr>
+                    <tr>
+                        <td>.o</td><td>目标文件可用于链接</td>
+                        <td>.s</td><td>汇编文件</td>
+                    </tr>
+                    <tr>
+                        <td>.so</td><td>动态(共享)库文件</td>
+                        <td></td><td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>1. 预处理指令</h3>
+            <pre><code class="language-bash">gcc -E [C源文件]           # 不输出任何预处理文件
+gcc -E [C源文件] -o [输出的预处理文件]  # 输出指定名称的预处理文件</code></pre>
+
+            <h3>2. 生成汇编语言指令</h3>
+            <pre><code class="language-bash">gcc -S [C源文件]           # 不输出任何汇编文件
+gcc -S [C源文件] -o [输出的汇编文件]  # 输出指定名称的汇编文件</code></pre>
+
+            <h3>3. 生成目标文件指令</h3>
+            <pre><code class="language-bash">gcc -c [C源文件]           # 不输出任何目标文件
+gcc -c [C源文件] -o [输出的目标文件]  # 输出指定名称的目标文件</code></pre>
+
+            <h3>4. 直接由源码生成可执行文件</h3>
+            <pre><code class="language-bash">gcc [C源文件]              # 直接输出 "a.out"，使用 ./a.out 执行
+gcc [C源文件] -o [目标文件] # 指定输出的目标文件名称</code></pre>
+
+            <h3>5. 生成静态库文件</h3>
+            <ol>
+                <li>编译成 .o 文件: <code>gcc -c [.c] -o [自定义文件名]</code></li>
+                <li>编译静态库: <code>ar -r [lib自定义库名称.a] [.o] [.o]</code></li>
+                <li>链接使用: <code>gcc [main.c] [lib.a] -o [app]</code></li>
+            </ol>
+
+            <h3>6. 生成动态库文件</h3>
+            <ol>
+                <li>编译 .o 文件: <code>gcc -c -fpic [.c] ...</code></li>
+                <li>编译动态库: <code>gcc -shared [.o] ... -o [libname.so]</code></li>
+                <li>链接使用: <code>gcc main.c -o app -l[库名] -L[路径] -Wl,-rpath=[路径]</code></li>
+            </ol>
+
+            <h2 id="sec-3">三、Makefile 基本格式、规则、伪目标</h2>
+            <h3>1. 基本格式</h3>
+            <pre><code class="language-makefile">targets : prerequisties
+    command</code></pre>
+            <p>注意：<code>command</code> 前必须使用 <strong>Tab</strong> 键缩进。命令前加 <code>@</code> 可以禁止打印该命令。</p>
+
+            <h3>2. 伪目标</h3>
+            <p>为了避免和同名文件冲突，使用 <code>.PHONY</code> 标记。</p>
+            <pre><code class="language-makefile">.PHONY : clean
+clean:
+    rm -f *.o</code></pre>
+
+            <h2 id="sec-4">四、Makefile 变量</h2>
+            <h3>1. 定义与引用</h3>
+            <pre><code class="language-makefile">c := src/main.c      # 定义
+obj := objs/main.o
+
+$(obj) : ${c}        # 引用，使用 $() 或 ${}</code></pre>
+
+            <h3>2. 预定义变量</h3>
+            <ul>
+                <li><code>$@</code> : 目标(target)的完整名称</li>
+                <li><code>$&lt;</code> : 第一个依赖文件的名称</li>
+                <li><code>$^</code> : 所有的依赖文件(去重)</li>
+            </ul>
+
+            <h2 id="sec-5">五、Makefile 常用符号</h2>
+            <ul>
+                <li><code>=</code> : 简单的赋值（延时变量）</li>
+                <li><code>:=</code> : 立即赋值（立即展开）</li>
+                <li><code>?=</code> : 默认赋值（若未定义则赋值）</li>
+                <li><code>+=</code> : 追加赋值</li>
+                <li><code>\</code> : 续行符</li>
+            </ul>
+
+            <h2 id="sec-6">六、Makefile 的常用函数</h2>
+            <p>语法：<code>$(fn arguments)</code></p>
+
+            <h3>1. shell</h3>
+            <pre><code class="language-makefile">cpp_src := $(shell find src -name *.cpp)</code></pre>
+
+            <h3>2. subst (字符串替换)</h3>
+            <pre><code class="language-makefile">$(subst from,to,text)</code></pre>
+
+            <h3>3. patsubst (模式替换)</h3>
+            <pre><code class="language-makefile"># 将变量 name1 中的 test... 替换为 right...
+$(patsubst test,right,$(name1))</code></pre>
+
+            <h3>4. foreach (循环)</h3>
+            <pre><code class="language-makefile"># 给 list 中的每个元素添加 -L 前缀
+name2 := $(foreach item,$(list),-L$(item))</code></pre>
+
+            <h3>5. dir (取目录)</h3>
+            <pre><code class="language-makefile">$(dir src/foo.c)  # 返回 src/</code></pre>
+
+            <h2 id="sec-7">七、Makefile 编译选项</h2>
+            <h3>编译选项</h3>
+            <ul>
+                <li><code>-m64</code>: 指定 64 位</li>
+                <li><code>-g</code>: 包含调试信息</li>
+                <li><code>-O3</code>: 高级优化</li>
+                <li><code>-I</code>: 头文件路径</li>
+                <li><code>-fpic</code>: 地址无关代码 (用于动态库)</li>
+            </ul>
+            <h3>链接选项</h3>
+            <ul>
+                <li><code>-l</code>: 库名 (如 -lm 链接 libm)</li>
+                <li><code>-L</code>: 库路径</li>
+                <li><code>-Wl,-rpath=</code>: 运行时动态库搜索路径</li>
+            </ul>
+
+        </article>
+    </div>
+
+    <!-- 引入 Prism.js 核心及 C/Makefile 语言包 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-makefile.min.js"></script>
+    
+    <!-- 滚动监听脚本 (高亮侧边栏) -->
+    <script>
+        const sections = document.querySelectorAll('h2');
+        const navLinks = document.querySelectorAll('.toc-list a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 150)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(a => {
+                a.classList.remove('active');
+                if (a.getAttribute('href').includes(current)) {
+                    a.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
