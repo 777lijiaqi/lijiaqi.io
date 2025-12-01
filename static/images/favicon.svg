@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- 背景：深色圆角矩形 -->
+  <rect x="4" y="4" width="56" height="56" rx="12" fill="#0f172a" stroke="#3b82f6" stroke-width="2"/>
+  
+  <!-- 代码符号 </> -->
+  <path d="M20 32 L10 32 L22 18 M44 32 L54 32 L42 46 M26 48 L38 16" 
+        stroke="#10b981" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <!-- 简单的发光滤镜效果模拟 -->
+        <animate attributeName="stroke" values="#10b981;#34d399;#10b981" dur="3s" repeatCount="indefinite" />
+  </path>
+</svg>
