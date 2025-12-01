@@ -26,7 +26,7 @@
 
 .header-top {
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     align-items: center;
     margin-bottom: 1.5rem;
 }
@@ -53,6 +53,7 @@
 .search-container {
     position: relative;
     width: 400px;
+    margin: 0 auto; /* <--- 新增这一行：自动均分左右边距，实现居中 */
 }
 
 #search-input {
