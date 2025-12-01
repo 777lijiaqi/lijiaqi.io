@@ -649,78 +649,6 @@ a.card:hover .click-hint {
     }
 }
 
-/* --- 文字电击故障特效 (Electric Glitch) --- */
-
-/* --- 修复版：文字电击故障特效 --- */
-
-.glitch-text {
-    position: relative;
-    display: inline-block;
-    color: var(--primary); /* 确保主文字有颜色 */
-    /* 关键点 1：主文字始终显示，不加 overflow: hidden，防止被误切 */
-}
-
-.glitch-text::before,
-.glitch-text::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    
-    /* 关键点 2：背景必须是透明的，否则会挡住下面的主文字 */
-    background: transparent; 
-    
-    /* 关键点 3：默认状态下透明度为0（隐藏），只有动画进行时才显示 */
-    opacity: 0; 
-}
-
-/* 红色错位层 */
-.glitch-text::before {
-    color: #ff00c1; /* 霓虹粉 */
-    z-index: -1;    /* 放在主文字后面，防止遮挡 */
-    animation: glitch-anim-1 5s infinite; /* 5秒电一次 */
-}
-
-/* 蓝色错位层 */
-.glitch-text::after {
-    color: #00fff9; /* 霓虹青 */
-    z-index: -2;
-    animation: glitch-anim-2 5s infinite;
-}
-
-/* --- 动画关键帧：控制 闪现 + 震动 + 裁剪 --- */
-
-@keyframes glitch-anim-1 {
-    /* 0% - 90%: 静止期 (隐藏) */
-    0% { opacity: 0; clip-path: inset(0 0 0 0); transform: translate(0); }
-    90% { opacity: 0; clip-path: inset(0 0 0 0); transform: translate(0); }
-    
-    /* 91% - 100%: 爆发期 (显示并震动) */
-    91% { opacity: 1; clip-path: inset(20% 0 80% 0); transform: translate(-2px, 1px); }
-    92% { opacity: 1; clip-path: inset(60% 0 10% 0); transform: translate(2px, -1px); }
-    94% { opacity: 1; clip-path: inset(40% 0 50% 0); transform: translate(-2px, 2px); }
-    96% { opacity: 1; clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); }
-    98% { opacity: 1; clip-path: inset(10% 0 70% 0); transform: translate(-1px, 1px); }
-    100% { opacity: 0; transform: translate(0); } /* 结束时回到隐藏 */
-}
-
-@keyframes glitch-anim-2 {
-    /* 0% - 90%: 静止期 (隐藏) */
-    0% { opacity: 0; clip-path: inset(0 0 0 0); transform: translate(0); }
-    90% { opacity: 0; clip-path: inset(0 0 0 0); transform: translate(0); }
-    
-    /* 91% - 100%: 爆发期 */
-    91% { opacity: 1; clip-path: inset(10% 0 60% 0); transform: translate(2px, -1px); }
-    93% { opacity: 1; clip-path: inset(30% 0 20% 0); transform: translate(-2px, 1px); }
-    95% { opacity: 1; clip-path: inset(70% 0 10% 0); transform: translate(2px, 2px); }
-    97% { opacity: 1; clip-path: inset(20% 0 50% 0); transform: translate(-2px, -2px); }
-    99% { opacity: 1; clip-path: inset(50% 0 30% 0); transform: translate(1px, -1px); }
-    100% { opacity: 0; transform: translate(0); }
-}
-
-
 /* --- 项目卡片文字高亮样式 --- */
 
 /* 风格 A：代码块风格 (适合强调技术名词，如 STM32, RTOS) */
@@ -746,4 +674,93 @@ a.card:hover .click-hint {
     border-left: 3px solid var(--primary); /* 左侧加个蓝条 */
     display: inline-block; /* 保持行内块级，防止错位 */
     line-height: 1.4;
+}
+
+/* 修改卡片标题样式 */
+.card h3 {
+    /* 1. 使用科幻字体 */
+    font-family: 'Orbitron', sans-serif; 
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 2px; /* 增加字间距，更像标题 */
+    margin-bottom: 1rem;
+    
+    /* 2. 制作流光渐变文字 (核心代码) */
+    background: linear-gradient(
+        90deg, 
+        #ffffff 0%, 
+        var(--primary) 50%, 
+        var(--accent) 100%
+    );
+    background-size: 200% auto; /* 放大背景以便流动 */
+    -webkit-background-clip: text; /* 只有文字显示背景 */
+    -webkit-text-fill-color: transparent; /* 文字变透明 */
+    
+    /* 3. 初始状态：无发光或微弱发光 */
+    filter: drop-shadow(0 0 2px rgba(14, 165, 233, 0.3));
+    
+    /* 4. 添加动画 */
+    animation: shine 5s linear infinite;
+    transition: all 0.3s ease;
+}
+
+/* 定义流光动画 */
+@keyframes shine {
+    to {
+        background-position: 200% center;
+    }
+}
+
+/* 鼠标悬停卡片时，标题更亮 */
+.card:hover h3 {
+    filter: drop-shadow(0 0 10px var(--primary)); /* 强力霓虹光 */
+    transform: scale(1.05); /* 微微放大 */
+}
+
+/* 修改卡片正文样式 */
+.card p {
+    /* 1. 使用代码字体 */
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    
+    /* 2. 颜色处理：稍微灰一点，不抢标题风头 */
+    color: #a0aec0;
+    
+    /* 3. 稍微增加字间距 */
+    letter-spacing: 0.5px;
+}
+
+/* 里面的高亮 span 样式 (配合之前的 code-highlight) */
+.card p span {
+    font-weight: 600; /* 加粗 */
+}
+
+.click-hint {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.8rem;
+    color: var(--accent); /* 使用绿色 */
+    margin-top: 15px;
+    display: block;
+    opacity: 0.8;
+    transition: 0.3s;
+}
+
+/* 添加一个伪元素作为光标 */
+.click-hint::after {
+    content: '_';
+    animation: blink 1s step-end infinite;
+    margin-left: 5px;
+    color: var(--primary);
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+/* 悬停时箭头移动 */
+.card:hover .click-hint {
+    color: #fff;
+    transform: translateX(10px); /* 向右滑 */
+    text-shadow: 0 0 5px var(--accent);
 }
