@@ -59,14 +59,56 @@ nav ul {
 }
 
 .nav-btn {
-    color: var(--text-main);
+    position: relative;
+    color: var(--text-muted); /* 默认颜色稍微暗一点 */
     text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.3s;
+    font-size: 1rem;
+    font-family: var(--font-code); /* 使用代码字体 */
+    font-weight: 500;
+    padding: 5px 0;
+    transition: color 0.3s ease;
+    letter-spacing: 1px;
 }
 
-.nav-btn:hover {
-    color: var(--primary);
+.nav-btn:hover ,
+.nav-btn.active {
+    color: var(--primary); /* 变成科技蓝 */
+    text-shadow: 0 0 10px rgba(14, 165, 233, 0.6); /*文字发光*/
+}
+
+/* 左括号效果 [ */
+.nav-btn::before {
+    content: '[';
+    position: absolute;
+    left: -15px;
+    opacity: 0;
+    color: var(--accent); /* 括号颜色：电路绿 */
+    transform: translateX(10px);
+    transition: all 0.3s ease;
+}
+
+/* 右括号效果 ] */
+.nav-btn::after {
+    content: ']';
+    position: absolute;
+    right: -15px;
+    opacity: 0;
+    color: var(--accent);
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+}
+
+/* 鼠标悬停时：括号出现并归位 */
+.nav-btn:hover::before,
+.nav-btn.active::before {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.nav-btn:hover::after,
+.nav-btn.active::after {
+    opacity: 1;
+    transform: translateX(0);
 }
 
 /* --- 通用板块布局 --- */
@@ -419,4 +461,111 @@ a.card span {
 a.card:hover .click-hint {
     opacity: 1;
     transform: translateX(0);
+}
+
+/* --- 电流流动特效 (Circuit Flow Effect) --- */
+
+/* 1. 背景容器：充满屏幕，固定不动，置于最底层 */
+.circuit-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* 确保鼠标能穿透，不影响点击按钮 */
+    z-index: -1;          /* 放在背景图之上，但文字之下 */
+    overflow: hidden;
+}
+
+/* 2. 导线基础样式：透明的轨道 */
+.line {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.02); /* 极其微弱的轨道痕迹，不需要可删 */
+}
+
+/* 3. 电流光点（伪元素）：真正的发光体 */
+.line::after {
+    content: '';
+    position: absolute;
+    background: linear-gradient(to bottom, transparent, var(--primary)); /* 拖尾渐变 */
+    box-shadow: 0 0 15px var(--primary); /* 强力霓虹发光 */
+    opacity: 0; /* 默认隐藏 */
+}
+
+/* --- 竖向线条 (Vertical) --- */
+.v-line {
+    top: 0;
+    width: 1px; /* 线宽 */
+    height: 100%;
+    left: var(--left); /* 由HTML传入位置 */
+}
+
+.v-line::after {
+    top: -50%;
+    left: 0;
+    width: 100%;
+    height: 150px; /* 电流长度 */
+    animation: dropDown 6s infinite; /* 总时长6秒，包含等待时间 */
+    animation-delay: var(--delay);   /* 错开出发时间 */
+}
+
+/* --- 横向线条 (Horizontal) --- */
+.h-line {
+    left: 0;
+    height: 1px; /* 线宽 */
+    width: 100%;
+    top: var(--top); /* 由HTML传入位置 */
+}
+
+.h-line::after {
+    left: -50%;
+    top: 0;
+    height: 100%;
+    width: 150px; /* 电流长度 */
+    background: linear-gradient(to right, transparent, var(--accent)); /* 横向用绿色(accent)区分 */
+    box-shadow: 0 0 15px var(--accent);
+    animation: slideRight 8s infinite;
+    animation-delay: var(--delay);
+}
+
+/* --- 动画定义 --- */
+
+/* 竖向掉落动画 */
+@keyframes dropDown {
+    0% {
+        top: -150px;
+        opacity: 0;
+    }
+    10% {
+        opacity: 1; /* 刚进入时变亮 */
+    }
+    50% {
+        top: 100%;  /* 跑到屏幕底部 */
+        opacity: 1;
+    }
+    51% {
+        opacity: 0; /* 跑完立刻消失 */
+    }
+    100% {
+        top: 100%; /* 后半段时间保持消失（等待期） */
+        opacity: 0;
+    }
+}
+
+/* 横向滑动动画 */
+@keyframes slideRight {
+    0% {
+        left: -150px;
+        opacity: 0;
+    }
+    10% { opacity: 1; }
+    40% {
+        left: 100%;
+        opacity: 1;
+    }
+    41% { opacity: 0; }
+    100% {
+        left: 100%;
+        opacity: 0;
+    }
 }
