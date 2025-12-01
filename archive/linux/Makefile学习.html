@@ -346,5 +346,28 @@ gcc -E [C源文件] -o [输出的预处理文件]  # 输出指定名称的预处
             });
         });
     </script>
+
+    <!-- 音乐播放器悬浮窗 (代码保持不变) -->
+    <div class="music-player-widget">
+        <div class="player-controls">
+            <button id="prev-btn" title="Previous"><i class="fas fa-step-backward"></i></button>
+            <button id="play-btn" title="Play/Pause"><i class="fas fa-play"></i></button>
+            <button id="next-btn" title="Next"><i class="fas fa-step-forward"></i></button>
+            <button id="mute-btn" title="Mute"><i class="fas fa-volume-up"></i></button>
+        </div>
+        <div class="song-info">
+            <span id="song-title">Loading...</span>
+        </div>
+        <audio id="bg-music"></audio>
+    </div>
+
+    <footer>...</footer>
+
+    <!-- 定义根路径变量 (根目录写 ./) -->
+    <script>const ROOT_PATH = '../../';</script>
+    
+    <!-- 引入新的音乐脚本 -->
+    <script src="static/js/music.js"></script>
+
 </body>
 </html>

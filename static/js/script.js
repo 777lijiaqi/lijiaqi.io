@@ -1,11 +1,6 @@
 /* --- static/js/script.js --- */
 
 /* --- 1. 配置区 --- */
-const playlist = [
-    { title: "最重要的小事-五月天", src: "static/music/最重要的小事_五月天.mp3" },
-    { title: "步步-五月天", src: "static/music/步步-五月天.mp3" }
-];
-
 const typingText = "Embedding intelligence into reality...";
 
 /* --- 2. 核心逻辑 --- */
@@ -98,64 +93,3 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.1 });
 
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-// --- 音乐播放器逻辑 ---
-const audio = document.getElementById('bg-music');
-const playBtn = document.getElementById('play-btn');
-const prevBtn = document.getElementById('prev-btn');
-const nextBtn = document.getElementById('next-btn');
-const muteBtn = document.getElementById('mute-btn');
-const songTitle = document.getElementById('song-title');
-
-if(audio && playBtn) {
-    let currentTrackIndex = 0;
-    let isPlaying = false;
-
-    function loadTrack(index) {
-        audio.src = playlist[index].src;
-        songTitle.innerText = playlist[index].title;
-    }
-
-    function playMusic() {
-        audio.play().then(() => {
-            isPlaying = true;
-            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-        }).catch(error => { console.log("等待交互播放"); });
-    }
-
-    function pauseMusic() {
-        audio.pause();
-        isPlaying = false;
-        playBtn.innerHTML = '<i class="fas fa-play"></i>';
-    }
-
-    muteBtn.addEventListener('click', () => {
-        audio.muted = !audio.muted;
-        muteBtn.innerHTML = audio.muted ? 
-            '<i class="fas fa-volume-mute" style="color:#ff4d4d"></i>' : 
-            '<i class="fas fa-volume-up"></i>';
-    });
-
-    playBtn.addEventListener('click', () => {
-        isPlaying ? pauseMusic() : playMusic();
-    });
-
-    function nextTrack() {
-        currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
-        loadTrack(currentTrackIndex);
-        if(isPlaying) playMusic();
-    }
-
-    function prevTrack() {
-        currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
-        loadTrack(currentTrackIndex);
-        if(isPlaying) playMusic();
-    }
-
-    nextBtn.addEventListener('click', nextTrack);
-    prevBtn.addEventListener('click', prevTrack);
-    audio.addEventListener('ended', nextTrack);
-
-    loadTrack(currentTrackIndex);
-    audio.volume = 0.5;
-}
