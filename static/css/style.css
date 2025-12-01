@@ -98,12 +98,12 @@ nav ul {
 }
 
 /* 鼠标悬停时：括号出现并归位 */
-.nav-btn:hover::before,{
+.nav-btn:hover::before{
     opacity: 1;
     transform: translateX(0);
 }
 
-.nav-btn:hover::after,{
+.nav-btn:hover::after{
     opacity: 1;
     transform: translateX(0);
 }
