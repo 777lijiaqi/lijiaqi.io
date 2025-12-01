@@ -2,7 +2,7 @@
 const documents = [
     {
         title: "Makefile构建指南",
-        category: "linux",
+        category: "LINUX",
         desc: "深入理解 Makefile 编译原理、规则、伪目标及常用函数，掌握大型项目构建技巧。",
         tags: ["Makefile", "GCC", "Automation"],
         icon: "fas fa-file-code",
@@ -10,7 +10,7 @@ const documents = [
     },
     {
         title: "STM32 HAL库开发实战",
-        category: "stm32",
+        category: "STM32",
         desc: "基于 STM32H7 的外设驱动开发，涵盖 GPIO、UART、DMA 及中断优先级配置。",
         tags: ["Embedded", "ARM", "Driver"],
         icon: "fas fa-microchip",
@@ -18,7 +18,7 @@ const documents = [
     },
     {
         title: "Linux 内核裁剪笔记",
-        category: "linux",
+        category: "LINUX",
         desc: "如何通过 menuconfig 配置内核选项，减小体积并优化启动速度。",
         tags: ["Kernel", "Bootloader", "Optimization"],
         icon: "fab fa-linux",
@@ -26,23 +26,15 @@ const documents = [
     },
     {
         title: "C语言指针与内存管理",
-        category: "lang",
+        category: "C/C++",
         desc: "深度解析指针数组、函数指针以及堆栈内存泄漏的排查方法。",
         tags: ["C/C++", "Memory", "Algorithm"],
         icon: "fas fa-code",
         link: "#" 
     },
     {
-        title: "Altium Designer 多层板设计",
-        category: "hardware",
-        desc: "四层板叠层设计、阻抗匹配计算及差分走线规则详解。",
-        tags: ["PCB", "EDA", "Hardware"],
-        icon: "fas fa-layer-group",
-        link: "#" 
-    },
-    {
         title: "I2C 通信协议波形分析",
-        category: "hardware",
+        category: "STM32",
         desc: "使用逻辑分析仪抓取 I2C 时序，解决 ACK 丢失与总线死锁问题。",
         tags: ["Protocol", "Debug", "Signal"],
         icon: "fas fa-wave-square",
