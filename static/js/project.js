@@ -6,32 +6,32 @@ document.addEventListener('DOMContentLoaded', function() {
     /* --- 1. 项目数据源 --- */
     const projects = [
         {
-            title: "智能网关设计",
-            category: "mcu",
+            title: "基于MODBUS协议的水质检测RTU",
+            category: "stm32",
             desc: "基于 STM32H7 与 LwIP 协议栈，实现 MQTT/Modbus 多协议转换。",
             tags: ["STM32", "IoT", "LwIP"],
             icon: "fas fa-network-wired",
             link: "../archive/stm32/gateway.html" // 假设指向归档中的项目文档
         },
         {
-            title: "FOC 电机驱动器",
-            category: "hardware",
+            title: "液流称重自动升降仪",
+            category: "stm32",
             desc: "基于磁场定向控制算法的高精度无刷电机驱动板设计。",
             tags: ["PCB", "Motor Control"],
             icon: "fas fa-bolt",
             link: "../archive/hardware/foc.html"
         },
         {
-            title: "Linux Qt 仪表盘",
-            category: "linux",
+            title: "高速高精度ADC测试",
+            category: "stm32",
             desc: "IMX6ULL 平台车载仪表盘界面开发，集成 CAN 总线数据读取。",
             tags: ["Linux", "Qt", "CAN"],
             icon: "fab fa-linux",
             link: "../archive/linux/dashboard.html"
         },
         {
-            title: "FPGA 图像加速核",
-            category: "fpga",
+            title: "other",
+            category: "linux",
             desc: "使用 Verilog 实现的 Sobel 边缘检测硬件加速 IP 核。",
             tags: ["Verilog", "Zynq"],
             icon: "fas fa-microchip",

@@ -6,32 +6,32 @@ document.addEventListener('DOMContentLoaded', function() {
     /* --- 1. 资源数据源 --- */
     const resources = [
         {
-            title: "STM32F4xx 数据手册",
-            category: "datasheet",
+            title: "STM32外设驱动源码",
+            category: "stm32",
             desc: "ST 官方英文参考手册，包含寄存器定义与电气特性。",
             tags: ["PDF", "Reference"],
             icon: "fas fa-file-pdf",
             link: "#" // 这里可以填文件下载链接，如 ../static/files/stm32.pdf
         },
         {
-            title: "Modbus 调试助手",
-            category: "tools",
+            title: "linux驱动程序",
+            category: "linux",
             desc: "Windows 平台 Modbus RTU/TCP 调试工具，支持主从模式。",
             tags: ["Tool", "Debug"],
             icon: "fas fa-toolbox",
             link: "#"
         },
         {
-            title: "PID 算法 C语言源码",
-            category: "code",
+            title: "linux应用源码",
+            category: "linux",
             desc: "通用的增量式/位置式 PID 控制算法实现模板。",
             tags: ["Source Code", "Algorithm"],
             icon: "fas fa-code",
             link: "#"
         },
         {
-            title: "嵌入式 Linux 学习路线图",
-            category: "datasheet",
+            title: "otherr",
+            category: "all",
             desc: "从 Bootloader 到文件系统的完整学习路径规划。",
             tags: ["Guide", "Roadmap"],
             icon: "fas fa-map-signs",
