@@ -1,21 +1,21 @@
 /* --- static/js/music.js --- */
-/* ÒôÀÖ²¥·ÅÆ÷ºËĞÄÂß¼­ - Ö§³Ö¶àÒ³Ãæ¼ÇÒä²¥·Å */
+/* éŸ³ä¹æ’­æ”¾å™¨æ ¸å¿ƒé€»è¾‘ - æ”¯æŒå¤šé¡µé¢è®°å¿†æ’­æ”¾ */
 
 document.addEventListener('DOMContentLoaded', function() {
     
-    // 1. ¶¨Òå²¥·ÅÁĞ±í (×¢Òâ£ºsrc Ö»ĞèÒªĞ´ÎÄ¼şÃû£¬Â·¾¶ÓÉÏÂÃæµÄÂß¼­×Ô¶¯´¦Àí)
+    // 1. å®šä¹‰æ’­æ”¾åˆ—è¡¨ (æ³¨æ„ï¼šsrc åªéœ€è¦å†™æ–‡ä»¶åï¼Œè·¯å¾„ç”±ä¸‹é¢çš„é€»è¾‘è‡ªåŠ¨å¤„ç†)
     const playlistData = [
-        { title: "×îÖØÒªµÄĞ¡ÊÂ-ÎåÔÂÌì", file: "×îÖØÒªµÄĞ¡ÊÂ_ÎåÔÂÌì.mp3" },
-        { title: "²½²½-ÎåÔÂÌì", file: "²½²½-ÎåÔÂÌì.mp3" }
+        { title: "æœ€é‡è¦çš„å°äº‹-äº”æœˆå¤©", file: "æœ€é‡è¦çš„å°äº‹_äº”æœˆå¤©.mp3" },
+        { title: "æ­¥æ­¥-äº”æœˆå¤©", file: "æ­¥æ­¥-äº”æœˆå¤©.mp3" }
     ];
 
-    // 2. »ñÈ¡µ±Ç°Ò³ÃæµÄÂ·¾¶Ç°×º (ÓÉ HTML ¶¨ÒåµÄ ROOT_PATH ¾ö¶¨£¬Èç¹ûÃ»ÓĞÔòÄ¬ÈÏÎª ./)
-    // ¸ùÄ¿Â¼ index.html -> ./static/music/
-    // ¶ş¼¶Ä¿Â¼ project/project.html -> ../static/music/
+    // 2. è·å–å½“å‰é¡µé¢çš„è·¯å¾„å‰ç¼€ (ç”± HTML å®šä¹‰çš„ ROOT_PATH å†³å®šï¼Œå¦‚æœæ²¡æœ‰åˆ™é»˜è®¤ä¸º ./)
+    // æ ¹ç›®å½• index.html -> ./static/music/
+    // äºŒçº§ç›®å½• project/project.html -> ../static/music/
     const rootPath = (typeof window.ROOT_PATH !== 'undefined') ? window.ROOT_PATH : './';
     const musicBasePath = rootPath + "static/music/";
 
-    // 3. »ñÈ¡ DOM ÔªËØ
+    // 3. è·å– DOM å…ƒç´ 
     const audio = document.getElementById('bg-music');
     const playBtn = document.getElementById('play-btn');
     const prevBtn = document.getElementById('prev-btn');
@@ -23,14 +23,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const muteBtn = document.getElementById('mute-btn');
     const songTitle = document.getElementById('song-title');
 
-    // Èç¹ûµ±Ç°Ò³ÃæÃ»ÓĞ²¥·ÅÆ÷¿Ø¼ş£¬Ö±½ÓÍË³ö£¬·ÀÖ¹±¨´í
+    // å¦‚æœå½“å‰é¡µé¢æ²¡æœ‰æ’­æ”¾å™¨æ§ä»¶ï¼Œç›´æ¥é€€å‡ºï¼Œé˜²æ­¢æŠ¥é”™
     if (!audio || !playBtn) return;
 
-    // 4. ×´Ì¬±äÁ¿
+    // 4. çŠ¶æ€å˜é‡
     let currentTrackIndex = 0;
     let isPlaying = false;
 
-    // --- ºËĞÄ£º´Ó LocalStorage ¶ÁÈ¡¼ÇÒä ---
+    // --- æ ¸å¿ƒï¼šä» LocalStorage è¯»å–è®°å¿† ---
     function loadState() {
         const savedIndex = localStorage.getItem('music_index');
         const savedTime = localStorage.getItem('music_time');
@@ -39,42 +39,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (savedIndex !== null) currentTrackIndex = parseInt(savedIndex);
         
-        // ¼ÓÔØ¸èÇú
+        // åŠ è½½æ­Œæ›²
         loadTrack(currentTrackIndex);
 
-        // »Ö¸´½ø¶È
+        // æ¢å¤è¿›åº¦
         if (savedTime !== null) audio.currentTime = parseFloat(savedTime);
         
-        // »Ö¸´ÒôÁ¿
+        // æ¢å¤éŸ³é‡
         if (savedVolume !== null) audio.volume = parseFloat(savedVolume);
 
-        // »Ö¸´²¥·Å×´Ì¬ (Èç¹ûÊÇ²¥·Å×´Ì¬£¬³¢ÊÔ×Ô¶¯²¥·Å)
+        // æ¢å¤æ’­æ”¾çŠ¶æ€ (å¦‚æœæ˜¯æ’­æ”¾çŠ¶æ€ï¼Œå°è¯•è‡ªåŠ¨æ’­æ”¾)
         if (savedStatus === 'true') {
-            playMusic(true); // true ±íÊ¾ÊÇ»Ö¸´²¥·Å£¬²»ĞèÒªÖØÖÃÊ±¼ä
+            playMusic(true); // true è¡¨ç¤ºæ˜¯æ¢å¤æ’­æ”¾ï¼Œä¸éœ€è¦é‡ç½®æ—¶é—´
         }
     }
 
-    // --- ºËĞÄ£º±£´æ×´Ì¬µ½ LocalStorage ---
+    // --- æ ¸å¿ƒï¼šä¿å­˜çŠ¶æ€åˆ° LocalStorage ---
     function saveState() {
         localStorage.setItem('music_index', currentTrackIndex);
         localStorage.setItem('music_time', audio.currentTime);
-        localStorage.setItem('music_playing', isPlaying); // ±£´æµ±Ç°ÊÇ·ñÔÚ²¥·Å
+        localStorage.setItem('music_playing', isPlaying); // ä¿å­˜å½“å‰æ˜¯å¦åœ¨æ’­æ”¾
         localStorage.setItem('music_volume', audio.volume);
     }
 
-    // Ò³Ãæ¹Ø±Õ/Ë¢ĞÂ/Ìø×ªÇ°±£´æ×´Ì¬
+    // é¡µé¢å…³é—­/åˆ·æ–°/è·³è½¬å‰ä¿å­˜çŠ¶æ€
     window.addEventListener('beforeunload', saveState);
 
-    // --- ²¥·ÅÆ÷¹¦ÄÜº¯Êı ---
+    // --- æ’­æ”¾å™¨åŠŸèƒ½å‡½æ•° ---
 
     function loadTrack(index) {
-        // Æ´½ÓÕıÈ·µÄÂ·¾¶
+        // æ‹¼æ¥æ­£ç¡®çš„è·¯å¾„
         audio.src = musicBasePath + playlistData[index].file;
         songTitle.innerText = playlistData[index].title;
     }
 
     function playMusic(isRestore = false) {
-        // ä¯ÀÀÆ÷×Ô¶¯²¥·Å²ßÂÔÏŞÖÆ£ºÈç¹ûÃ»ÓĞÓÃ»§½»»¥£¬play() ¿ÉÄÜ»áÊ§°Ü
+        // æµè§ˆå™¨è‡ªåŠ¨æ’­æ”¾ç­–ç•¥é™åˆ¶ï¼šå¦‚æœæ²¡æœ‰ç”¨æˆ·äº¤äº’ï¼Œplay() å¯èƒ½ä¼šå¤±è´¥
         var playPromise = audio.play();
 
         if (playPromise !== undefined) {
@@ -82,13 +82,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 isPlaying = true;
                 playBtn.innerHTML = '<i class="fas fa-pause"></i>';
                 
-                // ¸ø°´Å¥Ìí¼ÓĞı×ª¶¯»­Àà (¿ÉÑ¡)
+                // ç»™æŒ‰é’®æ·»åŠ æ—‹è½¬åŠ¨ç”»ç±» (å¯é€‰)
                 const icon = document.querySelector('.music-control'); 
                 if(icon) icon.classList.add('rotating');
 
             }).catch(error => {
-                console.log("ä¯ÀÀÆ÷×èÖ¹ÁË×Ô¶¯²¥·Å (ĞèÒªÓÃ»§µã»÷Ò»´ÎÒ³Ãæ):", error);
-                // ËäÈ»×Ô¶¯²¥·ÅÊ§°Ü£¬µ«ÎÒÃÇ±£³Ö isPlaying ×´Ì¬£¬µÈ´ıÓÃ»§µã»÷
+                console.log("æµè§ˆå™¨é˜»æ­¢äº†è‡ªåŠ¨æ’­æ”¾ (éœ€è¦ç”¨æˆ·ç‚¹å‡»ä¸€æ¬¡é¡µé¢):", error);
+                // è™½ç„¶è‡ªåŠ¨æ’­æ”¾å¤±è´¥ï¼Œä½†æˆ‘ä»¬ä¿æŒ isPlaying çŠ¶æ€ï¼Œç­‰å¾…ç”¨æˆ·ç‚¹å‡»
                 isPlaying = false; 
                 playBtn.innerHTML = '<i class="fas fa-play"></i>';
             });
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
         playBtn.innerHTML = '<i class="fas fa-play"></i>';
     }
 
-    // --- ÊÂ¼ş¼àÌı ---
+    // --- äº‹ä»¶ç›‘å¬ ---
 
     playBtn.addEventListener('click', () => {
         if (isPlaying) pauseMusic();
@@ -127,24 +127,24 @@ document.addEventListener('DOMContentLoaded', function() {
             '<i class="fas fa-volume-up"></i>';
     });
 
-    // ×Ô¶¯²¥·ÅÏÂÒ»Ê×
+    // è‡ªåŠ¨æ’­æ”¾ä¸‹ä¸€é¦–
     audio.addEventListener('ended', () => {
         currentTrackIndex = (currentTrackIndex + 1) % playlistData.length;
         loadTrack(currentTrackIndex);
         playMusic();
     });
 
-    // ÊµÊ±±£´æ½ø¶È (Ã¿Ãë±£´æÒ»´Î£¬·ÀÖ¹ÒâÍâ±ÀÀ£)
+    // å®æ—¶ä¿å­˜è¿›åº¦ (æ¯ç§’ä¿å­˜ä¸€æ¬¡ï¼Œé˜²æ­¢æ„å¤–å´©æºƒ)
     audio.addEventListener('timeupdate', () => {
-        // Ö»ÓĞÔÚ²¥·ÅÊ±²ÅÆµ·±±£´æ£¬±ÜÃâĞÔÄÜÀË·Ñ
+        // åªæœ‰åœ¨æ’­æ”¾æ—¶æ‰é¢‘ç¹ä¿å­˜ï¼Œé¿å…æ€§èƒ½æµªè´¹
         if(isPlaying) { 
             localStorage.setItem('music_time', audio.currentTime);
         }
     });
 
-    // --- Æô¶¯ ---
-    // ÉèÖÃÄ¬ÈÏÒôÁ¿
+    // --- å¯åŠ¨ ---
+    // è®¾ç½®é»˜è®¤éŸ³é‡
     audio.volume = 0.5;
-    // ¼ÓÔØ²¢³¢ÊÔ»Ö¸´×´Ì¬
+    // åŠ è½½å¹¶å°è¯•æ¢å¤çŠ¶æ€
     loadState();
 });
