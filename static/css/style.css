@@ -52,60 +52,141 @@ header {
     color: var(--primary);
 }
 
+/* --- 1. 导航栏容器调整 --- */
 nav ul {
     display: flex;
     list-style: none;
-    gap: 20px;
+    gap: 15px; /* 按钮之间的间距 */
+    align-items: center;
 }
 
+.nav-item {
+    position: relative; /* 关键：作为下拉菜单的定位基准 */
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+/* --- 2. 赛博朋克按钮主体 (Cyberpunk Button) --- */
 .nav-btn {
     position: relative;
-    color: var(--text-muted); /* 默认颜色稍微暗一点 */
     text-decoration: none;
-    font-size: 1rem;
-    font-family: var(--font-code); /* 使用代码字体 */
-    font-weight: 500;
-    padding: 5px 0;
-    transition: color 0.3s ease;
-    letter-spacing: 1px;
-}
-
-.nav-btn.active {
-    color: var(--primary); /* 变成科技蓝 */
-    text-shadow: 0 0 10px rgba(14, 165, 233, 0.6); /*文字发光*/
-}
-
-/* 左括号效果 [ */
-.nav-btn::before {
-    content: '[';
-    position: absolute;
-    left: -15px;
-    opacity: 0;
-    color: var(--accent); /* 括号颜色：电路绿 */
-    transform: translateX(10px);
+    color: var(--text-muted);
+    font-family: var(--font-code);
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 8px 20px;
+    background: rgba(11, 17, 32, 0.6); /* 半透明深底 */
+    border: 1px solid rgba(14, 165, 233, 0.3); /* 暗淡的蓝边框 */
+    
+    /* 核心：利用 clip-path 切掉左上角和右下角，制造科技感 */
+    clip-path: polygon(
+        10px 0, 100% 0, 
+        100% calc(100% - 10px), calc(100% - 10px) 100%, 
+        0 100%, 0 10px
+    );
+    
     transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* 文字和箭头的间距 */
 }
 
-/* 右括号效果 ] */
-.nav-btn::after {
-    content: ']';
-    position: absolute;
-    right: -15px;
-    opacity: 0;
+/* 按钮内部的文字 */
+.btn-text {
+    position: relative;
+    z-index: 2;
+}
+
+/* 倒三角图标 */
+.arrow-icon {
+    font-size: 0.8em;
+    transition: transform 0.3s;
     color: var(--accent);
-    transform: translateX(-10px);
+}
+
+/* --- 3. 悬停与激活状态 (Hover & Active) --- */
+.nav-item:hover .nav-btn,
+.nav-btn.active {
+    color: #fff;
+    background: rgba(14, 165, 233, 0.15); /* 激活时背景变亮 */
+    border-color: var(--primary);          /* 边框变亮蓝 */
+    text-shadow: 0 0 8px var(--primary);   /* 文字发光 */
+    box-shadow: 0 0 15px rgba(14, 165, 233, 0.2);
+}
+
+/* 悬停时箭头旋转 */
+.nav-item:hover .arrow-icon {
+    transform: rotate(180deg);
+    color: var(--primary);
+}
+
+/* 装饰：悬停时底部的扫描线动画 */
+.nav-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: var(--accent); /* 绿色扫描线 */
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px var(--accent);
+}
+
+.nav-item:hover .nav-btn::after,
+.nav-btn.active::after {
+    width: 100%; /* 线条填满 */
+}
+
+/* --- 4. 下拉菜单样式 (Dropdown Menu) --- */
+.dropdown-menu {
+    position: absolute;
+    top: 100%; /* 在按钮正下方 */
+    left: 50%;
+    transform: translateX(-50%) translateY(10px); /* 居中并稍微下移 */
+    
+    min-width: 160px;
+    background: rgba(15, 23, 42, 0.95); /* 深色背景 */
+    border: 1px solid var(--primary);
+    backdrop-filter: blur(10px); /* 毛玻璃 */
+    padding: 10px 0;
+    
+    /* 默认隐藏 */
+    opacity: 0;
+    visibility: hidden;
     transition: all 0.3s ease;
+    z-index: 1000;
+    
+    /* 赛博朋克边框装饰 */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border-top: 3px solid var(--accent); /* 顶部有一条绿线 */
 }
 
-/* 鼠标悬停时：括号出现并归位 */
-.nav-btn:hover::before{
+/* 显示下拉菜单的触发器 */
+.nav-item:hover .dropdown-menu {
     opacity: 1;
-    transform: translateX(0);
+    visibility: visible;
+    transform: translateX(-50%) translateY(5px); /* 上浮一点 */
 }
 
-.nav-btn:hover::after{
-    opacity: 1;
-    transform: translateX(0);
+/* 下拉菜单项 */
+.dropdown-item {
+    display: block;
+    padding: 10px 20px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-family: var(--font-code);
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    border-left: 2px solid transparent;
+}
+
+.dropdown-item:hover {
+    background: rgba(14, 165, 233, 0.1);
+    color: #fff;
+    border-left-color: var(--primary); /* 悬停时左侧出现亮条 */
+    padding-left: 25px; /* 稍微右移，制造动感 */
 }
 
 /* --- 通用板块布局 --- */
