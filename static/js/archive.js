@@ -4,7 +4,7 @@ const documents = [
         title: "Makefile构建指南",
         category: "linux",
         desc: "深入理解 Makefile 编译原理、规则、伪目标及常用函数，掌握大型项目构建技巧。",
-        tags: ["Build System", "GCC", "Automation"],
+        tags: ["Makefile", "GCC", "Automation"],
         icon: "fas fa-file-code",
         link: "linux/Makefile学习.html" // 跳转链接
     },
@@ -142,6 +142,34 @@ styleSheet.innerText = `
 `;
 document.head.appendChild(styleSheet);
 
-/* --- 4. 初始化 --- */
-// 页面加载时渲染所有数据
-renderList(documents);
+/* --- 4. 初始化与自动筛选 (Auto Filter on Load) --- */
+
+function init() {
+    // 1. 获取 URL 中的参数 (例如 ?cat=stm32)
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetCategory = urlParams.get('cat');
+
+    // 2. 如果 URL 里有分类参数，且不是 'all'
+    if (targetCategory && targetCategory !== 'all') {
+        // 更新当前的全局分类变量
+        currentCategory = targetCategory;
+
+        // 3. 自动高亮对应的顶部按钮
+        catBtns.forEach(btn => {
+            btn.classList.remove('active'); // 移除默认的 ALL 高亮
+            if (btn.getAttribute('data-category') === targetCategory) {
+                btn.classList.add('active'); // 高亮目标分类
+            }
+        });
+
+        // 4. 执行筛选逻辑
+        filterDocuments();
+    } else {
+        // 5. 如果没有参数，或者参数是 all，则显示全部
+        currentCategory = 'all';
+        renderList(documents);
+    }
+}
+
+// 执行初始化
+init();
