@@ -70,7 +70,6 @@ nav ul {
     letter-spacing: 1px;
 }
 
-.nav-btn:hover ,
 .nav-btn.active {
     color: var(--primary); /* 变成科技蓝 */
     text-shadow: 0 0 10px rgba(14, 165, 233, 0.6); /*文字发光*/
@@ -99,8 +98,7 @@ nav ul {
 }
 
 /* 鼠标悬停时：括号出现并归位 */
-.nav-btn:hover::before,
-.nav-btn.active::before {
+.nav-btn:hover::before,{
     opacity: 1;
     transform: translateX(0);
 }
