@@ -150,7 +150,7 @@ function init() {
     const targetCategory = urlParams.get('cat');
 
     // 2. 如果 URL 里有分类参数，且不是 'all'
-    if (targetCategory && targetCategory !== 'all') {
+    if (targetCategory && targetCategory !== 'ALL') {
         // 更新当前的全局分类变量
         currentCategory = targetCategory;
 
@@ -166,7 +166,7 @@ function init() {
         filterDocuments();
     } else {
         // 5. 如果没有参数，或者参数是 all，则显示全部
-        currentCategory = 'all';
+        currentCategory = 'ALL';
         renderList(documents);
     }
 }
