@@ -1,0 +1,222 @@
+/* 复用 archive.css 的样式逻辑 */
+
+/* --- 顶部区域 --- */
+.archive-header {
+    background: rgba(11, 17, 32, 0.95);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem 10%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+}
+
+.header-top {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* 居中方案 */
+    margin-bottom: 1.5rem;
+    position: relative;
+    min-height: 40px;
+}
+
+.back-home-btn {
+    position: absolute;
+    left: 0;
+    text-decoration: none;
+    color: var(--primary);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.3s;
+}
+
+.back-home-btn:hover {
+    color: #fff;
+    text-shadow: 0 0 10px var(--primary);
+}
+
+/* --- 搜索框 --- */
+.search-container {
+    position: relative;
+    width: 400px;
+}
+
+#search-input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border);
+    padding: 12px 20px 12px 45px;
+    border-radius: 50px;
+    color: #fff;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    transition: 0.3s;
+    outline: none;
+}
+
+#search-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 15px rgba(14, 165, 233, 0.2);
+    background: rgba(14, 165, 233, 0.05);
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+
+/* --- 分类按钮组 --- */
+.category-filter {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+    justify-content: center; /* 按钮组居中 */
+}
+
+.cat-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 6px 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    transition: 0.3s;
+    white-space: nowrap;
+}
+
+.cat-btn:hover, .cat-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(16, 185, 129, 0.1);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+}
+
+/* --- 列表容器 --- */
+.archive-container {
+    padding: 2rem 10%;
+    min-height: 80vh;
+}
+
+.result-count {
+    color: var(--text-muted);
+    font-family: 'Fira Code', monospace;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    text-align: right;
+}
+
+/* --- 长条形卡片样式 --- */
+.doc-item {
+    display: flex;
+    align-items: center;
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+}
+
+.doc-item:hover {
+    transform: translateX(10px);
+    border-color: var(--primary);
+    box-shadow: -5px 5px 20px rgba(0, 0, 0, 0.5);
+    background: rgba(30, 41, 59, 0.8);
+}
+
+.doc-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 3px;
+    background: var(--text-muted);
+    transition: 0.3s;
+}
+
+.doc-item:hover::before {
+    background: var(--primary);
+    box-shadow: 0 0 10px var(--primary);
+}
+
+.doc-icon {
+    font-size: 2rem;
+    color: var(--text-muted);
+    margin-right: 2rem;
+    width: 50px;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.doc-item:hover .doc-icon {
+    color: var(--primary);
+    transform: scale(1.1);
+}
+
+.doc-content {
+    flex: 1;
+}
+
+.doc-title {
+    color: #fff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+}
+
+.doc-desc {
+    color: var(--text-muted);
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.doc-tags {
+    margin-top: 0.8rem;
+    display: flex;
+    gap: 10px;
+}
+
+.doc-tag {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+    font-family: 'Fira Code', monospace;
+}
+
+.doc-arrow {
+    color: var(--border);
+    font-size: 1.2rem;
+    transition: 0.3s;
+}
+
+.doc-item:hover .doc-arrow {
+    color: var(--accent);
+    transform: translateX(5px);
+}
+
+@media (max-width: 768px) {
+    .header-top { flex-direction: column; gap: 15px; }
+    .search-container { width: 100%; }
+    .doc-item { flex-direction: column; align-items: flex-start; }
+    .doc-icon { margin-bottom: 1rem; }
+    .doc-arrow { display: none; }
+}

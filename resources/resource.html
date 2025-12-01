@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources Download | 资源下载</title>
+    <!-- 路径修正 -->
+    <link rel="icon" type="image/svg+xml" href="../static/images/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/resource.css">
+</head>
+<body>
+
+    <div class="circuit-bg">
+        <div class="line v-line" style="--delay: 2s; --left: 20%;"></div>
+        <div class="line v-line" style="--delay: 5s; --left: 80%;"></div>
+        <div class="line h-line" style="--delay: 1s; --top: 15%;"></div>
+        <div class="line h-line" style="--delay: 4s; --top: 85%;"></div>
+    </div>
+
+    <header class="archive-header">
+        <div class="header-top">
+            <a href="../index.html" class="back-home-btn">
+                <i class="fas fa-chevron-left"></i> <span class="logo-text">Main_System</span>
+            </a>
+            
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="search-input" placeholder="Search resources..." autocomplete="off">
+            </div>
+        </div>
+
+        <!-- 资源分类 -->
+        <div class="category-filter">
+            <button class="cat-btn active" data-category="all">ALL</button>
+            <button class="cat-btn" data-category="datasheet">DATASHEET</button>
+            <button class="cat-btn" data-category="tools">TOOLS</button>
+            <button class="cat-btn" data-category="code">CODE</button>
+        </div>
+    </header>
+
+    <main class="archive-container">
+        <div class="result-count">Found <span id="doc-count">0</span> resources</div>
+        <div id="document-list" class="doc-list">
+            <div class="loading-text">Loading Resource Stream...</div>
+        </div>
+    </main>
+
+    <script src="../static/js/resource.js"></script>
+</body>
+</html>

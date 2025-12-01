@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Gallery | 项目展示</title>
+    <!-- 引入网站图标 -->
+    <link rel="icon" type="image/svg+xml" href="../static/images/favicon.svg">
+    <!-- 引入字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- 引入图标 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 引入样式 (复用全局 + 专用样式) -->
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/project.css">
+</head>
+<body>
+
+    <!-- 动态背景容器 -->
+    <div class="circuit-bg">
+        <div class="line v-line" style="--delay: 1s; --left: 15%;"></div>
+        <div class="line v-line" style="--delay: 4s; --left: 85%;"></div>
+        <div class="line h-line" style="--delay: 3s; --top: 25%;"></div>
+        <div class="line h-line" style="--delay: 6s; --top: 75%;"></div>
+    </div>
+
+    <!-- 头部区域 -->
+    <header class="archive-header">
+        <div class="header-top">
+            <!-- 返回主页 -->
+            <a href="../index.html" class="back-home-btn">
+                <i class="fas fa-chevron-left"></i> <span class="logo-text">Main_System</span>
+            </a>
+            
+            <!-- 搜索框 -->
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="search-input" placeholder="Search projects..." autocomplete="off">
+            </div>
+        </div>
+
+        <!-- 分类筛选器 (Project Categories) -->
+        <div class="category-filter">
+            <button class="cat-btn active" data-category="all">ALL</button>
+            <button class="cat-btn" data-category="mcu">MCU</button>
+            <button class="cat-btn" data-category="linux">LINUX</button>
+            <button class="cat-btn" data-category="fpga">FPGA</button>
+            <button class="cat-btn" data-category="hardware">HARDWARE</button>
+        </div>
+    </header>
+
+    <!-- 列表容器 -->
+    <main class="archive-container">
+        <div class="result-count">Found <span id="doc-count">0</span> projects</div>
+        
+        <div id="document-list" class="doc-list">
+            <div class="loading-text">Loading Project Data...</div>
+        </div>
+    </main>
+
+    <!-- 引入 JS -->
+    <script src="../static/js/project.js"></script>
+</body>
+</html>
