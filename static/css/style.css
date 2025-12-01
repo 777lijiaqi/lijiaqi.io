@@ -640,3 +640,31 @@ a.card:hover .click-hint {
     99% { opacity: 1; clip-path: inset(50% 0 30% 0); transform: translate(1px, -1px); }
     100% { opacity: 0; transform: translate(0); }
 }
+
+
+/* --- 项目卡片文字高亮样式 --- */
+
+/* 风格 A：代码块风格 (适合强调技术名词，如 STM32, RTOS) */
+/* 特点：不换行，不破坏布局，像代码编辑器里的高亮 */
+.code-highlight {
+    font-family: var(--font-code); /* 使用代码字体 */
+    color: var(--accent);          /* 你的电路绿 */
+    background: rgba(16, 185, 129, 0.15); /* 淡淡的绿色背景 */
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    margin: 0 2px; /* 左右留一点空隙 */
+}
+
+/* 风格 B：霓虹重点风格 (适合强调一整句描述) */
+/* 特点：文字变亮，底部有光晕，不会撑大卡片 */
+.text-highlight {
+    color: #fff;
+    font-weight: bold;
+    background: linear-gradient(to right, rgba(14, 165, 233, 0.5), transparent);
+    padding-left: 5px;
+    border-left: 3px solid var(--primary); /* 左侧加个蓝条 */
+    display: inline-block; /* 保持行内块级，防止错位 */
+    line-height: 1.4;
+}
