@@ -103,8 +103,7 @@ nav ul {
     transform: translateX(0);
 }
 
-.nav-btn:hover::after,
-.nav-btn.active::after {
+.nav-btn:hover::after,{
     opacity: 1;
     transform: translateX(0);
 }
