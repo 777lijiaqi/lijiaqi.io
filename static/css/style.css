@@ -187,27 +187,106 @@ h1 {
     gap: 1rem;
 }
 
+/* --- 高端按钮通用样式 --- */
 .btn {
-    padding: 10px 25px;
-    border: none;
-    border-radius: 5px;
+    position: relative;
+    padding: 12px 32px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 50px; /* 圆角胶囊形状 */
     cursor: pointer;
-    font-weight: bold;
-    transition: transform 0.2s;
+    border: none;
+    outline: none;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 弹性过渡动画 */
+    font-family: var(--font-code); /* 使用代码字体 */
+    letter-spacing: 1px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px; /* 图标和文字的间距 */
+    overflow: hidden; /* 用于限制光效范围 */
+    z-index: 1;
 }
 
-.btn:active { transform: scale(0.95); }
-
-.primary-btn {
-    background: var(--primary);
-    color: white;
-    box-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
+/* 图标微调 */
+.btn i {
+    font-size: 1.1em;
 }
 
-.secondary-btn {
-    background: transparent;
-    border: 1px solid var(--border);
+/* 点击时的按压感 */
+.btn:active {
+    transform: scale(0.95) !important;
+}
+
+/* --- 样式 A：流光霓虹主按钮 (The Neon Glow) --- */
+.btn-glow {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #000; /* 深色背景配深色字，或者改成 #fff 配白字 */
+    box-shadow: 0 5px 15px rgba(14, 165, 233, 0.4); /* 初始投影 */
+}
+
+/* 悬停效果：上浮 + 强烈发光 */
+.btn-glow:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.6); /* 混合了绿色的光 */
+    color: #fff;
+}
+
+/* 添加一道扫光动画 (高级感来源) */
+.btn-glow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.4), 
+        transparent
+    );
+    transform: skewX(-25deg);
+    transition: 0.5s;
+    z-index: -1;
+}
+
+.btn-glow:hover::before {
+    left: 100%; /* 鼠标放上去，一道光扫过去 */
+}
+
+/* --- 样式 B：磨砂玻璃次按钮 (The Frost Glass) --- */
+.btn-glass {
+    background: rgba(255, 255, 255, 0.03); /* 极淡的背景 */
     color: var(--text-main);
+    border: 1px solid rgba(255, 255, 255, 0.1); /* 隐约的边框 */
+    backdrop-filter: blur(5px); /* 毛玻璃模糊 */
+}
+
+/* 悬停效果：边框变亮 + 文字变色 */
+.btn-glass:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--primary);
+    color: var(--primary);
+    box-shadow: 0 0 15px rgba(14, 165, 233, 0.2); /* 淡淡的蓝光 */
+    transform: translateY(-3px);
+}
+
+/* 装饰性的小方块 (Tech Bits) */
+.btn-glass::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    right: 20px;
+    width: 10px;
+    height: 2px;
+    background: var(--bg-color); /* 遮断边框，制造缺口感 */
+    transition: 0.3s;
+}
+
+.btn-glass:hover::after {
+    background: var(--primary); /* 悬停时缺口补齐并发光 */
+    width: 100%;
+    right: 0;
 }
 
 /* 右侧个人信息框 */
