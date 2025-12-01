@@ -308,17 +308,24 @@ gcc -E [C源文件] -o [输出的预处理文件]  # 输出指定名称的预处
         // 1. 处理返回按钮逻辑
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
-            const fromCat = urlParams.get('from'); // 获取链接里的 ?from=...
+            // 获取 ?from=... 参数
+            // decodeURIComponent 用于把 c%2Fcpp 变回 c/cpp (虽然浏览器通常会自动处理，但为了保险)
+            const fromCat = urlParams.get('from'); 
+            
+            const backBtn = document.getElementById('back-btn');
             
             if (fromCat) {
-                const backBtn = document.getElementById('back-btn');
-                // 动态修改 href，记得处理 c/cpp 的转码
+                // 如果有 from 参数，就用它
+                // 注意：这里再次 encodeURIComponent 是为了把它安全地放回 URL 里
                 backBtn.href = `../../archive/archive.html?cat=${encodeURIComponent(fromCat)}`;
-                console.log("Back link set to:", backBtn.href);
+                console.log("检测到来源，返回链接已设定为:", backBtn.href);
+            } else {
+                // 如果没有 from 参数（比如直接打开网址），默认回 ALL
+                backBtn.href = `../../archive/archive.html?cat=all`;
             }
         });
 
-        // 2. 目录滚动监听
+        // 2. 目录滚动监听 (保持不变)
         const sections = document.querySelectorAll('h2');
         const navLinks = document.querySelectorAll('.toc-list a');
 
