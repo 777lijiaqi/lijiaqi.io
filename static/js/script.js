@@ -13,7 +13,7 @@ const playlist = [
 ];
 
 // 打字机显示的文字
-const typingText = "Embedding Intelligence into Reality...";
+const typingText = "Embedding intelligence into reality...";
 
 
 /* --- 2. 核心逻辑代码 --- */
