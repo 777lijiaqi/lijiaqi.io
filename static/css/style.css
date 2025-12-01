@@ -140,54 +140,147 @@ nav ul {
 }
 
 /* --- 4. 下拉菜单样式 (Dropdown Menu) --- */
+/* --- 高端赛博朋克下拉菜单 (High-End HUD Menu) --- */
+
 .dropdown-menu {
     position: absolute;
-    top: 100%; /* 在按钮正下方 */
+    top: 100%;
     left: 50%;
-    transform: translateX(-50%) translateY(10px); /* 居中并稍微下移 */
+    /* 初始状态：下移且隐藏，利用 transform 居中 */
+    transform: translateX(-50%) translateY(20px);
     
-    min-width: 160px;
-    background: rgba(15, 23, 42, 0.95); /* 深色背景 */
-    border: 1px solid var(--primary);
-    backdrop-filter: blur(10px); /* 毛玻璃 */
-    padding: 10px 0;
+    min-width: 220px; /* 稍微宽一点，大气 */
+    padding: 15px 0;
     
-    /* 默认隐藏 */
+    /* 1. 背景：深色 + 极其微弱的网格纹理 */
+    background: 
+        linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.98)),
+        linear-gradient(rgba(14, 165, 233, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(14, 165, 233, 0.1) 1px, transparent 1px);
+    background-size: 100% 100%, 20px 20px, 20px 20px;
+    
+    /* 2. 边框与光影 */
+    border: 1px solid rgba(14, 165, 233, 0.2);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 
+                0 0 15px rgba(14, 165, 233, 0.1); /* 淡淡的蓝光晕 */
+    backdrop-filter: blur(12px);
+    
+    /* 3. 异形切割：右下角切掉一块 */
+    clip-path: polygon(
+        0 0, 100% 0, 
+        100% calc(100% - 20px), calc(100% - 20px) 100%, 
+        0 100%
+    );
+
+    /* 动画过渡 */
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s ease;
-    z-index: 1000;
-    
-    /* 赛博朋克边框装饰 */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    border-top: 3px solid var(--accent); /* 顶部有一条绿线 */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 2000;
 }
 
-/* 显示下拉菜单的触发器 */
+/* 顶部装饰亮条 (装饰用) */
+.menu-decoration-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+}
+
+/* 悬停显示 */
 .nav-item:hover .dropdown-menu {
     opacity: 1;
     visibility: visible;
-    transform: translateX(-50%) translateY(5px); /* 上浮一点 */
+    transform: translateX(-50%) translateY(10px); /* 带有回弹的上浮效果 */
 }
 
-/* 下拉菜单项 */
+/* --- 下拉菜单项样式 --- */
+
 .dropdown-item {
-    display: block;
-    padding: 10px 20px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 12px 25px;
     color: var(--text-muted);
     text-decoration: none;
     font-family: var(--font-code);
     font-size: 0.9rem;
-    transition: all 0.2s;
-    border-left: 2px solid transparent;
+    transition: all 0.3s;
+    overflow: hidden; /* 限制背景光效范围 */
+    border-left: 2px solid transparent; /* 左侧指示条占位 */
 }
 
-.dropdown-item:hover {
-    background: rgba(14, 165, 233, 0.1);
-    color: #fff;
-    border-left-color: var(--primary); /* 悬停时左侧出现亮条 */
-    padding-left: 25px; /* 稍微右移，制造动感 */
+/* 图标样式 */
+.item-icon {
+    margin-right: 12px;
+    font-size: 1rem;
+    color: #475569; /* 默认灰色 */
+    transition: 0.3s;
 }
+
+/* 文本样式 */
+.item-text {
+    position: relative;
+    z-index: 2;
+    transition: 0.3s;
+}
+
+/* --- 核心：悬停交互特效 --- */
+
+/* 1. 背景光扫过 */
+.dropdown-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0%; /* 初始宽度为0 */
+    height: 100%;
+    background: linear-gradient(90deg, rgba(14, 165, 233, 0.15), transparent);
+    transition: width 0.4s ease;
+    z-index: 1;
+}
+
+.dropdown-item:hover::before {
+    width: 100%; /* 悬停时拉满 */
+}
+
+/* 2. 状态变化 */
+.dropdown-item:hover {
+    color: #fff;
+    border-left-color: var(--primary); /* 左侧亮条出现 */
+    padding-left: 30px; /* 整体右移，产生动感 */
+}
+
+.dropdown-item:hover .item-icon {
+    color: var(--primary); /* 图标变蓝 */
+    transform: scale(1.1);
+    text-shadow: 0 0 8px var(--primary);
+}
+
+.dropdown-item:hover .item-text {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+/* 3. 装饰：右侧出现一个小箭头 */
+.dropdown-item::after {
+    content: '\f105'; /* FontAwesome 的右箭头编码 */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 20px;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: 0.3s;
+    color: var(--accent);
+}
+
+.dropdown-item:hover::after {
+    opacity: 1;
+    transform: translateX(0);
+}
+
 
 /* --- 通用板块布局 --- */
 .section {
