@@ -6,7 +6,7 @@ const documents = [
         desc: "深入理解 Makefile 编译原理、规则、伪目标及常用函数，掌握大型项目构建技巧。",
         tags: ["Build System", "GCC", "Automation"],
         icon: "fas fa-file-code",
-        link: "archive/Makefile学习.html" // 跳转链接
+        link: "archive/linux/Makefile学习.html" // 跳转链接
     },
     {
         title: "STM32 HAL库开发实战",
