@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
             desc: "基于 STM32H7 与 LwIP 协议栈，实现 MQTT/Modbus 多协议转换。",
             tags: ["STM32", "IoT", "LwIP"],
             icon: "fas fa-network-wired",
-            link: "../archive/stm32/gateway.html" // 假设指向归档中的项目文档
+            link: "../archive/stm32/gateway.html" 
         },
         {
             title: "液流称重自动升降仪",
@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentCategory = 'all';
     let currentSearch = '';
 
+    /* --- 2. 渲染函数 --- */
     function renderList(data) {
         listContainer.innerHTML = '';
         
@@ -60,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         data.forEach((item, index) => {
             const card = document.createElement('a');
-            // 动态生成 from 参数，方便返回
+            // 动态生成 from 参数
             const dynamicLink = `${item.link}?from=${encodeURIComponent(currentCategory)}`;
             
             card.href = dynamicLink;
@@ -83,6 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    /* --- 3. 筛选逻辑 --- */
     function filterProjects() {
         const filtered = projects.filter(item => {
             const itemCat = item.category.toLowerCase();
@@ -99,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
         renderList(filtered);
     }
 
+    /* --- 4. URL 更新逻辑 --- */
     function updateUrl(cat) {
         if (history.pushState) {
             const newUrl = window.location.pathname + `?cat=${encodeURIComponent(cat)}`;
@@ -106,12 +109,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    /* --- 5. 事件监听 --- */
     catBtns.forEach(btn => {
         btn.addEventListener('click', function() {
             catBtns.forEach(b => b.classList.remove('active'));
             this.classList.add('active');
+            
             currentCategory = this.getAttribute('data-category');
-            updateUrl(currentCategory);
+            
+            updateUrl(currentCategory); // 立即更新 URL
             filterProjects();
         });
     });
@@ -127,10 +133,11 @@ document.addEventListener('DOMContentLoaded', function() {
     styleSheet.innerText = `@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }`;
     document.head.appendChild(styleSheet);
 
-    // 初始化参数
+    /* --- 6. 初始化 --- */
     const urlParams = new URLSearchParams(window.location.search);
     const targetCategory = urlParams.get('cat') ? urlParams.get('cat').toLowerCase() : 'all';
 
+    console.log("Project Init:", targetCategory);
     currentCategory = targetCategory;
 
     catBtns.forEach(btn => {
