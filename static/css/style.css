@@ -634,3 +634,16 @@ a.card:hover .click-hint {
     /* 10% 到 95% 保持正常（静止期） */
     100% { clip-path: inset(0 0 0 0); transform: translate(0, 0); }
 }
+
+/* 默认暂停动画 */
+.glitch-text::before,
+.glitch-text::after {
+    /* ...之前的代码... */
+    animation-play-state: paused; /* 默认不播 */
+}
+
+/* 鼠标悬停时播放 */
+.glitch-text:hover::before,
+.glitch-text:hover::after {
+    animation-play-state: running;
+}
