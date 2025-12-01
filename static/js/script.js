@@ -1,47 +1,94 @@
-/* --- 1. 自定义配置区 (Modify This Area) --- */
+/* --- static/js/script.js --- */
 
-// 背景音乐播放列表 (可以添加 MP3 文件的 URL)
+/* --- 1. 配置区 --- */
 const playlist = [
-    {
-        title: "最重要的小事-五月天",
-        src: "static/music/最重要的小事_五月天.mp3" 
-    },
-    {
-        title: "步步-五月天",
-        src: "static/music/步步-五月天.mp3"
-    }
+    { title: "最重要的小事-五月天", src: "static/music/最重要的小事_五月天.mp3" },
+    { title: "步步-五月天", src: "static/music/步步-五月天.mp3" }
 ];
 
-// 打字机显示的文字
 const typingText = "Embedding intelligence into reality...";
 
-
-/* --- 2. 核心逻辑代码 --- */
+/* --- 2. 核心逻辑 --- */
 
 // --- 打字机效果 ---
 const typeWriterElement = document.getElementById('typewriter');
 let typeIndex = 0;
 
 function typeWriter() {
-    if (typeIndex < typingText.length) {
+    if (typeWriterElement && typeIndex < typingText.length) {
         typeWriterElement.innerHTML += typingText.charAt(typeIndex);
         typeIndex++;
         setTimeout(typeWriter, 100);
     }
 }
-// 页面加载后启动打字
 window.addEventListener('load', typeWriter);
 
-
-// --- 页面跳转与滚动 ---
+// --- 页面跳转与滚动 (关键修改：增加 Hash 更新) ---
 function scrollToSection(id) {
     const element = document.getElementById(id);
     if(element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+        // 1. 平滑滚动
+        const headerOffset = 80; // 导航栏高度补偿
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+        });
+
+        // 2. 手动更新 URL 参数 (Hash)
+        if(history.pushState) {
+            history.pushState(null, null, '#' + id);
+        }
     }
 }
 
-// 滚动监听 (动画效果)
+// --- 滚动监听 (Scroll Spy) & URL 自动更新 ---
+const sections = document.querySelectorAll('section');
+const navLinks = document.querySelectorAll('.nav-btn');
+
+window.addEventListener('scroll', () => {
+    let current = '';
+    
+    // 遍历板块确定当前位置
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        // -150 是为了提前一点触发
+        if (scrollY >= (sectionTop - 150)) {
+            current = section.getAttribute('id');
+        }
+    });
+
+    // 1. 导航栏高亮
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href').includes(current)) {
+            link.classList.add('active');
+        }
+    });
+
+    // 2. 【核心新增】滚动时静默更新 URL Hash
+    // 使用 replaceState 不会产生废弃的历史记录堆栈
+    if (current && window.location.hash !== '#' + current) {
+        if(history.replaceState) {
+            history.replaceState(null, null, '#' + current);
+        }
+    }
+});
+
+// --- 页面加载时处理 Hash 定位 (解决导航栏遮挡问题) ---
+window.addEventListener('DOMContentLoaded', () => {
+    if (window.location.hash) {
+        const id = window.location.hash.substring(1); // 去掉 #
+        setTimeout(() => {
+            scrollToSection(id);
+        }, 100); // 稍微延迟等待布局稳定
+    }
+});
+
+// --- 滚动监听 (动画效果) ---
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -52,7 +99,6 @@ const observer = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-
 // --- 音乐播放器逻辑 ---
 const audio = document.getElementById('bg-music');
 const playBtn = document.getElementById('play-btn');
@@ -61,101 +107,55 @@ const nextBtn = document.getElementById('next-btn');
 const muteBtn = document.getElementById('mute-btn');
 const songTitle = document.getElementById('song-title');
 
-let currentTrackIndex = 0;
-let isPlaying = false;
+if(audio && playBtn) {
+    let currentTrackIndex = 0;
+    let isPlaying = false;
 
-// 初始化播放器
-function loadTrack(index) {
-    audio.src = playlist[index].src;
-    songTitle.innerText = playlist[index].title;
-}
-
-// 播放音乐
-function playMusic() {
-    // 浏览器可能会拦截自动播放，需要用户交互捕获错误
-    audio.play().then(() => {
-        isPlaying = true;
-        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-    }).catch(error => {
-        console.log("等待用户交互以播放音乐");
-    });
-}
-
-// 暂停音乐
-function pauseMusic() {
-    audio.pause();
-    isPlaying = false;
-    playBtn.innerHTML = '<i class="fas fa-play"></i>';
-}
-
-// 切换静音
-muteBtn.addEventListener('click', () => {
-    audio.muted = !audio.muted;
-    if(audio.muted) {
-        muteBtn.innerHTML = '<i class="fas fa-volume-mute" style="color:#ff4d4d"></i>';
-    } else {
-        muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+    function loadTrack(index) {
+        audio.src = playlist[index].src;
+        songTitle.innerText = playlist[index].title;
     }
-});
 
-// 播放/暂停按钮点击
-playBtn.addEventListener('click', () => {
-    if (isPlaying) {
-        pauseMusic();
-    } else {
-        playMusic();
+    function playMusic() {
+        audio.play().then(() => {
+            isPlaying = true;
+            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        }).catch(error => { console.log("等待交互播放"); });
     }
-});
 
-// 下一首
-function nextTrack() {
-    currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
-    loadTrack(currentTrackIndex);
-    if(isPlaying) playMusic();
-}
+    function pauseMusic() {
+        audio.pause();
+        isPlaying = false;
+        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+    }
 
-// 上一首
-function prevTrack() {
-    currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
-    loadTrack(currentTrackIndex);
-    if(isPlaying) playMusic();
-}
-
-nextBtn.addEventListener('click', nextTrack);
-prevBtn.addEventListener('click', prevTrack);
-
-// 自动循环播放：当一首结束后自动播下一首
-audio.addEventListener('ended', nextTrack);
-
-// 初始化加载第一首
-loadTrack(currentTrackIndex);
-// 设置默认音量
-audio.volume = 0.5;
-
-
-// --- 导航栏滚动监听 (Scroll Spy) ---
-const sections = document.querySelectorAll('section');
-const navLinks = document.querySelectorAll('.nav-btn');
-
-window.addEventListener('scroll', () => {
-    let current = '';
-    
-    // 遍历所有板块，判断当前视口在哪里
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        // -150 是为了提前一点点触发高亮，体验更好
-        if (scrollY >= (sectionTop - 150)) {
-            current = section.getAttribute('id');
-        }
+    muteBtn.addEventListener('click', () => {
+        audio.muted = !audio.muted;
+        muteBtn.innerHTML = audio.muted ? 
+            '<i class="fas fa-volume-mute" style="color:#ff4d4d"></i>' : 
+            '<i class="fas fa-volume-up"></i>';
     });
 
-    // 移除所有 active，给当前对应的加 active
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        // 检查链接 href 是否包含当前板块 id
-        if (link.getAttribute('href').includes(current)) {
-            link.classList.add('active');
-        }
+    playBtn.addEventListener('click', () => {
+        isPlaying ? pauseMusic() : playMusic();
     });
-});
+
+    function nextTrack() {
+        currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+        loadTrack(currentTrackIndex);
+        if(isPlaying) playMusic();
+    }
+
+    function prevTrack() {
+        currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+        loadTrack(currentTrackIndex);
+        if(isPlaying) playMusic();
+    }
+
+    nextBtn.addEventListener('click', nextTrack);
+    prevBtn.addEventListener('click', prevTrack);
+    audio.addEventListener('ended', nextTrack);
+
+    loadTrack(currentTrackIndex);
+    audio.volume = 0.5;
+}
