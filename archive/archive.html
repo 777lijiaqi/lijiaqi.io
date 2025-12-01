@@ -39,13 +39,15 @@
             </div>
         </div>
 
-        <!-- 分类筛选器 (耦合卡片分类) -->
+        <!-- 分类筛选器 -->
         <div class="category-filter">
-            <button class="cat-btn active" data-category="ALL">ALL</button>
-            <button class="cat-btn" data-category="STM32">STM32</button>
-            <button class="cat-btn" data-category="LINUX">LINUX</button>
-            <button class="cat-btn" data-category="C/C++">C/C++</button>
+            <!-- value 统一使用小写，C/C++ 改为 cpp -->
+            <button class="cat-btn active" data-category="all">ALL</button>
+            <button class="cat-btn" data-category="stm32">STM32</button>
+            <button class="cat-btn" data-category="linux">LINUX</button>
+            <button class="cat-btn" data-category="c/cpp">C/C++</button>
         </div>
+        
     </header>
 
     <!-- 文档列表容器 -->
