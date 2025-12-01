@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         {
             title: "C语言指针详解",
-            category: "cpp",
+            category: "c/cpp",
             desc: "深度解析指针数组与内存管理。",
             tags: ["C/C++", "Memory"],
             icon: "fas fa-code",
