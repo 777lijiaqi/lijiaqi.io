@@ -28,44 +28,104 @@
 			        </li>
 			
 			        <!-- 2. 项目 (有下拉菜单) -->
-			        <li class="nav-item has-dropdown">
-			            <a href="#projects" class="nav-btn">
-			                <span class="btn-text">项目</span>
-			                <i class="fas fa-caret-down arrow-icon"></i> <!-- 倒三角 -->
-			            </a>
-			            <!-- 下拉菜单：列出具体的项目卡片 -->
-			            <div class="dropdown-menu">
-			                <!-- href 指向具体的详情页 -->
-			                <a href="archive/stm32/gateway.html" class="dropdown-item">智能网关</a>
-			                <a href="archive/hardware/foc.html" class="dropdown-item">FOC驱动板</a>
-			                <a href="archive/linux/dashboard.html" class="dropdown-item">Qt仪表盘</a>
-			            </div>
-			        </li>
+					<!-- 以“项目”为例，其他下拉菜单请参照修改 -->
+					<li class="nav-item has-dropdown">
+						
+					    <a href="#projects" class="nav-btn">
+					        <span class="btn-text">项目</span>
+					        <i class="fas fa-caret-down arrow-icon"></i>
+					    </a>
+					    
+					    <div class="dropdown-menu">
+					        <!-- 装饰用的顶部光条 -->
+					        <div class="menu-decoration-line"></div>
+					        
+					        <a href="archive/stm32/gateway.html" class="dropdown-item">
+					            <i class="fas fa-microchip item-icon"></i> <!-- 图标 -->
+					            <span class="item-text">智能网关</span>
+					        </a>
+							
+					        <a href="archive/hardware/foc.html" class="dropdown-item">
+					            <i class="fas fa-bolt item-icon"></i>
+					            <span class="item-text">FOC驱动板</span>
+					        </a>
+							
+					        <a href="archive/linux/dashboard.html" class="dropdown-item">
+					            <i class="fab fa-linux item-icon"></i>
+					            <span class="item-text">Qt仪表盘</span>
+					        </a>
+							
+					    </div>
+					</li>
 			
 			        <!-- 3. 知识库 (有下拉菜单) -->
 			        <li class="nav-item has-dropdown">
+						
 			            <a href="#knowledge" class="nav-btn">
 			                <span class="btn-text">知识库</span>
 			                <i class="fas fa-caret-down arrow-icon"></i>
 			            </a>
-			            <div class="dropdown-menu">
-			                <a href="archive/archive.html" class="dropdown-item">全部归档</a>
-			                <a href="archive/stm32/index.html" class="dropdown-item">STM32</a>
-			                <a href="archive/linux/index.html" class="dropdown-item">Linux</a>
-			            </div>
+						
+						<div class="dropdown-menu">
+					        <!-- 装饰用的顶部光条 -->
+					        <div class="menu-decoration-line"></div>
+					        
+					        <a href="archive/stm32/gateway.html" class="dropdown-item">
+					            <i class="fas fa-microchip item-icon"></i> <!-- 图标 -->
+					            <span class="item-text">STM32</span>
+					        </a>
+							
+					        <a href="archive/hardware/foc.html" class="dropdown-item">
+					            <i class="fas fa-bolt item-icon"></i>
+					            <span class="item-text">linux</span>
+					        </a>
+							
+					        <a href="archive/linux/dashboard.html" class="dropdown-item">
+					            <i class="fab fa-linux item-icon"></i>
+					            <span class="item-text">c语言</span>
+					        </a>
+
+						    <a href="archive/linux/dashboard.html" class="dropdown-item">
+					            <i class="fab fa-linux item-icon"></i>
+					            <span class="item-text">更多</span>
+					        </a>
+							
+					    </div>
 			        </li>
 			
 			        <!-- 4. 资源 (有下拉菜单) -->
 			        <li class="nav-item has-dropdown">
+						
 			            <a href="#resources" class="nav-btn">
-			                <span class="btn-text">资源</span>
+			                <span class="btn-text">资源链接</span>
 			                <i class="fas fa-caret-down arrow-icon"></i>
 			            </a>
-			            <div class="dropdown-menu">
-			                <a href="#" class="dropdown-item">GitHub仓库</a>
-			                <a href="#" class="dropdown-item">PCB工程文件</a>
-			                <a href="#" class="dropdown-item">开发工具包</a>
-			            </div>
+						
+						<div class="dropdown-menu">
+					        <!-- 装饰用的顶部光条 -->
+					        <div class="menu-decoration-line"></div>
+					        
+					        <a href="archive/stm32/gateway.html" class="dropdown-item">
+					            <i class="fas fa-microchip item-icon"></i> <!-- 图标 -->
+					            <span class="item-text">STM32外设驱动</span>
+					        </a>
+							
+					        <a href="archive/hardware/foc.html" class="dropdown-item">
+					            <i class="fas fa-bolt item-icon"></i>
+					            <span class="item-text">linux驱动程序</span>
+					        </a>
+							
+					        <a href="archive/linux/dashboard.html" class="dropdown-item">
+					            <i class="fab fa-linux item-icon"></i>
+					            <span class="item-text">linux应用源码</span>
+					        </a>
+
+						    <a href="archive/linux/dashboard.html" class="dropdown-item">
+					            <i class="fab fa-linux item-icon"></i>
+					            <span class="item-text">更多</span>
+					        </a>
+							
+					    </div>
 			        </li>
 			    </ul>
 			</nav>
