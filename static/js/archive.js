@@ -1,12 +1,12 @@
 /* --- 1. 文档数据源 (Database) --- */
 const documents = [
     {
-        title: "Makefile 构建指南",
+        title: "Makefile构建指南",
         category: "linux",
         desc: "深入理解 Makefile 编译原理、规则、伪目标及常用函数，掌握大型项目构建技巧。",
         tags: ["Build System", "GCC", "Automation"],
         icon: "fas fa-file-code",
-        link: "articles/makefile-note.html" // 跳转链接
+        link: "archive/Makefile学习.html" // 跳转链接
     },
     {
         title: "STM32 HAL库开发实战",
