@@ -1,4 +1,4 @@
-/* ¸´ÓÃ archive/project µÄÑùÊ½ */
+/* å¤ç”¨ archive/project çš„æ ·å¼ */
 
 .archive-header {
     background: rgba(11, 17, 32, 0.95);
@@ -33,8 +33,8 @@
     gap: 10px;
     transition: 0.3s;
     
-    /* --- ĞÂÔöÕâÒ»ĞĞ --- */
-    z-index: 10; /* Ìá¸ß²ã¼¶£¬·ÀÖ¹±»ËÑË÷¿òÕÚµ² */
+    /* --- æ–°å¢è¿™ä¸€è¡Œ --- */
+    z-index: 10; /* æé«˜å±‚çº§ï¼Œé˜²æ­¢è¢«æœç´¢æ¡†é®æŒ¡ */
 }
 .back-home-btn:hover {
     color: #fff;

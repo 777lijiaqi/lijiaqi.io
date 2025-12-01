@@ -3,28 +3,28 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log("Project.js: System Online.");
 
-    /* --- 1. ÏîÄ¿Êı¾İÔ´ --- */
+    /* --- 1. é¡¹ç›®æ•°æ®æº --- */
     const projects = [
         {
-            title: "»ùÓÚMODBUSĞ­ÒéµÄË®ÖÊ¼ì²âRTU",
+            title: "åŸºäºMODBUSåè®®çš„æ°´è´¨æ£€æµ‹RTU",
             category: "stm32",
-            desc: "»ùÓÚ STM32H7 Óë LwIP Ğ­ÒéÕ»£¬ÊµÏÖ MQTT/Modbus ¶àĞ­Òé×ª»»¡£",
+            desc: "åŸºäº STM32H7 ä¸ LwIP åè®®æ ˆï¼Œå®ç° MQTT/Modbus å¤šåè®®è½¬æ¢ã€‚",
             tags: ["STM32", "IoT", "LwIP"],
             icon: "fas fa-network-wired",
-            link: "../archive/stm32/gateway.html" // ¼ÙÉèÖ¸Ïò¹éµµÖĞµÄÏîÄ¿ÎÄµµ
+            link: "../archive/stm32/gateway.html" // å‡è®¾æŒ‡å‘å½’æ¡£ä¸­çš„é¡¹ç›®æ–‡æ¡£
         },
         {
-            title: "ÒºÁ÷³ÆÖØ×Ô¶¯Éı½µÒÇ",
+            title: "æ¶²æµç§°é‡è‡ªåŠ¨å‡é™ä»ª",
             category: "stm32",
-            desc: "»ùÓÚ´Å³¡¶¨Ïò¿ØÖÆËã·¨µÄ¸ß¾«¶ÈÎŞË¢µç»úÇı¶¯°åÉè¼Æ¡£",
+            desc: "åŸºäºç£åœºå®šå‘æ§åˆ¶ç®—æ³•çš„é«˜ç²¾åº¦æ— åˆ·ç”µæœºé©±åŠ¨æ¿è®¾è®¡ã€‚",
             tags: ["PCB", "Motor Control"],
             icon: "fas fa-bolt",
             link: "../archive/hardware/foc.html"
         },
         {
-            title: "¸ßËÙ¸ß¾«¶ÈADC²âÊÔ",
+            title: "é«˜é€Ÿé«˜ç²¾åº¦ADCæµ‹è¯•",
             category: "stm32",
-            desc: "IMX6ULL Æ½Ì¨³µÔØÒÇ±íÅÌ½çÃæ¿ª·¢£¬¼¯³É CAN ×ÜÏßÊı¾İ¶ÁÈ¡¡£",
+            desc: "IMX6ULL å¹³å°è½¦è½½ä»ªè¡¨ç›˜ç•Œé¢å¼€å‘ï¼Œé›†æˆ CAN æ€»çº¿æ•°æ®è¯»å–ã€‚",
             tags: ["Linux", "Qt", "CAN"],
             icon: "fab fa-linux",
             link: "../archive/linux/dashboard.html"
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             title: "other",
             category: "linux",
-            desc: "Ê¹ÓÃ Verilog ÊµÏÖµÄ Sobel ±ßÔµ¼ì²âÓ²¼ş¼ÓËÙ IP ºË¡£",
+            desc: "ä½¿ç”¨ Verilog å®ç°çš„ Sobel è¾¹ç¼˜æ£€æµ‹ç¡¬ä»¶åŠ é€Ÿ IP æ ¸ã€‚",
             tags: ["Verilog", "Zynq"],
             icon: "fas fa-microchip",
             link: "#"
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         data.forEach((item, index) => {
             const card = document.createElement('a');
-            // ¶¯Ì¬Éú³É from ²ÎÊı£¬·½±ã·µ»Ø
+            // åŠ¨æ€ç”Ÿæˆ from å‚æ•°ï¼Œæ–¹ä¾¿è¿”å›
             const dynamicLink = `${item.link}?from=${encodeURIComponent(currentCategory)}`;
             
             card.href = dynamicLink;
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
     styleSheet.innerText = `@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }`;
     document.head.appendChild(styleSheet);
 
-    // ³õÊ¼»¯²ÎÊı
+    // åˆå§‹åŒ–å‚æ•°
     const urlParams = new URLSearchParams(window.location.search);
     const targetCategory = urlParams.get('cat') ? urlParams.get('cat').toLowerCase() : 'all';
 

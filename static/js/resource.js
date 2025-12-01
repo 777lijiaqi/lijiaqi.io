@@ -3,28 +3,28 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log("Resource.js: System Online.");
 
-    /* --- 1. ×ÊÔ´Êı¾İÔ´ --- */
+    /* --- 1. èµ„æºæ•°æ®æº --- */
     const resources = [
         {
-            title: "STM32ÍâÉèÇı¶¯Ô´Âë",
+            title: "STM32å¤–è®¾é©±åŠ¨æºç ",
             category: "stm32",
-            desc: "ST ¹Ù·½Ó¢ÎÄ²Î¿¼ÊÖ²á£¬°üº¬¼Ä´æÆ÷¶¨ÒåÓëµçÆøÌØĞÔ¡£",
+            desc: "ST å®˜æ–¹è‹±æ–‡å‚è€ƒæ‰‹å†Œï¼ŒåŒ…å«å¯„å­˜å™¨å®šä¹‰ä¸ç”µæ°”ç‰¹æ€§ã€‚",
             tags: ["PDF", "Reference"],
             icon: "fas fa-file-pdf",
-            link: "#" // ÕâÀï¿ÉÒÔÌîÎÄ¼şÏÂÔØÁ´½Ó£¬Èç ../static/files/stm32.pdf
+            link: "#" // è¿™é‡Œå¯ä»¥å¡«æ–‡ä»¶ä¸‹è½½é“¾æ¥ï¼Œå¦‚ ../static/files/stm32.pdf
         },
         {
-            title: "linuxÇı¶¯³ÌĞò",
+            title: "linuxé©±åŠ¨ç¨‹åº",
             category: "linux",
-            desc: "Windows Æ½Ì¨ Modbus RTU/TCP µ÷ÊÔ¹¤¾ß£¬Ö§³ÖÖ÷´ÓÄ£Ê½¡£",
+            desc: "Windows å¹³å° Modbus RTU/TCP è°ƒè¯•å·¥å…·ï¼Œæ”¯æŒä¸»ä»æ¨¡å¼ã€‚",
             tags: ["Tool", "Debug"],
             icon: "fas fa-toolbox",
             link: "#"
         },
         {
-            title: "linuxÓ¦ÓÃÔ´Âë",
+            title: "linuxåº”ç”¨æºç ",
             category: "linux",
-            desc: "Í¨ÓÃµÄÔöÁ¿Ê½/Î»ÖÃÊ½ PID ¿ØÖÆËã·¨ÊµÏÖÄ£°å¡£",
+            desc: "é€šç”¨çš„å¢é‡å¼/ä½ç½®å¼ PID æ§åˆ¶ç®—æ³•å®ç°æ¨¡æ¿ã€‚",
             tags: ["Source Code", "Algorithm"],
             icon: "fas fa-code",
             link: "#"
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             title: "otherr",
             category: "all",
-            desc: "´Ó Bootloader µ½ÎÄ¼şÏµÍ³µÄÍêÕûÑ§Ï°Â·¾¶¹æ»®¡£",
+            desc: "ä» Bootloader åˆ°æ–‡ä»¶ç³»ç»Ÿçš„å®Œæ•´å­¦ä¹ è·¯å¾„è§„åˆ’ã€‚",
             tags: ["Guide", "Roadmap"],
             icon: "fas fa-map-signs",
             link: "#"
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="doc-desc">${item.desc}</div>
                     <div class="doc-tags">${tagsHtml}</div>
                 </div>
-                <!-- ×ÊÔ´Í¨³£ÊÇÏÂÔØ»òÌø×ª -->
+                <!-- èµ„æºé€šå¸¸æ˜¯ä¸‹è½½æˆ–è·³è½¬ -->
                 <div class="doc-arrow"><i class="fas fa-download"></i></div>
             `;
             listContainer.appendChild(card);
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
     styleSheet.innerText = `@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }`;
     document.head.appendChild(styleSheet);
 
-    // ³õÊ¼»¯
+    // åˆå§‹åŒ–
     const urlParams = new URLSearchParams(window.location.search);
     const targetCategory = urlParams.get('cat') ? urlParams.get('cat').toLowerCase() : 'all';
 
