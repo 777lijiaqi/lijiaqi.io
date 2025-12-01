@@ -1,19 +1,23 @@
 /* --- static/js/music.js --- */
-/* 增强版：带状态记忆与防中断优化的音乐控制器 */
+/* 全局音乐播放器：支持跨页面状态继承与路径自动修正 */
 
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // --- 1. 配置区 ---
+    console.log("Music Player: System Online.");
+
+    // --- 1. 播放列表配置 (文件名必须准确) ---
     const playlistData = [
         { title: "最重要的小事-五月天", file: "最重要的小事_五月天.mp3" },
         { title: "步步-五月天", file: "步步-五月天.mp3" }
     ];
 
-    // 获取路径前缀
+    // --- 2. 路径处理 (核心修复点) ---
+    // 检查 HTML 是否定义了 ROOT_PATH，如果没有定义，默认为 ./ (根目录)
     const rootPath = (typeof window.ROOT_PATH !== 'undefined') ? window.ROOT_PATH : './';
     const musicBasePath = rootPath + "static/music/";
 
-    // 获取元素
+    console.log("Current Music Path Base:", musicBasePath); // 调试日志
+
+    // --- 3. 获取 DOM ---
     const audio = document.getElementById('bg-music');
     const playBtn = document.getElementById('play-btn');
     const prevBtn = document.getElementById('prev-btn');
@@ -21,112 +25,123 @@ document.addEventListener('DOMContentLoaded', function() {
     const muteBtn = document.getElementById('mute-btn');
     const songTitle = document.getElementById('song-title');
 
+    // 如果当前页面没有播放器组件，直接退出
     if (!audio || !playBtn) return;
 
+    // --- 4. 状态变量 ---
     let currentTrackIndex = 0;
-    let isPlaying = false; // 内部状态标记
+    
+    // --- 5. 核心功能函数 ---
 
-    // --- 核心功能函数 ---
-
+    // 加载歌曲资源
     function loadTrack(index) {
-        audio.src = musicBasePath + playlistData[index].file;
-        songTitle.innerText = playlistData[index].title;
-        // 注意：这里不要立即 play，等待 loadedmetadata 事件
+        const targetSrc = musicBasePath + playlistData[index].file;
+        
+        // 只有当路径改变时才重新赋值 src，防止闪断
+        if (audio.src.indexOf(playlistData[index].file) === -1) {
+            audio.src = targetSrc;
+            songTitle.innerText = playlistData[index].title;
+        }
     }
 
-    // 尝试播放音乐 (兼容浏览器策略)
+    // 尝试播放 (处理浏览器拦截)
     function tryPlayMusic() {
         var playPromise = audio.play();
 
         if (playPromise !== undefined) {
             playPromise.then(_ => {
                 // 播放成功
-                isPlaying = true;
-                updatePlayBtnUI();
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                // 开始记录状态
+                localStorage.setItem('music_playing', 'true');
             }).catch(error => {
-                // 播放被阻止 (通常是因为页面刚加载完，用户还没点击)
-                console.log("自动播放被浏览器拦截 (这是正常现象，需用户点击):", error);
-                isPlaying = false; // 标记为未播放
-                updatePlayBtnUI();
+                // 播放被拦截 (这是正常现象)
+                console.log("Auto-play blocked by browser. Waiting for interaction.");
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                // 虽然被拦截，但我们标记为‘原本应该是播放状态’
+                // 用户点击任何地方后，我们可以尝试恢复（这里暂不实现太复杂的全局点击恢复，仅由用户点击播放键恢复）
             });
         }
     }
 
+    // 暂停
     function pauseMusic() {
         audio.pause();
-        isPlaying = false;
-        updatePlayBtnUI();
+        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+        localStorage.setItem('music_playing', 'false');
     }
 
-    function updatePlayBtnUI() {
-        if (isPlaying) {
+    // 更新按钮状态图标
+    function updatePlayIcon() {
+        if (!audio.paused) {
             playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-            // 可选：添加旋转动画
-            // document.getElementById('music-icon')?.classList.add('rotating');
         } else {
             playBtn.innerHTML = '<i class="fas fa-play"></i>';
         }
     }
 
-    // --- 状态记忆：保存与恢复 ---
+    // --- 6. 状态记忆：保存与恢复 ---
 
-    function saveState() {
-        // 只有当音乐确实在播放，或者用户意图是播放时，才保存 true
-        // 这里的 !audio.paused 是最准确的判断
-        localStorage.setItem('music_index', currentTrackIndex);
+    // 每一秒保存一次进度 (比 beforeunload 更可靠，防止崩溃丢失)
+    audio.addEventListener('timeupdate', () => {
         localStorage.setItem('music_time', audio.currentTime);
-        localStorage.setItem('music_playing', !audio.paused); // 关键：保存真实的播放状态
+    });
+
+    // 保存当前歌曲索引和音量
+    function saveConfig() {
+        localStorage.setItem('music_index', currentTrackIndex);
         localStorage.setItem('music_volume', audio.volume);
     }
 
-    function loadState() {
+    // 恢复状态 (页面加载时调用)
+    function restoreState() {
         const savedIndex = localStorage.getItem('music_index');
         const savedTime = localStorage.getItem('music_time');
         const savedStatus = localStorage.getItem('music_playing');
         const savedVolume = localStorage.getItem('music_volume');
 
-        // 1. 恢复歌曲索引
-        if (savedIndex !== null) currentTrackIndex = parseInt(savedIndex);
-        loadTrack(currentTrackIndex);
-
-        // 2. 恢复音量
+        // 1. 恢复音量
         if (savedVolume !== null) audio.volume = parseFloat(savedVolume);
+        else audio.volume = 0.5;
 
-        // 3. 【关键优化】等待音频元数据加载完，再恢复进度和播放
-        // 这样可以避免 "The element has no supported sources" 错误
+        // 2. 恢复歌曲
+        if (savedIndex !== null) currentTrackIndex = parseInt(savedIndex);
+        loadTrack(currentTrackIndex); // 设置 src
+
+        // 3. 恢复进度和播放状态
+        // 必须等待音频元数据加载完毕，才能设置 currentTime
         audio.addEventListener('loadedmetadata', function() {
             if (savedTime !== null) {
                 audio.currentTime = parseFloat(savedTime);
             }
             
-            // 4. 如果之前的状态是“正在播放”，则尝试自动续播
+            // 如果之前是播放状态，尝试续播
             if (savedStatus === 'true') {
                 tryPlayMusic();
             }
-        }, { once: true }); // 只执行一次，防止后续切歌时干扰
+        }, { once: true }); // 仅执行一次
     }
 
-    // --- 事件监听 ---
+    // --- 7. 事件监听 ---
 
-    // 页面关闭/刷新前保存
-    window.addEventListener('beforeunload', saveState);
-
-    // 按钮点击
     playBtn.addEventListener('click', () => {
         if (audio.paused) tryPlayMusic();
         else pauseMusic();
+        saveConfig();
     });
 
     prevBtn.addEventListener('click', () => {
         currentTrackIndex = (currentTrackIndex - 1 + playlistData.length) % playlistData.length;
         loadTrack(currentTrackIndex);
-        // 切歌时，我们要等到 loadedmetadata 后自动播放，或者手动触发
+        saveConfig();
+        // 切歌后，等待加载完自动播放
         audio.addEventListener('loadedmetadata', () => tryPlayMusic(), { once: true });
     });
 
     nextBtn.addEventListener('click', () => {
         currentTrackIndex = (currentTrackIndex + 1) % playlistData.length;
         loadTrack(currentTrackIndex);
+        saveConfig();
         audio.addEventListener('loadedmetadata', () => tryPlayMusic(), { once: true });
     });
 
@@ -140,9 +155,10 @@ document.addEventListener('DOMContentLoaded', function() {
     audio.addEventListener('ended', () => {
         currentTrackIndex = (currentTrackIndex + 1) % playlistData.length;
         loadTrack(currentTrackIndex);
+        saveConfig();
         audio.addEventListener('loadedmetadata', () => tryPlayMusic(), { once: true });
     });
 
-    // --- 启动 ---
-    loadState();
+    // --- 8. 启动 ---
+    restoreState();
 });
