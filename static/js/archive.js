@@ -86,16 +86,20 @@ function renderList(data) {
 const searchInput = document.getElementById('search-input');
 const catBtns = document.querySelectorAll('.cat-btn');
 
+// 定义全局变量 (必须用 let，因为它们会变)
 let currentCategory = 'all';
 let currentSearch = '';
 
 // 核心过滤函数
 function filterDocuments() {
+    console.log("正在筛选 -> 分类:", currentCategory, " 关键词:", currentSearch); // 调试日志
+
     const filtered = documents.filter(doc => {
-        // 1. 匹配分类
-        const matchCat = currentCategory === 'all' || doc.category === currentCategory;
+        // 1. 匹配分类 (如果是 all 则匹配所有)
+        const matchCat = (currentCategory === 'ALL') || (doc.category === currentCategory);
+        
         // 2. 匹配搜索关键词 (标题或描述)
-        const term = currentSearch.toLowerCase();
+        const term = currentSearch.toLowerCase().trim();
         const matchSearch = doc.title.toLowerCase().includes(term) || 
                             doc.desc.toLowerCase().includes(term);
         
@@ -105,37 +109,43 @@ function filterDocuments() {
     renderList(filtered);
 }
 
-// 监听搜索框输入
+// --- 关键修复点：按钮点击监听 ---
+catBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        // 1. 视觉交互：移除其他按钮的高亮，点亮当前按钮
+        catBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // 2. 数据更新：获取按钮上的 data-category 属性
+        const newCategory = btn.getAttribute('data-category');
+        currentCategory = newCategory;
+
+        // 3. ⚠️ 核心步骤：重新执行筛选函数！
+        // 之前可能漏掉了这一步，导致点击后界面不刷新
+        filterDocuments();
+    });
+});
+
+// --- 搜索框输入监听 ---
 searchInput.addEventListener('input', (e) => {
     currentSearch = e.target.value;
     filterDocuments();
 });
 
-// 监听分类按钮点击
-catBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        // 移除其他按钮激活状态
-        catBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        // 更新当前分类
-        currentCategory = btn.getAttribute('data-category');
-        filterDocuments();
-    });
-});
-
-// 注入动画 CSS
-const styleSheet = document.createElement("style");
-styleSheet.innerText = `
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-`;
-document.head.appendChild(styleSheet);
+// 注入动画 CSS (防止多次注入)
+if (!document.getElementById('dynamic-style')) {
+    const styleSheet = document.createElement("style");
+    styleSheet.id = 'dynamic-style';
+    styleSheet.innerText = `
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    `;
+    document.head.appendChild(styleSheet);
+}
 
 /* --- 4. 初始化与自动筛选 (Auto Filter on Load) --- */
-
 function init() {
     // 1. 获取 URL 中的参数 (例如 ?cat=stm32)
     const urlParams = new URLSearchParams(window.location.search);
@@ -143,25 +153,22 @@ function init() {
 
     // 2. 如果 URL 里有分类参数，且不是 'all'
     if (targetCategory && targetCategory !== 'ALL') {
-        // 更新当前的全局分类变量
         currentCategory = targetCategory;
 
-        // 3. 自动高亮对应的顶部按钮
+        // 同步顶部按钮的高亮状态
         catBtns.forEach(btn => {
-            btn.classList.remove('active'); // 移除默认的 ALL 高亮
+            btn.classList.remove('active');
             if (btn.getAttribute('data-category') === targetCategory) {
-                btn.classList.add('active'); // 高亮目标分类
+                btn.classList.add('active');
             }
         });
-
-        // 4. 执行筛选逻辑
-        filterDocuments();
     } else {
-        // 5. 如果没有参数，或者参数是 all，则显示全部
         currentCategory = 'ALL';
-        renderList(documents);
     }
+
+    // 3. 执行一次初始筛选
+    filterDocuments();
 }
 
-// 执行初始化
+// 启动
 init();
