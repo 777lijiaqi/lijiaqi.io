@@ -1,36 +1,36 @@
 /* --- static/js/archive.js --- */
 
-// 等待 HTML 加载完成后再执行 JS (这是关键修复！！！)
 document.addEventListener('DOMContentLoaded', function() {
-    
-    console.log("Archive.js: 页面加载完成，脚本启动...");
+    console.log("Archive.js: System Online.");
 
-    /* --- 1. 文档数据源 --- */
+    /* --- 1. 文档数据源 (Database) --- */
+    // 关键修改：category 字段全部改为小写，C/C++ 改为 cpp
     const documents = [
         {
             title: "Makefile 构建指南",
-            category: "LINUX",
+            category: "linux",
             desc: "深入理解 Makefile 编译原理、规则、伪目标及常用函数。",
             tags: ["Makefile", "GCC"],
             icon: "fas fa-file-code",
-            link: "linux/Makefile学习.html"
+            link: "../archive/linux/Makefile学习.html" // 注意：这里通常需要相对 archive.html 的路径，或者绝对路径
         },
         {
             title: "STM32 HAL库开发",
-            category: "STM32",
+            category: "stm32",
             desc: "基于 STM32H7 的外设驱动开发。",
             tags: ["Embedded", "ARM"],
             icon: "fas fa-microchip",
-            link: "stm32/index.html"
+            link: "../archive/stm32/index.html"
         },
         {
             title: "C语言指针详解",
-            category: "C/C++",
+            category: "cpp",
             desc: "深度解析指针数组与内存管理。",
             tags: ["C/C++", "Memory"],
             icon: "fas fa-code",
-            link: "lang/pointer.html"
+            link: "../archive/lang/pointer.html"
         }
+        // 您可以在此继续添加更多...
     ];
 
     /* --- 2. 获取 DOM 元素 --- */
@@ -39,24 +39,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('search-input');
     const catBtns = document.querySelectorAll('.cat-btn');
 
-    // 调试：检查是否找到了按钮
-    if (catBtns.length === 0) {
-        console.error("严重错误：JS 没有找到 class 为 'cat-btn' 的按钮！请检查 archive.html 的写法。");
-        return; // 找不到按钮就停止运行
-    } else {
-        console.log(`成功找到 ${catBtns.length} 个分类按钮。`);
-    }
-
-    // 全局状态变量
+    // 全局状态
     let currentCategory = 'all';
     let currentSearch = '';
 
     /* --- 3. 渲染函数 --- */
     function renderList(data) {
-        listContainer.innerHTML = ''; // 清空
+        listContainer.innerHTML = '';
         
         if (data.length === 0) {
-            listContainer.innerHTML = `<div style="text-align:center; color:#64748b; padding:2rem;">未找到相关文档 / No Data</div>`;
+            listContainer.innerHTML = `<div style="text-align:center; color:#64748b; padding:2rem; font-family:'Fira Code'">SYSTEM: No Data Found.</div>`;
             if(countLabel) countLabel.innerText = 0;
             return;
         }
@@ -65,9 +57,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         data.forEach((doc, index) => {
             const card = document.createElement('a');
-            card.href = doc.link;
+            // 修正链接逻辑：如果 doc.link 是相对路径，确保它能正确跳转
+            card.href = doc.link; 
             card.className = 'doc-item';
-            // 简单的淡入动画
             card.style.opacity = '0';
             card.style.animation = `fadeIn 0.5s ease forwards ${index * 0.1}s`;
 
@@ -88,40 +80,40 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /* --- 4. 筛选核心逻辑 --- */
     function filterDocuments() {
-        console.log(`执行筛选 -> 分类: [${currentCategory}] | 关键词: [${currentSearch}]`);
-
         const filtered = documents.filter(doc => {
-            const matchCat = (currentCategory === 'all') || (doc.category === currentCategory);
+            // 统一转小写比较，确保匹配
+            const docCat = doc.category.toLowerCase();
+            const curCat = currentCategory.toLowerCase();
+            
+            // 匹配分类
+            const matchCat = (curCat === 'all') || (docCat === curCat);
+            
+            // 匹配搜索
             const term = currentSearch.toLowerCase().trim();
             const matchSearch = doc.title.toLowerCase().includes(term) || 
                                 doc.desc.toLowerCase().includes(term);
+            
             return matchCat && matchSearch;
         });
 
         renderList(filtered);
     }
 
-    /* --- 5. 事件监听绑定 --- */
-    
-    // 按钮点击事件
+    /* --- 5. 事件监听 --- */
     catBtns.forEach(btn => {
         btn.addEventListener('click', function() {
-            console.log("按钮被点击:", this.innerText);
-
-            // 1. 移除所有 active
+            // UI 更新
             catBtns.forEach(b => b.classList.remove('active'));
-            // 2. 激活当前
             this.classList.add('active');
             
-            // 3. 更新状态
+            // 状态更新 (获取 HTML 里的 data-category)
             currentCategory = this.getAttribute('data-category');
             
-            // 4. 重新筛选
+            // 触发筛选
             filterDocuments();
         });
     });
 
-    // 搜索框输入事件
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
             currentSearch = e.target.value;
@@ -131,30 +123,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 注入动画 CSS
     const styleSheet = document.createElement("style");
-    styleSheet.innerText = `
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    `;
+    styleSheet.innerText = `@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }`;
     document.head.appendChild(styleSheet);
 
     /* --- 6. 初始化 (处理 URL 参数) --- */
     const urlParams = new URLSearchParams(window.location.search);
-    const targetCategory = urlParams.get('cat');
+    // 获取参数并转小写
+    const targetCategory = urlParams.get('cat') ? urlParams.get('cat').toLowerCase() : 'all';
 
-    if (targetCategory && targetCategory !== 'all') {
-        console.log("检测到 URL 参数:", targetCategory);
-        currentCategory = targetCategory;
-        // 同步按钮高亮
-        catBtns.forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.getAttribute('data-category') === targetCategory) {
-                btn.classList.add('active');
-            }
-        });
-    }
+    console.log("初始化筛选参数:", targetCategory);
 
-    // 首次渲染
+    // 设置当前分类
+    currentCategory = targetCategory;
+
+    // 高亮对应按钮
+    catBtns.forEach(btn => {
+        btn.classList.remove('active');
+        // 比较 data-category (转小写后比较)
+        if (btn.getAttribute('data-category').toLowerCase() === targetCategory) {
+            btn.classList.add('active');
+        }
+    });
+
+    // 执行首次渲染
     filterDocuments();
 });
