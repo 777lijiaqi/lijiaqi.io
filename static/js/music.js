@@ -7,8 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- 1. 播放列表配置 (文件名必须准确) ---
     const playlistData = [
         { title: "最重要的小事-五月天", file: "最重要的小事_五月天.mp3" },
-        { title: "步步-五月天", file: "步步-五月天.mp3" },
-        { title: "OAOA-五月天", file: "OAOA-五月天.mp3" }
+        { title: "步步-五月天", file: "步步-五月天.mp3" }
     ];
 
     // --- 2. 路径处理 (核心修复点) ---
