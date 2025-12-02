@@ -23,12 +23,12 @@ document.addEventListener('DOMContentLoaded', function() {
             link: "stm32/index.html"
         },
         {
-            title: "C语言指针详解",
+            title: "C/C++条件编译",
             category: "c/cpp", // 对应 c/cpp
             desc: "深度解析指针数组与内存管理。",
-            tags: ["C/C++", "Memory"],
+            tags: ["C/C++", "条件编译"],
             icon: "fas fa-code",
-            link: "lang/pointer.html"
+            link: "c语言/条件编译.html"
         },
         {
             title: "Altium Designer 实战",
