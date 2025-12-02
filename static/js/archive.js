@@ -9,10 +9,10 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             title: "Makefile 构建指南",
             category: "linux", 
-            desc: "深入理解 Makefile 编译原理、规则、伪目标及常用函数。",
+            desc: "深入理解GCC Makefile 编译原理、规则、伪目标及常用函数。",
             tags: ["Makefile", "GCC"],
             icon: "fas fa-file-code",
-            link: "linux/Makefile学习.html" 
+            link: "linux/Makefile教程.html" 
         },
         {
             title: "HAL库精准延时",
