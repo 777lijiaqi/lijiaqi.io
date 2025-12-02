@@ -505,6 +505,10 @@ void delay_s(uint16_t tim_s);                       //秒级延时
         // 1. 定义根路径 (相对于当前文件是两级: ../../)
         var ROOT_PATH = '../../';
 
+            <!-- 引入音乐脚本 (必须在 ROOT_PATH 定义之后) -->
+        <script src="../../static/js/music.js"></script>
+
+        <script src="../../static/js/comment.js"></script>
         // 2. 处理返回按钮逻辑 (读取 URL 中的 from 参数)
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -546,9 +550,5 @@ void delay_s(uint16_t tim_s);                       //秒级延时
         });
     </script>
 
-    <!-- 引入音乐脚本 (必须在 ROOT_PATH 定义之后) -->
-    <script src="../../static/js/music.js"></script>
-
-    <script src="../../static/js/comment.js"></script>
 </body>
 </html>
