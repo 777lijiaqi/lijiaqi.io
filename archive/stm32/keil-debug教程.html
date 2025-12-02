@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keil Debug 调试指南 | STM32</title>
+    <!-- 引入网站图标 -->
+    <link rel="icon" type="image/svg+xml" href="../../static/images/favicon.svg">
+    <!-- 引入字体 -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Orbitron:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <!-- 引入图标 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 代码高亮 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+    <!-- 引入全局样式 -->
+    <link rel="stylesheet" href="../../static/css/style.css">
+
+    <style>
+        /* --- 本地覆盖样式 (文章专用) --- */
+        body {
+            padding-top: 80px;
+        }
+
+        /* 顶部导航栏 */
+        .article-header {
+            background: rgba(11, 17, 32, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 5%;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: var(--primary);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            color: #fff;
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        /* 布局容器 */
+        .layout {
+            display: flex;
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+            gap: 40px;
+        }
+
+        /* 文章内容区域 */
+        article {
+            flex: 1;
+            background: rgba(30, 41, 59, 0.6);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+        }
+
+        /* 侧边目录栏 */
+        aside {
+            flex: 0 0 250px;
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+            display: none;
+        }
+
+        @media (min-width: 1100px) {
+            aside {
+                display: block;
+            }
+        }
+
+        /* --- 文章内部排版 --- */
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #fff;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            border-left: 5px solid var(--primary);
+            padding-left: 15px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            margin-bottom: 0.8rem;
+            color: #fff;
+            font-family: 'Fira Code', monospace;
+        }
+
+        h4,
+        h5 {
+            color: var(--text-muted);
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        p,
+        li {
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            font-family: 'Segoe UI', sans-serif;
+            line-height: 1.8;
+            text-align: justify;
+        }
+
+        strong {
+            color: var(--accent);
+        }
+
+        /* 键盘按键样式 */
+        kbd {
+            background-color: #333;
+            border-radius: 3px;
+            border: 1px solid #b4b4b4;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
+            color: #fff;
+            display: inline-block;
+            font-size: .85em;
+            font-weight: 700;
+            line-height: 1;
+            padding: 2px 4px;
+            white-space: nowrap;
+            font-family: sans-serif;
+        }
+
+        /* 目录高亮 */
+        .toc-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-list li {
+            margin-bottom: 10px;
+        }
+
+        .toc-list a {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: 0.2s;
+            display: block;
+            border-left: 2px solid transparent;
+            padding-left: 10px;
+            text-decoration: none;
+        }
+
+        .toc-list a:hover,
+        .toc-list a.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+        }
+
+        /* 签名 */
+        .signature {
+            text-align: right;
+            margin-top: 4rem;
+            color: var(--text-muted);
+            font-style: italic;
+            border-top: 1px solid var(--border);
+            padding-top: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 动态背景容器 -->
+    <div class="circuit-bg">
+        <div class="line v-line" style="--delay: 0s; --left: 10%;"></div>
+        <div class="line v-line" style="--delay: 5s; --left: 90%;"></div>
+        <div class="line h-line" style="--delay: 2s; --top: 20%;"></div>
+        <div class="line h-line" style="--delay: 7s; --top: 80%;"></div>
+    </div>
+
+    <!-- 顶部导航 -->
+    <header class="article-header">
+        <a id="back-btn" href="../../archive/archive.html?cat=all" class="back-btn">
+            <i class="fas fa-chevron-left"></i> <span>Back to Archive</span>
+        </a>
+        <div style="font-family: 'Fira Code'; color: var(--text-muted); font-size: 0.9rem;">
+            system.debug(mode=on)
+        </div>
+    </header>
+
+    <div class="layout">
+        <!-- 侧边目录 (TOC) -->
+        <aside>
+            <div class="toc-title">DIRECTORY</div>
+            <ul class="toc-list">
+                <li><a href="#sec-1">一、进入调试模式</a></li>
+                <li><a href="#sec-2">二、基本调试控制</a></li>
+                <li><a href="#sec-3">三、查看变量 (Watch)</a></li>
+                <li><a href="#sec-4">四、查看外设寄存器 (System Viewer)</a></li>
+                <li><a href="#sec-5">五、查看内存与内核寄存器</a></li>
+                <li><a href="#sec-6">六、高级技巧 (Call Stack)</a></li>
+            </ul>
+        </aside>
+
+        <!-- 文章内容 -->
+        <article>
+            <h1>Keil MDK 深度调试指南</h1>
+
+            <p>
+                编写代码只是开发过程的一半，另一半则是<strong>调试 (Debug)</strong>。Keil MDK
+                提供了非常强大的调试功能，能够帮助我们深入单片机内部，查看每一个寄存器、每一个变量的实时状态。掌握这些技巧，能让你的 Bug 修复效率提升十倍。
+            </p>
+
+            <h2 id="sec-1">一、进入调试模式</h2>
+            <p>
+                在进行硬件调试前，请确保你的仿真器（ST-Link/J-Link）已连接，并且在 <strong>Options for Target -> Debug</strong> 中选择了正确的调试器。
+            </p>
+            <p>
+                点击工具栏上的红色 <strong>"d"</strong> 图标，或者按下快捷键 <kbd>Ctrl</kbd> + <kbd>F5</kbd>，即可进入调试模式。
+            </p>
+            <p>
+                进入后，界面会发生变化，出现寄存器窗口、反汇编窗口等。此时程序默认会在 <code>main()</code> 函数的第一行停下来，等待你的指令。
+            </p>
+
+            <h2 id="sec-2">二、基本调试控制</h2>
+            <p>调试最常用的就是控制程序的运行流程。工具栏左上角有一排控制按钮：</p>
+
+            <ul>
+                <li><strong>Reset (复位)</strong>：复位单片机，程序回到起始点。</li>
+                <li><strong>Run (全速运行)</strong> <kbd>F5</kbd>：程序开始全速执行，直到遇到断点。</li>
+                <li><strong>Stop (停止)</strong>：暂停程序运行。</li>
+                <li><strong>Step (单步调试)</strong> <kbd>F11</kbd>：执行当前行代码。如果当前行是函数调用，会<strong>进入</strong>函数内部。</li>
+                <li><strong>Step Over (单步跳过)</strong>
+                    <kbd>F10</kbd>：执行当前行代码。如果当前行是函数调用，会直接执行完该函数，<strong>不进入</strong>内部。这是最常用的单步方式。</li>
+                <li><strong>Step Out (跳出函数)</strong>：执行完当前函数剩余的代码，返回到调用该函数的地方。</li>
+                <li><strong>Run to Cursor Line (运行到光标处)</strong>：右键点击某一行代码选择此项，程序会运行到该行并暂停。</li>
+            </ul>
+
+            <h2 id="sec-3">三、查看变量 (Watch Window)</h2>
+            <p>这是调试中最常用的功能，用于实时查看全局变量或局部变量的值。</p>
+
+            <h3>1. 添加变量</h3>
+            <p>
+                在代码窗口中，<strong>选中</strong>你想查看的变量名，右键点击选择 <strong>"Add 'xxx' to... -> Watch 1"</strong>。
+                或者直接在下方的 <strong>Watch 1</strong> 窗口中双击空白处，手动输入变量名。
+            </p>
+
+            <h3>2. 实时刷新</h3>
+            <p>
+                默认情况下，只有当程序暂停时，变量值才会更新。如果你希望在程序全速运行时也能看到变量变化（需要仿真器支持，如 J-Link 或 ST-Link V2 以上），可以勾选 <strong>View ->
+                    Periodic Window Update</strong>。
+            </p>
+
+            <h3>3. 修改变量值</h3>
+            <p>
+                在 Watch 窗口中，你不仅可以看，还可以<strong>改</strong>。单击变量的值，输入新数值并回车，单片机内存中的值就会被立即修改。这在测试临界条件（如模拟传感器超限）时非常有用。
+            </p>
+
+            <h2 id="sec-4">四、查看外设寄存器 (System Viewer)</h2>
+            <p>
+                想知道 GPIO 到底有没有配置成推挽输出？定时器的 ARR 寄存器值对不对？不需要查代码，直接看寄存器。
+            </p>
+            <ol>
+                <li>点击菜单栏的 <strong>Peripherals</strong>。</li>
+                <li>选择 <strong>System Viewer</strong>。</li>
+                <li>选择你想查看的外设（例如 <code>GPIO -> GPIOA</code>）。</li>
+            </ol>
+            <p>
+                右侧会出现一个窗口，列出该外设的所有寄存器及其当前的配置值。你甚至可以直接在这里勾选/取消勾选某些位，实时控制硬件（例如点亮 LED）。
+            </p>
+
+            <h2 id="sec-5">五、查看内存与内核寄存器</h2>
+
+            <h3>1. Memory Window (内存窗口)</h3>
+            <p>
+                如果你需要查看数组、结构体或者一段连续内存的内容，使用 Memory 窗口。
+                在地址栏输入变量名（如 <code>&my_buffer</code>）或绝对地址（如 <code>0x20000000</code>），即可查看该地址下的原始数据（Hex 格式）。
+            </p>
+
+            <h3>2. CPU Registers (内核寄存器)</h3>
+            <p>
+                左侧的 <strong>Registers</strong> 窗口显示了 ARM 内核寄存器的状态：
+            </p>
+            <ul>
+                <li><strong>R0 - R15</strong>：通用寄存器。</li>
+                <li><strong>SP (Stack Pointer)</strong>：栈指针，指向当前栈顶。</li>
+                <li><strong>LR (Link Register)</strong>：连接寄存器，保存函数返回地址。</li>
+                <li><strong>PC (Program Counter)</strong>：程序计数器，指向当前正在执行的指令地址。</li>
+            </ul>
+            <p>
+                当程序跑飞（HardFault）时，查看 LR 和 PC 是定位问题的关键。
+            </p>
+
+            <h2 id="sec-6">六、高级技巧 (Call Stack)</h2>
+            <p>
+                <strong>Call Stack + Locals</strong> 窗口可以显示当前的函数调用关系（调用栈）。
+            </p>
+            <p>
+                例如：<code>main()</code> -> <code>sensor_init()</code> -> <code>i2c_write()</code>。
+                如果你在 <code>i2c_write</code> 中打了断点，Call Stack 会清晰地展示这一条调用链。右键点击某个上层函数，选择 <strong>Show Caller
+                    Code</strong>，可以快速跳转到调用它的地方。这对于理清复杂的逻辑流非常有帮助。
+            </p>
+
+            <div class="signature">
+                <p>Author：李家琦</p>
+                <p>Date: 2025/12/02</p>
+            </div>
+
+        </article>
+    </div>
+
+    <!-- 音乐播放器挂载 -->
+    <div class="music-player-widget">
+        <div class="player-controls">
+            <button id="prev-btn" title="Previous"><i class="fas fa-step-backward"></i></button>
+            <button id="play-btn" title="Play/Pause"><i class="fas fa-play"></i></button>
+            <button id="next-btn" title="Next"><i class="fas fa-step-forward"></i></button>
+            <button id="mute-btn" title="Mute"><i class="fas fa-volume-up"></i></button>
+        </div>
+        <div class="song-info">
+            <span id="song-title">Loading...</span>
+        </div>
+        <audio id="bg-music"></audio>
+    </div>
+
+    <!-- 引入脚本库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+
+    <!-- 核心逻辑 -->
+    <script>
+        // 1. 定义根路径
+        var ROOT_PATH = '../../';
+
+        // 2. 处理返回按钮逻辑
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromCat = urlParams.get('from');
+            const backBtn = document.getElementById('back-btn');
+
+            if (fromCat) {
+                backBtn.href = `../../archive/archive.html?cat=${encodeURIComponent(fromCat)}`;
+            } else {
+                backBtn.href = `../../archive/archive.html?cat=all`;
+            }
+        });
+
+        // 3. 目录滚动监听
+        const sections = document.querySelectorAll('h2, h3');
+        const navLinks = document.querySelectorAll('.toc-list a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            if (current) {
+                navLinks.forEach(a => {
+                    a.classList.remove('active');
+                    if (a.getAttribute('href').includes(current)) {
+                        a.classList.add('active');
+                    }
+                });
+            }
+        });
+    </script>
+
+    <!-- 引入音乐脚本 -->
+    <script src="../../static/js/music.js"></script>
+    <script src="../../static/js/comment.js"></script>
+</body>
+
+</html>
