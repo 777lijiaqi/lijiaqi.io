@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             title: "HAL库精准延时",
             category: "stm32",
-            desc: "基于 STM32H7 的外设驱动开发。",
-            tags: ["Embedded", "ARM"],
+            desc: "基于HAL库定时器外设延时驱动开发。",
+            tags: ["HAL", "TIM" , "Delay"],
             icon: "fas fa-microchip",
             link: "stm32/HAL库精准延时.html"
         },
