@@ -15,12 +15,12 @@ document.addEventListener('DOMContentLoaded', function() {
             link: "linux/Makefile学习.html" 
         },
         {
-            title: "STM32 HAL库开发",
+            title: "HAL库精准延时",
             category: "stm32",
             desc: "基于 STM32H7 的外设驱动开发。",
             tags: ["Embedded", "ARM"],
             icon: "fas fa-microchip",
-            link: "stm32/index.html"
+            link: "stm32/HAL库精准延时.html"
         },
         {
             title: "C/C++条件编译",
