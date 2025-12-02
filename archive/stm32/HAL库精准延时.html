@@ -1,1 +1,553 @@
-!
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>定时器精准延时 | STM32</title>
+    <!-- 引入网站图标 -->
+    <link rel="icon" type="image/svg+xml" href="../../static/images/favicon.svg">
+    <!-- 引入字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- 引入图标 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 代码高亮 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    
+    <!-- 引入全局样式 -->
+    <link rel="stylesheet" href="../../static/css/style.css">
+
+    <style>
+        /* --- 本地覆盖样式 (文章专用) --- */
+        body {
+            padding-top: 80px;
+        }
+
+        /* 顶部导航栏 (复用 archive 风格) */
+        .article-header {
+            background: rgba(11, 17, 32, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 5%;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: var(--primary);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            color: #fff;
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        /* 布局容器 */
+        .layout {
+            display: flex;
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+            gap: 40px;
+        }
+
+        /* 文章内容区域 */
+        article {
+            flex: 1;
+            background: rgba(30, 41, 59, 0.6);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            max-width: 900px;
+        }
+
+        /* 侧边目录栏 */
+        aside {
+            flex: 0 0 250px;
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+            display: none;
+        }
+
+        @media (min-width: 1100px) {
+            aside { display: block; }
+        }
+
+        /* --- 文章内部排版 --- */
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #fff;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            border-left: 5px solid var(--primary);
+            padding-left: 15px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            margin-bottom: 0.8rem;
+            color: #fff;
+            font-family: 'Fira Code', monospace;
+        }
+        
+        h4, h5 {
+            color: var(--text-muted);
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        p, li {
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            font-family: 'Segoe UI', sans-serif;
+            line-height: 1.8;
+            text-align: justify;
+        }
+
+        strong {
+            color: var(--accent);
+        }
+
+        /* 表格样式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        th {
+            background-color: rgba(14, 165, 233, 0.1);
+            color: var(--primary);
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* 引用块 */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            background: rgba(16, 185, 129, 0.05);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            color: #d1d5db;
+        }
+
+        /* --- 代码块折叠样式 (New!) --- */
+        details {
+            background: #0d1117;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        summary {
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            font-family: 'Fira Code', monospace;
+            color: var(--primary);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            list-style: none; /* 隐藏默认三角 */
+        }
+
+        summary::before {
+            content: '▶';
+            margin-right: 10px;
+            font-size: 0.8rem;
+            transition: transform 0.2s;
+        }
+
+        details[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+        /* 目录高亮 */
+        .toc-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+        }
+        .toc-list { list-style: none; }
+        .toc-list li { margin-bottom: 10px; }
+        .toc-list a {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: 0.2s;
+            display: block;
+            border-left: 2px solid transparent;
+            padding-left: 10px;
+            text-decoration: none;
+        }
+        .toc-list a:hover, .toc-list a.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+        }
+        
+        /* 签名 */
+        .signature {
+            text-align: right;
+            margin-top: 4rem;
+            color: var(--text-muted);
+            font-style: italic;
+            border-top: 1px solid var(--border);
+            padding-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 动态背景容器 -->
+    <div class="circuit-bg">
+        <div class="line v-line" style="--delay: 0s; --left: 10%;"></div>
+        <div class="line v-line" style="--delay: 5s; --left: 90%;"></div>
+        <div class="line h-line" style="--delay: 2s; --top: 20%;"></div>
+        <div class="line h-line" style="--delay: 7s; --top: 80%;"></div>
+    </div>
+
+    <!-- 顶部导航 -->
+    <header class="article-header">
+        <!-- 返回按钮：ID 用于 JS 动态修改链接 -->
+        <a id="back-btn" href="../../archive/archive.html?cat=all" class="back-btn">
+            <i class="fas fa-chevron-left"></i> <span>Back to Archive</span>
+        </a>
+        <div style="font-family: 'Fira Code'; color: var(--text-muted); font-size: 0.9rem;">
+            system.read(mode=doc)
+        </div>
+    </header>
+
+    <div class="layout">
+        <!-- 侧边目录 (TOC) -->
+        <aside>
+            <div class="toc-title">DIRECTORY</div>
+            <ul class="toc-list">
+                <li><a href="#sec-1">01_为什么需要精准延时</a></li>
+                <li><a href="#sec-2">02_延时方式</a></li>
+                <li><a href="#sec-2-1">2.1 阻塞式延时</a></li>
+                <li><a href="#sec-2-1-2">2.1.2 定时器精准延时</a></li>
+                <li><a href="#sec-2-2">2.2 非阻塞延时</a></li>
+                <li><a href="#sec-3">03_总结</a></li>
+            </ul>
+        </aside>
+
+        <!-- 文章内容 -->
+        <article>
+            <h1>定时器精准延时</h1>
+
+            <h2 id="sec-1">一、为什么需要精准延时</h2>
+            <p>
+                <span style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">时</span>基对于单片机来说就是心脏，它决定着单片机能跑多快，什么时间在干什么，执行代码时是不是符合时序要求等等……在使用一些传感器或者外设模块时总要用到延时，因为传感器的启动和某些操作（模拟IIC）需要延时使功能是正常的，否则可能因为没有延时导致传感器启动失败，时序不符合要求导致数据传输失败。所以，延时对于单片机来讲是一件非常重要的事情，并且我们要让延时尽可能的精准，不然想要延时100ms结果单片机延时了1s那么带来的结果对于整个工程来说就是灾难性的！！！
+            </p>
+            <p>
+                延时根据方式分类可以分为阻塞式延时和非阻塞式延时，阻塞式延时又可以分为非精准延时和我们本文的主角<strong>定时器精准延时</strong>，下文我将简单的介绍一下。
+            </p>
+
+            <h2 id="sec-2">二、延时方式</h2>
+            <h3 id="sec-2-1">2.1 阻塞式延时</h3>
+            <p>
+                阻塞延时顾名思义就是单片机在没有执行完延时指令时不会进行其他操作，可以理解为此时的单片机是“休眠”状态，整个程序被堵在了延时这里，只有当延时时间结束后，单片机才会继续执行其他指令，有点像等红灯，绿灯没亮可是不许走的喔，遵守交通规则（咳咳，跑题了）。
+            </p>
+
+            <h4>2.1.1 非精准延时</h4>
+            <p>
+                所谓非精准延时，就是通过 <code>while()</code> 或者 <code>for()</code> 循环体，让单片机循环空操作，来达到延时的目的。这种延时方式不精准，只有在粗略的延时过程中才会使用，例如：每隔100ms执行一次打印操作。
+            </p>
+            
+            <pre><code class="language-c">void  delay_ms(uint16_t time)
+{
+    uint32_t local_time = ??;       // 根据系统主频计算
+    while(time --)
+    {    
+        while(local_time --)
+        {
+            _NOP();                // 空操作
+        }
+    }
+}</code></pre>
+
+            <blockquote>
+                <div style="text-align: center;">T 时钟周期 | t 空操作时间</div>
+                <div style="text-align: center;">T = 1/系统主频</div>
+                <div style="text-align: center;">t = T (因为执行一次空操作的时间是一个时钟周期)</div>
+            </blockquote>
+
+            <p>这种延时方式的缺点显而易见，不够精确；优点就是不需要中断，也不用占用任何外设资源。</p>
+
+            <h4 id="sec-2-1-2">2.1.2 定时器精准延时</h4>
+            <p>
+                芜湖主角闪亮登场，个人还是最爱用这种延时方式啦，精准好用，不需要中断。不过也是有缺点的，那就是要占用一个定时器资源啦。
+            </p>
+
+            <h5>2.1.2.1 系统嘀嗒定时器延时(SysTick)</h5>
+            <p>SysTick又名系统嘀嗒定时器，是一个向下计数的24位定时器。</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>寄存器</th>
+                        <th>位段</th>
+                        <th>名称</th>
+                        <th>功能</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>控制寄存器(CTRL)</td>
+                        <td>[16]</td>
+                        <td>COUNTFLAG</td>
+                        <td>计数至零，置1，读取标志清零</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>[2]</td>
+                        <td>CLKSOURCE</td>
+                        <td>时钟源，0 = 外部，1 = 内部</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>[1]</td>
+                        <td>TICKINT</td>
+                        <td>1 = 触发异常请求，0 = 无动作</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>[0]</td>
+                        <td>ENABLE</td>
+                        <td>定时器使能</td>
+                    </tr>
+                    <tr>
+                        <td>重装载数值寄存器(LOAD)</td>
+                        <td>[23:0]</td>
+                        <td>RELOAD</td>
+                        <td>计数器清零时重装载的值</td>
+                    </tr>
+                    <tr>
+                        <td>当前数值寄存器(VAL)</td>
+                        <td>[23:0]</td>
+                        <td>CURRENT</td>
+                        <td>读取时返回当前值，读取可清零标志位</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>使用HAL库时，CUBEMX会自动生成一个函数：</p>
+            <pre><code class="language-c">HAL/LL_mDelay(uint16_t Time);</code></pre>
+
+            <h5>2.1.2.2 TIM定时器精准延时 (代码可折叠)</h5>
+            <p>使用TIM定时器外设做系统精准延时，这是笔者本人最常用的方式，也是最喜欢用的方式。</p>
+
+            <!-- 代码折叠区域：delay.c -->
+            <details>
+                <summary>点击展开：delay.c 源码</summary>
+                <pre><code class="language-c">/***************************************************************************
+**DELAY.C**
+File：延时函数源文件
+Author：李家琦
+Time:2025/8/7
+***************************************************************************/
+#include "delay.h"
+
+void delay_us(uint16_t tim_us)
+{
+    if(tim_us > DELAY_US_MAX)
+    {
+        printf("参数输入错误\n");
+    }
+    CLEAR_TIM_COUNT;
+    while(GET_TIME_NOW < tim_us);
+}
+
+void delay_ms(uint16_t tim_ms)
+{
+    if(tim_ms > DELAY_MS_MAX)
+    {
+        printf("参数输入错误\n");
+    }
+    for(int i = 0 ; i < 1000 ; i ++)
+    {
+        CLEAR_TIM_COUNT;
+        while(GET_TIME_NOW < tim_us); // 注意：这里原文可能是 tim_ms 还是 tim_us 请确认逻辑
+    }
+}
+
+uint8_t delay_s(uint16_t tim_s)
+{
+    if(tim_s > DELAY_S_MAX)
+    {
+        printf("参数输入错误\n");
+    }
+    for(int i = 0 ; i < 1000000 ; i ++)
+    {
+        CLEAR_TIM_COUNT;
+        while(GET_TIME_NOW < tim_us);
+    }
+}</code></pre>
+            </details>
+
+            <!-- 代码折叠区域：delay.h -->
+            <details>
+                <summary>点击展开：delay.h 源码</summary>
+                <pre><code class="language-c">/***************************************************************************
+**DELAY.H**
+File：延时函数头文件
+Author：李家琦
+Time:2025/8/7
+
+Description：
+    - 使用时应在"delay.c"文件中包含"tim.h"文件
+    - 宏中的htimx可替换为任意设定定时器 时基单元应按照系统主频设置为1us
+***************************************************************************/
+#ifndef __DELAY_H
+#define __DELAY_H
+
+#include "main.h"
+#include "tim.h"
+
+#define DELAY_US_MAX __HAL_TIM_GET_AUTORELOAD(&htimx)   //根据自动重装载值计算最大延时
+#define DELAY_MS_MAX __HAL_TIM_GET_AUTORELOAD(&htimx)   //根据自动重装载值计算最大延时
+#define DELAY_S_MAX  __HAL_TIM_GET_AUTORELOAD(&htimx)   //根据自动重装载值计算最大延时
+#define GET_TIME_NOW    __HAL_TIM_GET_COUNTER(&htimx)       //获取计数器值
+#define CLEAR_TIM_COUNT __HAL_TIM_SET_COUNTER(&htimx , 0)   //清空计数器值
+
+void delay_us(uint16_t tim_us);                     //微秒级延时
+void delay_ms(uint16_t tim_ms);                     //毫秒级延时
+void delay_s(uint16_t tim_s);                       //秒级延时
+
+#endif</code></pre>
+            </details>
+
+            <p>
+                本代码是基于HAL库的代码，“delay.h”文件中的 <code>&htimx</code> 可以修改为所使用的定时器。
+                <br>
+                <strong style="color: #ff4d4d;">！！！！！！在使用之前千万不要忘记将定时器使能！！！！！！不然你的程序会卡死。</strong>
+            </p>
+
+            <h3 id="sec-2-2">2.2 非阻塞延时</h3>
+            <p>
+                非阻塞延时顾名思义就是延时过程不会阻塞程序的正常运行，只有等到延时时间到达的时候才会执行所需要的操作，这一延时方式需要使用中断。
+            </p>
+            <p>
+                这种方式的优点是充分利用单片机性能，不让单片机将性能浪费在阻塞延时中，缺点是不能进行太短的延时，频繁进出中断影响单片机的执行，尤其是在使用RTOS时。
+            </p>
+
+            <h2 id="sec-3">三、总结</h2>
+            <p>
+                每一种延时方式都有各自的优缺点，并不存在说哪种方式更好，还要依据现实系统所需，来选择更合适的延时方式，本文介绍的精准延时在单总线协议us级延时需求下就非常好用，中断延时在编写状态机时是不可必须的，所以请根据你的系统所需，来选择延时方式吧，当然也可以搭配使用！
+            </p>
+
+            <div class="signature">
+                <p>Author：李家琦</p>
+                <p>Date: 2025/8/20</p>
+            </div>
+
+        </article>
+    </div>
+
+    <!-- 音乐播放器挂载 -->
+    <div class="music-player-widget">
+        <div class="player-controls">
+            <button id="prev-btn" title="Previous"><i class="fas fa-step-backward"></i></button>
+            <button id="play-btn" title="Play/Pause"><i class="fas fa-play"></i></button>
+            <button id="next-btn" title="Next"><i class="fas fa-step-forward"></i></button>
+            <button id="mute-btn" title="Mute"><i class="fas fa-volume-up"></i></button>
+        </div>
+        <div class="song-info">
+            <span id="song-title">Loading...</span>
+        </div>
+        <audio id="bg-music"></audio>
+    </div>
+
+    <!-- 引入脚本库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    
+    <!-- 核心逻辑：定义 ROOT_PATH, 音乐播放, 返回链接, 目录高亮 -->
+    <script>
+        // 1. 定义根路径 (相对于当前文件是两级: ../../)
+        var ROOT_PATH = '../../';
+
+        // 2. 处理返回按钮逻辑 (读取 URL 中的 from 参数)
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromCat = urlParams.get('from'); 
+            
+            const backBtn = document.getElementById('back-btn');
+            
+            if (fromCat) {
+                // 如果有 from 参数，构建带参数的返回链接
+                backBtn.href = `../../archive/archive.html?cat=${encodeURIComponent(fromCat)}`;
+                console.log("Back link set to:", backBtn.href);
+            } else {
+                // 默认返回全部
+                backBtn.href = `../../archive/archive.html?cat=all`;
+            }
+        });
+
+        // 3. 目录滚动监听
+        const sections = document.querySelectorAll('h2, h3'); // 监听 h2 和 h3
+        const navLinks = document.querySelectorAll('.toc-list a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            if (current) {
+                navLinks.forEach(a => {
+                    a.classList.remove('active');
+                    if (a.getAttribute('href').includes(current)) {
+                        a.classList.add('active');
+                    }
+                });
+            }
+        });
+    </script>
+
+    <!-- 引入音乐脚本 (必须在 ROOT_PATH 定义之后) -->
+    <script src="../../static/js/music.js"></script>
+
+</body>
+</html>
