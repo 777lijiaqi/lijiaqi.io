@@ -22,16 +22,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 添加标题
     commentDiv.innerHTML = `<h3 style="font-family: 'Orbitron', sans-serif; margin-bottom: 1rem;"><i class="fas fa-comments"></i> Discussion</h3>`;
-    
     // 3. 创建 Giscus 脚本
     const script = document.createElement('script');
     script.src = "https://giscus.app/client.js";
     
     // --- 👇👇👇 请在这里填入您在 Giscus 官网获取的真实数据 👇👇👇 ---
-    script.setAttribute("data-repo", "您的GitHub用户名/您的仓库名"); 
-    script.setAttribute("data-repo-id", "这里必须填官网生成的ID，比如 R_kgDOL..."); 
+    script.setAttribute("data-repo", "777lijiaqi/lijiaqi.io"); 
+    script.setAttribute("data-repo-id", "R_kgDOQeiAAA"); 
     script.setAttribute("data-category", "General"); // 或者您选择的其他分类
-    script.setAttribute("data-category-id", "这里必须填官网生成的分类ID，比如 DIC_kwDOL..."); 
+    script.setAttribute("data-category-id", "DIC_kwDOQeiAAM4CzRrj"); 
     // -----------------------------------------------------------------
 
     script.setAttribute("data-mapping", "pathname");
