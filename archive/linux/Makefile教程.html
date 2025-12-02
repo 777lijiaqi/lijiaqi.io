@@ -270,9 +270,10 @@
                 <li><a href="#sec-2-2">2. 变量的使用</a></li>
                 <li><a href="#sec-2-3">3. 模式匹配与通配符</a></li>
                 <li><a href="#sec-2-4">4. 伪目标 (.PHONY)</a></li>
-                <li><a href="#sec-2-5">5. 通用 Makefile 模板</a></li>
-                <li><a href="#sec-2-6">6. 常用 Make 命令</a></li>
-                <li><a href="#sec-2-7">7. 复杂 Makefile 示例</a></li>
+                <li><a href="#sec-2-5">5. 条件判断</a></li>
+                <li><a href="#sec-2-6">6. 通用 Makefile 模板</a></li>
+                <li><a href="#sec-2-7">7. 常用 Make 命令</a></li>
+                <li><a href="#sec-2-8">8. 复杂 Makefile 示例</a></li>
             </ul>
         </aside>
 
@@ -284,6 +285,9 @@
             <h2 id="part-1">一、GCC 编译指令详解</h2>
             <p>GCC (GNU Compiler Collection) 是 Linux 下最常用的编译器。将 C 源代码编译成可执行文件通常经过四个步骤：预处理 (Preprocessing)、编译
                 (Compilation)、汇编 (Assembly) 和 链接 (Linking)。</p>
+
+            <p>更多详细信息请参考：<a href="https://www.gnu.org/software/make/manual/html_node/index.html" target="_blank">GNU
+                    Make 官方文档</a></p>
 
             <h3 id="sec-1-1">1. 基础编译流程</h3>
             <p>假设我们有一个源文件 <code>hello.c</code>。</p>
@@ -539,7 +543,138 @@ OBJS := $(patsubst %.c, %.o, $(SRCS))
 clean:
 	rm -f $(OBJS) $(TARGET)</code></pre>
 
-            <h3 id="sec-2-5">5. 最终通用 Makefile 模板</h3>
+            <h3 id="sec-2-5">5. 条件判断</h3>
+            <p>Makefile 支持条件语句，可以根据不同条件执行不同的编译选项，常用于调试模式切换、平台适配等场景。</p>
+
+            <h4>5.1 基本语法</h4>
+            <p>Makefile 支持两种主要的条件判断：</p>
+            <ul>
+                <li><code>ifeq</code> / <code>ifneq</code>: 判断两个值是否相等/不相等</li>
+                <li><code>ifdef</code> / <code>ifndef</code>: 判断变量是否已定义/未定义</li>
+            </ul>
+
+            <h4>5.2 ifeq 与 ifneq (相等判断)</h4>
+            <p>用于判断两个值是否相等。</p>
+            <pre><code class="language-makefile"># 语法格式 (注意括号和逗号)
+ifeq ($(变量名), 目标值)
+    # 条件为真时执行
+else
+    # 条件为假时执行
+endif</code></pre>
+
+            <p><strong>示例：调试模式切换</strong></p>
+            <pre><code class="language-makefile">CC := gcc
+CFLAGS := -Wall
+
+# 使用方法: make DEBUG=1
+ifeq ($(DEBUG), 1)
+    CFLAGS += -g -DDEBUG    # 添加调试信息和 DEBUG 宏
+    TARGET := app_debug
+else
+    CFLAGS += -O2           # 开启优化
+    TARGET := app_release
+endif
+
+all: $(TARGET)
+    @echo "Build Mode: $(if $(DEBUG),DEBUG,RELEASE)"
+
+$(TARGET): main.c
+    $(CC) $(CFLAGS) main.c -o $(TARGET)</code></pre>
+
+            <p><strong>运行示例：</strong></p>
+            <pre><code class="language-bash"># 正常编译 (发布模式)
+make
+
+# 调试模式编译
+make DEBUG=1</code></pre>
+
+            <h4>5.3 ifdef 与 ifndef (定义判断)</h4>
+            <p>用于判断变量是否已定义，不关心变量的具体值。</p>
+            <pre><code class="language-makefile"># 检查是否定义了 CC 变量
+ifdef CC
+    @echo "Compiler is defined: $(CC)"
+else
+    CC := gcc  # 未定义则设为默认值
+endif</code></pre>
+
+            <h4>5.4 多条件组合</h4>
+            <p>可以嵌套使用多个条件判断。</p>
+            <pre><code class="language-makefile"># 平台检测示例
+OS := $(shell uname -s)
+
+ifeq ($(OS), Linux)
+    CFLAGS += -DLINUX
+    LIBS := -lpthread
+else ifeq ($(OS), Darwin)  # macOS
+    CFLAGS += -DMACOS
+    LIBS := 
+else
+    $(error Unsupported OS: $(OS))
+endif</code></pre>
+
+            <h4>5.5 实战案例：交叉编译配置</h4>
+            <pre><code class="language-makefile">CC := gcc
+CFLAGS := -Wall
+
+# 使用方法: make ARCH=arm
+ifdef ARCH
+    ifeq ($(ARCH), arm)
+        CC := arm-linux-gnueabihf-gcc
+        CFLAGS += -march=armv7-a
+    else ifeq ($(ARCH), x86)
+        CC := gcc
+        CFLAGS += -m32
+    else
+        $(error Unknown ARCH: $(ARCH). Supported: arm, x86)
+    endif
+endif
+
+all:
+    @echo "Compiler: $(CC)"
+    @echo "Flags: $(CFLAGS)"</code></pre>
+
+            <h4>5.6 常用内置函数配合条件判断</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>函数</th>
+                        <th>说明</th>
+                        <th>示例</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>$(if condition,then-part,else-part)</code></td>
+                        <td>单行条件表达式</td>
+                        <td><code>$(if $(DEBUG),-g,-O2)</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>$(shell command)</code></td>
+                        <td>执行 shell 命令并返回结果</td>
+                        <td><code>OS := $(shell uname -s)</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>$(error text)</code></td>
+                        <td>输出错误并立即停止</td>
+                        <td><code>$(error Missing CC!)</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>$(warning text)</code></td>
+                        <td>输出警告但继续执行</td>
+                        <td><code>$(warning Using default)</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <blockquote>
+                <p><strong>注意事项</strong>：<br>
+                    1. 条件判断语句必须顶格写，不能有 Tab 缩进。<br>
+                    2. <code>ifeq</code> 的比较是字符串比较，空格敏感：<code>ifeq ($(VAR), 1)</code> 与 <code>ifeq ($(VAR),1)</code>
+                    不同。<br>
+                    3. 条件判断在 Makefile 解析阶段执行，而非运行阶段。</p>
+            </blockquote>
+
+            <h3 id="sec-2-6">6. 最终通用 Makefile 模板</h3>
             <p>这是一个可以直接用于中小型项目的通用 Makefile。</p>
             <pre><code class="language-makefile"># 编译器设置
 CC = gcc
@@ -569,7 +704,7 @@ show:
 	@echo "SRCS: $(SRCS)"
 	@echo "OBJS: $(OBJS)"</code></pre>
 
-            <h3 id="sec-2-6">6. 常用 Make 命令</h3>
+            <h3 id="sec-2-7">7. 常用 Make 命令</h3>
             <ul>
                 <li><code>make</code>: 构建默认目标。</li>
                 <li><code>make &lt;target&gt;</code>: 构建指定目标，例如 <code>make clean</code>。</li>
@@ -578,7 +713,7 @@ show:
                 <li><code>make -B</code>: 强制重新编译所有目标。</li>
             </ul>
 
-            <h3 id="sec-2-7">7. 复杂 Makefile 伪代码示例</h3>
+            <h3 id="sec-2-8">8. 复杂 Makefile 示例</h3>
             <p>这是一个包含多目录处理、条件编译和颜色输出等高级特性的复杂 Makefile 示例。</p>
             <p><strong>假设目录结构:</strong></p>
             <pre><code>├── src/
