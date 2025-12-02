@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>条件编译 | 知识文档</title>
+    <!-- 引入网站图标 -->
+    <link rel="icon" type="image/svg+xml" href="../../static/images/favicon.svg">
+    <!-- 引入字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- 引入图标 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 代码高亮 (Prism Tomorrow Night) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    
+    <!-- 引入全局样式 -->
+    <link rel="stylesheet" href="../../static/css/style.css">
+
+    <style>
+        /* --- 本地覆盖样式 (文章专用) --- */
+        body {
+            padding-top: 80px; /* 给固定导航栏留位置 */
+        }
+
+        /* 头部样式复用 */
+        .article-header {
+            background: rgba(11, 17, 32, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 5%;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: var(--primary);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            color: #fff;
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        /* 布局容器 */
+        .layout {
+            display: flex;
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+            gap: 40px;
+        }
+
+        /* 文章内容区域 */
+        article {
+            flex: 1;
+            background: rgba(30, 41, 59, 0.6);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            max-width: 900px;
+        }
+
+        /* 侧边目录栏 */
+        aside {
+            flex: 0 0 250px;
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+            display: none;
+        }
+
+        @media (min-width: 1100px) {
+            aside { display: block; }
+        }
+
+        /* --- Markdown 内容排版 --- */
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #fff;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            border-left: 5px solid var(--primary);
+            padding-left: 15px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            margin-bottom: 0.8rem;
+            color: #fff;
+            font-family: 'Fira Code', monospace;
+        }
+        
+        h4 {
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+            color: var(--accent);
+            font-family: 'Fira Code', monospace;
+        }
+
+        p, li {
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            font-family: 'Segoe UI', sans-serif;
+            line-height: 1.8;
+            text-indent: 2em; /* 首行缩进 */
+        }
+
+        /* 代码块样式 */
+        code {
+            font-family: 'Fira Code', monospace;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-indent: 0;
+        }
+
+        pre {
+            background: #0d1117 !important;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            text-indent: 0;
+        }
+
+        blockquote {
+            border-left: 4px solid var(--accent);
+            background: rgba(16, 185, 129, 0.05);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            color: #d1d5db;
+            text-indent: 0;
+        }
+        
+        blockquote p {
+            text-indent: 0;
+            margin: 0;
+            text-align: right;
+            font-style: italic;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid var(--border);
+            margin: 3rem 0;
+        }
+
+        /* 目录样式 */
+        .toc-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+        }
+        .toc-list { list-style: none; }
+        .toc-list li { margin-bottom: 10px; }
+        .toc-list a {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: 0.2s;
+            display: block;
+            border-left: 2px solid transparent;
+            padding-left: 10px;
+            text-decoration: none;
+        }
+        .toc-list a:hover, .toc-list a.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 动态背景容器 -->
+    <div class="circuit-bg">
+        <div class="line v-line" style="--delay: 0s; --left: 10%;"></div>
+        <div class="line v-line" style="--delay: 5s; --left: 90%;"></div>
+        <div class="line h-line" style="--delay: 2s; --top: 20%;"></div>
+        <div class="line h-line" style="--delay: 7s; --top: 80%;"></div>
+    </div>
+
+    <!-- 顶部导航 -->
+    <header class="article-header">
+        <!-- 返回按钮：ID 用于 JS 动态修改链接 -->
+        <a id="back-btn" href="../../archive/archive.html?cat=all" class="back-btn">
+            <i class="fas fa-chevron-left"></i> <span>Back to Archive</span>
+        </a>
+        <div style="font-family: 'Fira Code'; color: var(--text-muted); font-size: 0.9rem;">
+            system.read(mode=doc_c)
+        </div>
+    </header>
+
+    <div class="layout">
+        <!-- 侧边目录 (TOC) -->
+        <aside>
+            <div class="toc-title">DIRECTORY</div>
+            <ul class="toc-list">
+                <li><a href="#sec-1">一、什么是宏</a></li>
+                <li><a href="#sec-2">二、什么是条件编译</a></li>
+                <li><a href="#sec-3">三、条件编译指令</a></li>
+                <li><a href="#sec-4">四、如何使用条件编译</a></li>
+            </ul>
+        </aside>
+
+        <!-- 文章内容 -->
+        <article>
+            <h1>条件编译</h1>
+
+            <h2 id="sec-1">一、什么是宏</h2>
+            <p>在学习条件编译指令之前，首先我们要知道什么是宏。</p>
+            <p>宏是一种批量处理的称谓，在计算机科学中宏是一种抽象，根据预定义的规则来进行强制替换，将宏语句中的表达式二强制转换为表达式一文本表示，通常写法为：</p>
+
+            <pre><code class="language-c">#define [表达式一] [表达式二]	//将表达式一强制替换为表达式二，注意表达式一的内容一般要全部大写
+
+//example：	
+#define PB8_H HAL_GPIO_WritePin(GPIOB , GPIO_Pin_8 , GIPO_PIN_SET)
+/*
+将HAL_GPIO_WritePin(GPIOB , GPIO_Pin_8 , GIPO_PIN_SET)替换为PB8_H，也就是说在后续代码中你所写的PB8_H，都将被HAL_GPIO_WritePin(GPIOB , GPIO_Pin_8 , GIPO_PIN_SET)所替换，这里可能比较绕，提升代码的可读性并且在后续写代码的过程中可以少打很多的字哈哈哈哈哈哈哈！！！！！咳咳，可不是因为懒┗|｀O′|┛ 嗷~~
+*/</code></pre>
+
+            <p>当然上面只是宏的基本形式，根据是否携带参数，宏还分为对象宏和函数宏，带参数的为函数宏，上述则是对象宏。</p>
+
+            <h3>1.1 函数宏</h3>
+            <p>宏定义不仅仅可以用作简单的替换，还可以携带形式参数，形如：</p>
+
+            <pre><code class="language-c">#define 表达式一(形式参数1 ，…… ， 形式参数n) 表达式二(形式参数1 ，…… ，形式参数n)
+//即将表达式二用表达式一来表示，并且可以传递参数
+
+//example：
+#define	MAX(A ， B） A < B ? A : B
+
+int a = 1;
+int b = 2;
+
+return MAX(A , B);		//即 return A < B ? A : B
+
+//example2:
+#define FUNC1(char c) Get_char(char C)
+void Get_char(char C)
+{
+    C = 'C';
+}
+
+char a = '';
+FUNC1(a);				//即将'C'赋值给a</code></pre>
+
+            <p>但是在函数体或表达式中的形式参数带有自增或输入输出等特性时不要使用函数宏，比如：</p>
+
+            <pre><code class="language-c">#define FUNC1(i ++) i ++	//使用该宏时会使传入的实际参数自增两次</code></pre>
+
+            <hr>
+
+            <h2 id="sec-2">二、什么是条件编译</h2>
+            <p>条件编译是指编译器根据实际的定义宏有选择性地对代码进行静态编译，可以根据表达式中的条件和某个特定宏是否被定义来确定编译条件，可以有效地防止宏被重复定义等问题，并在一个工程在适配多系统时，也可通过条件编译来对系统进行是被，即只需要修改定义宏或者表达式中的条件，便可以让一个工程在不同的内核系统中运行，不应用在该系统中的源代码就不送如编译器进行编译，这样也会让生成的可执行代码体积减小，节省内存空间。既然这么有用，那快来学习一下吧！！！嘻嘻。</p>
+
+            <hr>
+
+            <h2 id="sec-3">三、条件编译指令</h2>
+            <pre><code class="language-c">#define 		//定义一个预处理宏
+#undef			//取消宏的定义
+#if				//编译预处理中的条件命令，相当于C语法中的if语句
+#ifdef			//判断某个宏是否被定义，若被定义，执行随后的语句
+#ifndef			//与#ifdef相反，判断某个宏是否未被定义
+#elif			//若#if，#ifdef，#ifndef或前面的#elif条件不满足，但满足该#elif中的条件，则执行#elif之后的语句，相当于C语法中的else-if
+#else			//若#if，#ifdef，#ifndef或前面的#elif条件不满足，则执行#else之后的语句，相当于C语言中的else
+#endif			//#if，#ifdef，#ifndef等条件编译指令的结束语
+defined 		//与#if，#elif配合使用，用于判断某个宏是否被定义</code></pre>
+
+            <hr>
+
+            <h2 id="sec-4">四、如何使用条件编译</h2>
+
+            <h3>4.1 防止重复引用</h3>
+            <pre><code class="language-c">#ifndef __XXX_H			//如果没有定义XXX.h
+#define	__XXX_H			//定义XXX.h
+
+//头文件中的内容
+
+#endif					</code></pre>
+            <p>首先#ifndef判断XXX.h是否被定义，如果被定义了直接跳到#endif，如果没有被定义则执行#ifndef和#endif之间的语句，如#define __XXX_H，这样可以确保XXX.h只被引用一次，防止重复引用的问题，否则编译器会报错！！！</p>
+
+            <h3>4.2 选择性编译</h3>
+
+            <h4>4.2.1 判断表达式是否为真</h4>
+            <pre><code class="language-c">#define A 1000			//将A替换为1000
+#define A 0				//将A替换为0
+#if	A
+	printf("A\n");
+#else
+	printf("A\n");
+#endif</code></pre>
+            <p>当注释掉#define A 1000时，此时A被替换为0，即逻辑假，则执行#else和#endif之间的语句，打印输出为0，当注释掉#define A 0 时，此时A被替换为1000，非零即逻辑真，则执行#if和#endif(不包括#else和#endif中的语句)之间的语句，打印输出为1000。</p>
+
+            <h4>4.2.2 选择性编译</h4>
+            <pre><code class="language-c">#ifdef __XXX_H
+	//头文件中的内容
+#elif defined __XXXX_H
+	//头文件中的内容
+#endif</code></pre>
+            <p>如果定义了XXX.h，则将头文件XXX.h中的内容送入编译器，如果定义了XXXX.h，则将XXXX.h中的内容送入编译器，这样我们就可以修改宏定义，选择性的向编译器传输我们所需要的内容。</p>
+
+            <h3>4.3 Example</h3>
+            <pre><code class="language-c">"stm32f103xe.h"
+#ifndef __STM32F103xE_H
+#define __STM32F103xE_H
+/*   
+	  |
+	  |	stm32f103xe头文件中的具体内容配置等等
+   	|
+*/
+#endif</code></pre>
+
+            <pre><code class="language-c">"stm32f1xx.h"
+#if defined(STM32F100xB)
+  #include "stm32f100xb.h"
+#elif defined(STM32F100xE)
+  #include "stm32f100xe.h"
+#elif defined(STM32F101x6)
+  #include "stm32f101x6.h"
+/* ... (省略中间部分以保持简洁) ... */
+#elif defined(STM32F103xE)
+  #include "stm32f103xe.h"
+#elif defined(STM32F107xC)
+  #include "stm32f107xc.h"
+#else
+ #error "Please select first the target STM32F1xx device used in your application (in stm32f1xx.h file)"
+#endif</code></pre>
+            <p>在IDE中我们可以发现由于一开始在stm32f103xe.h文件中我们定义了stm32f103xe这个宏，并将这个文件引入了工程，所以在后续的条件编译中，#elif defined(STM32F103xE)条件符合，stm32f1xx.h将引用stm32f103xe.h文件中的内容，并且该行代码会高亮显示，没有被定义的条件则变灰，请随便打开一个STM32F103的工程看一看这两个文件吧。</p>
+
+            <hr>
+            
+            <blockquote>
+                <p>Author：李家琦</p>
+                <p>Date: 2025/8/18</p>
+            </blockquote>
+
+        </article>
+    </div>
+
+    <!-- 音乐播放器挂载 -->
+    <div class="music-player-widget">
+        <div class="player-controls">
+            <button id="prev-btn" title="Previous"><i class="fas fa-step-backward"></i></button>
+            <button id="play-btn" title="Play/Pause"><i class="fas fa-play"></i></button>
+            <button id="next-btn" title="Next"><i class="fas fa-step-forward"></i></button>
+            <button id="mute-btn" title="Mute"><i class="fas fa-volume-up"></i></button>
+        </div>
+        <div class="song-info">
+            <span id="song-title">Loading...</span>
+        </div>
+        <audio id="bg-music"></audio>
+    </div>
+
+    <!-- 定义根路径变量 (由于在 archive/c语言/ 下，所以是 ../../) -->
+    <script>var ROOT_PATH = '../../';</script>
+    
+    <!-- 引入音乐脚本 -->
+    <script src="../../static/js/music.js"></script>
+
+    <!-- 引入 Prism.js 核心及 C 语言包 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+    
+    <!-- 核心逻辑：处理返回链接 & 目录高亮 -->
+    <script>
+        // 1. 处理返回按钮逻辑
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromCat = urlParams.get('from'); 
+            
+            const backBtn = document.getElementById('back-btn');
+            
+            if (fromCat) {
+                // 如果有 from 参数，就用它，处理 c/cpp 的转码
+                backBtn.href = `../../archive/archive.html?cat=${encodeURIComponent(fromCat)}`;
+                console.log("Back link set to:", backBtn.href);
+            } else {
+                // 默认回 C/C++ 分类
+                backBtn.href = `../../archive/archive.html?cat=c/cpp`;
+            }
+        });
+
+        // 2. 目录滚动监听
+        const sections = document.querySelectorAll('h2');
+        const navLinks = document.querySelectorAll('.toc-list a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(a => {
+                a.classList.remove('active');
+                if (a.getAttribute('href').includes(current)) {
+                    a.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
