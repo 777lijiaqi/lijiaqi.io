@@ -1193,3 +1193,18 @@ a.card:hover .click-hint {
         transform: translateX(-50%) translateY(0);
     }
 }
+
+/* --- 修复二维码不显示的问题 --- */
+
+/* 1. 允许微信这一栏的内容溢出 (关键！) */
+.wechat-trigger {
+    overflow: visible !important; 
+}
+
+/* 2. 确保菜单容器也不遮挡溢出 (关键！) */
+.sub-menu {
+    /* 移除切角效果，因为切角会把飞出去的二维码切断 */
+    clip-path: none !important; 
+    overflow: visible !important;
+}
+
