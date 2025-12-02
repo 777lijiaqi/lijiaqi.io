@@ -1,14 +1,24 @@
 /* --- static/js/music.js --- */
 /* 全局音乐播放器：支持跨页面状态继承与路径自动修正 */
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     console.log("Music Player: System Online.");
 
     // --- 1. 播放列表配置 (文件名必须准确) ---
     const playlistData = [
-        { title: "最重要的小事-五月天", file: "最重要的小事_五月天.mp3" },
-        { title: "步步-五月天", file: "步步-五月天.mp3" }
-        
+        { title: "最重要的小事-五月天", file: "最重要的小事-五月天.mp3" },
+        { title: "步步-五月天", file: "步步-五月天.mp3" },
+        { title: "倔强-五月天", file: "倔强-五月天.mp3" },
+        { title: "离开地球表面-五月天", file: "离开地球表面-五月天.mp3" },
+        { title: "突然好想你-五月天", file: "突然好想你-五月天.mp3" },
+        { title: "恋爱ing-五月天", file: "恋爱ing-五月天.mp3" },
+        { title: "派对动物-五月天", file: "派对动物-五月天.mp3" },
+        { title: "任意门-五月天", file: "任意门-五月天.mp3" },
+        { title: "如果我们不曾相遇-五月天", file: "如果我们不曾相遇-五月天.mp3" },
+        { title: "伤心的人别听慢歌-五月天", file: "伤心的人别听慢歌-五月天.mp3" },
+        { title: "盛夏光年-五月天", file: "盛夏光年-五月天.mp3" },
+        { title: "私奔到月球-五月天", file: "私奔到月球-五月天.mp3" },
+        { title: "笑忘歌-五月天", file: "笑忘歌-五月天.mp3" }
     ];
 
     // --- 2. 路径处理 (核心修复点) ---
@@ -31,13 +41,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- 4. 状态变量 ---
     let currentTrackIndex = 0;
-    
+
     // --- 5. 核心功能函数 ---
 
     // 加载歌曲资源
     function loadTrack(index) {
         const targetSrc = musicBasePath + playlistData[index].file;
-        
+
         // 只有当路径改变时才重新赋值 src，防止闪断
         if (audio.src.indexOf(playlistData[index].file) === -1) {
             audio.src = targetSrc;
@@ -111,11 +121,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // 3. 恢复进度和播放状态
         // 必须等待音频元数据加载完毕，才能设置 currentTime
-        audio.addEventListener('loadedmetadata', function() {
+        audio.addEventListener('loadedmetadata', function () {
             if (savedTime !== null) {
                 audio.currentTime = parseFloat(savedTime);
             }
-            
+
             // 如果之前是播放状态，尝试续播
             if (savedStatus === 'true') {
                 tryPlayMusic();
@@ -148,8 +158,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     muteBtn.addEventListener('click', () => {
         audio.muted = !audio.muted;
-        muteBtn.innerHTML = audio.muted ? 
-            '<i class="fas fa-volume-mute" style="color:#ff4d4d"></i>' : 
+        muteBtn.innerHTML = audio.muted ?
+            '<i class="fas fa-volume-mute" style="color:#ff4d4d"></i>' :
             '<i class="fas fa-volume-up"></i>';
     });
 
