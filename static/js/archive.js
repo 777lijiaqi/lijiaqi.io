@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
             desc: "深入理解 Makefile 编译原理、规则、伪目标及常用函数。",
             tags: ["Makefile", "GCC"],
             icon: "fas fa-file-code",
-            link: "linux/Makefile学习.html" // 纯净路径
+            link: "linux/Makefile学习.html" 
         },
         {
             title: "STM32 HAL库开发",
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
             link: "c语言/条件编译.html"
         },
         {
-            title: "Keil输出汇编反推程序逻辑",
+            title: "Keil输出汇编程序",
             category: "stm32",
             desc: "",
             tags: ["Keil", "汇编"],
