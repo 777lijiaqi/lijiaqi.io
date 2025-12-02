@@ -31,12 +31,12 @@ document.addEventListener('DOMContentLoaded', function() {
             link: "c语言/条件编译.html"
         },
         {
-            title: "Altium Designer 实战",
-            category: "hardware",
-            desc: "PCB 多层板设计技巧。",
-            tags: ["PCB", "Hardware"],
+            title: "Keil输出汇编反推程序逻辑",
+            category: "stm32",
+            desc: "",
+            tags: ["Keil", "汇编"],
             icon: "fas fa-layer-group",
-            link: "hardware/pcb.html"
+            link: "stm32/keil输出汇编.html"
         }
     ];
 
