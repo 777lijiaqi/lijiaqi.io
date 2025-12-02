@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCC & Makefile 教程 | Linux</title>
+    <!-- 引入网站图标 -->
+    <link rel="icon" type="image/svg+xml" href="../../static/images/favicon.svg">
+    <!-- 引入字体 -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Orbitron:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <!-- 引入图标 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 代码高亮 Prism.js -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+    <!-- 引入全局样式 -->
+    <link rel="stylesheet" href="../../static/css/style.css">
+
+    <style>
+        /* --- 文章专用局部样式 --- */
+        body {
+            padding-top: 80px;
+        }
+
+        /* 顶部导航条 */
+        .article-header {
+            background: rgba(11, 17, 32, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 5%;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: var(--primary);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+            z-index: 20;
+            /* 确保可点击 */
+        }
+
+        .back-btn:hover {
+            color: #fff;
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        /* 布局容器 */
+        .layout {
+            display: flex;
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+            gap: 40px;
+        }
+
+        /* 文章主体 */
+        article {
+            flex: 1;
+            background: rgba(30, 41, 59, 0.6);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            overflow-x: hidden;
+            /* 防止代码块撑破布局 */
+        }
+
+        /* 侧边目录 */
+        aside {
+            flex: 0 0 250px;
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+            display: none;
+        }
+
+        @media (min-width: 1100px) {
+            aside {
+                display: block;
+            }
+        }
+
+        /* 内容排版 */
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #fff;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            border-left: 5px solid var(--primary);
+            padding-left: 15px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            margin-bottom: 0.8rem;
+            color: #fff;
+            font-family: 'Fira Code', monospace;
+        }
+
+        p,
+        li {
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            font-family: 'Segoe UI', sans-serif;
+            line-height: 1.8;
+        }
+
+        /* 代码与引用 */
+        code {
+            font-family: 'Fira Code', monospace;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #0d1117 !important;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        blockquote {
+            border-left: 4px solid var(--accent);
+            background: rgba(16, 185, 129, 0.05);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            color: #d1d5db;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* 表格样式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            text-align: left;
+            color: var(--text-main);
+        }
+
+        th {
+            background-color: rgba(14, 165, 233, 0.15);
+            color: var(--primary);
+            font-family: 'Fira Code', monospace;
+            font-weight: bold;
+        }
+
+        /* 目录链接样式 */
+        .toc-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 10px;
+        }
+
+        .toc-list a {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: 0.2s;
+            display: block;
+            border-left: 2px solid transparent;
+            padding-left: 10px;
+            text-decoration: none;
+        }
+
+        .toc-list a:hover,
+        .toc-list a.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+        }
+
+        /* 链接样式 */
+        article a {
+            color: var(--primary);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--primary);
+        }
+
+        article a:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 动态背景容器 -->
+    <div class="circuit-bg">
+        <div class="line v-line" style="--delay: 0s; --left: 10%;"></div>
+        <div class="line v-line" style="--delay: 5s; --left: 90%;"></div>
+        <div class="line h-line" style="--delay: 2s; --top: 20%;"></div>
+        <div class="line h-line" style="--delay: 7s; --top: 80%;"></div>
+    </div>
+
+    <!-- 顶部导航 -->
+    <header class="article-header">
+        <!-- 返回按钮：ID 用于 JS 动态修改链接 -->
+        <a id="back-btn" href="../../archive/archive.html?cat=all" class="back-btn">
+            <i class="fas fa-chevron-left"></i> <span>Back to Archive</span>
+        </a>
+        <div style="font-family: 'Fira Code'; color: var(--text-muted); font-size: 0.9rem;">
+            system.read(mode=doc)
+        </div>
+    </header>
+
+    <div class="layout">
+        <!-- 侧边目录 (TOC) -->
+        <aside>
+            <div class="toc-title">DIRECTORY</div>
+            <ul class="toc-list">
+                <li><a href="#part-1">一、GCC 编译指令</a></li>
+                <li><a href="#sec-1-1">1. 基础编译流程</a></li>
+                <li><a href="#sec-1-2">2. 常用参数详解</a></li>
+                <li><a href="#sec-1-3">3. 多文件编译</a></li>
+                <li><a href="#sec-1-4">4. 静态库与动态库</a></li>
+                <li><a href="#part-2">二、Makefile 详解</a></li>
+                <li><a href="#sec-2-1">1. 基本规则</a></li>
+                <li><a href="#sec-2-2">2. 变量的使用</a></li>
+                <li><a href="#sec-2-3">3. 模式匹配与通配符</a></li>
+                <li><a href="#sec-2-4">4. 伪目标 (.PHONY)</a></li>
+                <li><a href="#sec-2-5">5. 通用 Makefile 模板</a></li>
+                <li><a href="#sec-2-6">6. 常用 Make 命令</a></li>
+                <li><a href="#sec-2-7">7. 复杂 Makefile 示例</a></li>
+            </ul>
+        </aside>
+
+        <!-- 文章内容 -->
+        <article>
+            <h1>GCC 编译指令及 Makefile 详细操作应用教程</h1>
+            <p>本教程将详细介绍 Linux 下 C/C++ 开发中必不可少的两个工具：<strong>GCC 编译器</strong>和 <strong>Makefile 构建工具</strong>。</p>
+
+            <h2 id="part-1">一、GCC 编译指令详解</h2>
+            <p>GCC (GNU Compiler Collection) 是 Linux 下最常用的编译器。将 C 源代码编译成可执行文件通常经过四个步骤：预处理 (Preprocessing)、编译
+                (Compilation)、汇编 (Assembly) 和 链接 (Linking)。</p>
+
+            <h3 id="sec-1-1">1. 基础编译流程</h3>
+            <p>假设我们有一个源文件 <code>hello.c</code>。</p>
+
+            <h4>1.1 预处理 (-E)</h4>
+            <p>预处理主要处理以 <code>#</code> 开头的指令，如 <code>#include</code>, <code>#define</code> 等。</p>
+            <pre><code class="language-bash">gcc -E hello.c -o hello.i
+# -E: 只进行预处理。
+# -o: 指定输出文件名。</code></pre>
+            <p>生成文件：<code>hello.i</code> (纯文本 C 代码，宏已展开)。</p>
+
+            <h4>1.2 编译 (-S)</h4>
+            <p>将预处理后的代码翻译成汇编语言。</p>
+            <pre><code class="language-bash">gcc -S hello.i -o hello.s
+# -S: 只进行编译，生成汇编代码。</code></pre>
+            <p>生成文件：<code>hello.s</code> (汇编代码)。</p>
+
+            <h4>1.3 汇编 (-c)</h4>
+            <p>将汇编代码转换成机器码（目标文件）。</p>
+            <pre><code class="language-bash">gcc -c hello.s -o hello.o
+# -c: 只编译和汇编，不链接。</code></pre>
+            <p>生成文件：<code>hello.o</code> (二进制目标文件)。</p>
+
+            <h4>1.4 链接</h4>
+            <p>将目标文件与库文件链接，生成最终的可执行文件。</p>
+            <pre><code class="language-bash">gcc hello.o -o hello</code></pre>
+            <p>生成文件：<code>hello</code> (可执行文件)。</p>
+
+            <p><strong>一步到位命令：</strong></p>
+            <pre><code class="language-bash">gcc hello.c -o hello</code></pre>
+
+            <h3 id="sec-1-2">2. 常用参数详解</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>参数</th>
+                        <th>说明</th>
+                        <th>示例</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>-o &lt;file&gt;</code></td>
+                        <td>指定输出文件名</td>
+                        <td><code>gcc main.c -o app</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>-g</code></td>
+                        <td>生成调试信息 (供 GDB 使用)</td>
+                        <td><code>gcc -g main.c -o app</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>-Wall</code></td>
+                        <td>开启大部分警告信息 (推荐常开)</td>
+                        <td><code>gcc -Wall main.c -o app</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>-O&lt;n&gt;</code></td>
+                        <td>优化等级 (0-3, s)。O0无优化, O2常用推荐</td>
+                        <td><code>gcc -O2 main.c -o app</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>-c</code></td>
+                        <td>只编译不链接，生成 .o 文件</td>
+                        <td><code>gcc -c main.c</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>-I &lt;dir&gt;</code></td>
+                        <td>指定头文件搜索路径</td>
+                        <td><code>gcc -I./include main.c -o app</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>-L &lt;dir&gt;</code></td>
+                        <td>指定库文件搜索路径</td>
+                        <td><code>gcc main.c -L./lib -lmylib -o app</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>-l&lt;name&gt;</code></td>
+                        <td>指定链接的库名 (去掉 lib 前缀和后缀)</td>
+                        <td><code>gcc main.c -lpthread -o app</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>-D&lt;macro&gt;</code></td>
+                        <td>定义宏 (相当于代码中 #define)</td>
+                        <td><code>gcc -DDEBUG main.c -o app</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 id="sec-1-3">3. 多文件编译</h3>
+            <p>假设有 <code>main.c</code>, <code>tools.c</code>, <code>tools.h</code>。</p>
+
+            <p><strong>方法一：一次性编译</strong></p>
+            <pre><code class="language-bash">gcc main.c tools.c -o app</code></pre>
+
+            <p><strong>方法二：分步编译 (推荐)</strong></p>
+            <p>先生成目标文件，再链接。这样当只修改一个文件时，只需重新编译该文件，提高效率。</p>
+            <pre><code class="language-bash">gcc -c main.c -o main.o
+gcc -c tools.c -o tools.o
+gcc main.o tools.o -o app</code></pre>
+
+            <h3 id="sec-1-4">4. 静态库与动态库</h3>
+            <p>为了演示，我们准备以下三个文件：</p>
+            <p><strong>math_utils.h (头文件)</strong></p>
+            <pre><code class="language-c">#ifndef MATH_UTILS_H
+#define MATH_UTILS_H
+int add(int a, int b);
+#endif</code></pre>
+
+            <p><strong>math_utils.c (库源文件)</strong></p>
+            <pre><code class="language-c">#include "math_utils.h"
+int add(int a, int b) {
+    return a + b;
+}</code></pre>
+
+            <p><strong>main.c (主程序)</strong></p>
+            <pre><code class="language-c">#include &lt;stdio.h&gt;
+#include "math_utils.h"
+int main() {
+    printf("1 + 2 = %d\n", add(1, 2));
+    return 0;
+}</code></pre>
+
+            <h4>4.1 静态库 (.a)</h4>
+            <p>静态库在编译时被完整复制到可执行文件中。</p>
+            <p><strong>生成与使用步骤：</strong></p>
+            <ol>
+                <li>编译库文件：生成目标文件 .o
+                    <pre><code class="language-bash">gcc -c math_utils.c -o math_utils.o</code></pre>
+                </li>
+                <li>打包静态库：使用 ar 命令
+                    <pre><code class="language-bash">ar rcs libmath.a math_utils.o</code></pre>
+                    <p><code>libmath.a</code>: 库名通常以 lib 开头，.a 结尾。</p>
+                </li>
+                <li>链接使用：
+                    <pre><code class="language-bash">gcc main.c -L. -lmath -o static_app</code></pre>
+                    <p><code>-L.</code>: 告诉 gcc 在当前目录查找库。<br><code>-lmath</code>: 链接 libmath.a (去掉前缀 lib 和后缀 .a)。</p>
+                </li>
+                <li>运行：
+                    <pre><code class="language-bash">./static_app</code></pre>
+                    <p>即使删除 libmath.a，程序依然可以运行。</p>
+                </li>
+            </ol>
+
+            <h4>4.2 动态库 (.so)</h4>
+            <p>动态库在程序运行时被加载，多个程序可以共享同一个动态库，节省内存。</p>
+            <p><strong>生成与使用步骤：</strong></p>
+            <ol>
+                <li>编译库文件：生成位置无关代码 (Position Independent Code)
+                    <pre><code class="language-bash">gcc -fPIC -c math_utils.c -o math_utils.o</code></pre>
+                </li>
+                <li>生成动态库：
+                    <pre><code class="language-bash">gcc -shared -o libmath.so math_utils.o</code></pre>
+                </li>
+                <li>链接使用：
+                    <pre><code class="language-bash">gcc main.c -L. -lmath -o dynamic_app</code></pre>
+                </li>
+                <li>运行：
+                    <p>直接运行 <code>./dynamic_app</code> 可能会报错
+                        <code>error while loading shared libraries</code>，因为系统找不到自定义的 .so 文件。
+                    </p>
+                    <p><strong>解决方法 1 (临时)：</strong>指定库路径</p>
+                    <pre><code class="language-bash">export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.
+./dynamic_app</code></pre>
+                    <p><strong>解决方法 2 (永久)：</strong>将库移动到系统目录 (如 /usr/lib) 或更新 /etc/ld.so.conf。</p>
+                </li>
+            </ol>
+
+            <h2 id="part-2">二、Makefile 详细操作应用</h2>
+            <p>Makefile 定义了一系列规则来指定哪些文件需要先编译，哪些文件需要后编译，以及如何编译。使用 <code>make</code> 命令执行。</p>
+
+            <h3 id="sec-2-1">1. 基本规则</h3>
+            <pre><code class="language-makefile">target: prerequisites
+    recipe</code></pre>
+            <ul>
+                <li><strong>target (目标)</strong>: 生成的文件名 (如 app, main.o) 或标签 (如 clean)。</li>
+                <li><strong>prerequisites (依赖)</strong>: 生成目标所需要的文件。</li>
+                <li><strong>recipe (命令)</strong>: 生成目标的具体命令 (必须以 Tab 键开头)。</li>
+            </ul>
+            <p><strong>示例：</strong></p>
+            <pre><code class="language-makefile">app: main.o tools.o
+	gcc main.o tools.o -o app
+main.o: main.c tools.h
+	gcc -c main.c -o main.o
+tools.o: tools.c tools.h
+	gcc -c tools.c -o tools.o
+clean:
+	rm -f *.o app</code></pre>
+
+            <p><strong>为什么是这个顺序？（核心逻辑）</strong></p>
+            <ol>
+                <li><strong>默认目标 (Default Target)</strong>：make 程序默认会执行 Makefile 中出现的第一个目标。在上面的例子中，app 是第一个目标。</li>
+                <li><strong>自顶向下的依赖推导</strong>：Make 从 app 开始，发现依赖 main.o 和 tools.o，于是暂停生成 app，先去寻找如何生成 main.o 和 tools.o
+                    的规则。</li>
+            </ol>
+            <p><strong>总结</strong>： 编写 Makefile 时，通常将最终生成的可执行文件作为第一个目标。</p>
+
+            <h3 id="sec-2-2">2. 变量的使用</h3>
+            <h4>2.1 自定义变量</h4>
+            <p>变量定义通常使用 <code>=</code> 或 <code>:=</code>。</p>
+            <ul>
+                <li><code>=</code> (递归展开赋值): 变量的值在使用时才确定。</li>
+                <li><code>:=</code> (简单赋值): 变量的值在定义时就确定了（推荐使用，避免不可预测的递归）。</li>
+                <li><code>?=</code> (条件赋值): 如果变量未定义，则赋值；否则维持原值。</li>
+            </ul>
+            <p><strong>为什么要使用变量？</strong> 遵循 DRY (Don't Repeat Yourself) 原则。</p>
+            <pre><code class="language-makefile">CC := gcc
+CFLAGS := -Wall -g
+OBJS := main.o tools.o
+TARGET := app
+$(TARGET): $(OBJS)
+	$(CC) $(OBJS) -o $(TARGET)</code></pre>
+
+            <h4>2.2 自动变量</h4>
+            <p>只能在命令 (recipe) 中使用。</p>
+            <ul>
+                <li><code>$@</code>: 目标文件名。</li>
+                <li><code>$&lt;</code>: 第一个依赖文件名。</li>
+                <li><code>$^</code>: 所有依赖文件名 (去重)。</li>
+            </ul>
+            <p><strong>改进后的示例：</strong></p>
+            <pre><code class="language-makefile">app: main.o tools.o
+	gcc $^ -o $@
+main.o: main.c
+	gcc -c $&lt; -o $@
+tools.o: tools.c
+	gcc -c $&lt; -o $@</code></pre>
+
+            <h3 id="sec-2-3">3. 模式匹配与通配符</h3>
+            <h4>3.1 模式规则 (%)</h4>
+            <p>使用 <code>%</code> 进行通配符匹配，它类似于 Shell 中的 <code>*</code>，但在 Makefile 规则中含义不同。</p>
+            <pre><code class="language-makefile"># 这是一个模式规则
+%.o: %.c
+	$(CC) -c $&lt; -o $@</code></pre>
+            <p><strong>解读</strong>：对于任何以 .o 结尾的目标，寻找一个同名但以 .c 结尾的依赖文件。</p>
+
+            <h4>3.2 通配符 (wildcard)</h4>
+            <p>Make 变量定义中不能直接使用 <code>*</code> 来获取文件列表（除非在 recipe 中调用 shell）。必须使用 <code>wildcard</code> 函数。</p>
+            <pre><code class="language-makefile"># 正确写法：
+SRCS := $(wildcard *.c)   # 展开为当前目录下所有 .c 文件列表，如 "main.c tools.c"</code></pre>
+
+            <h4>3.3 替换函数 (patsubst)</h4>
+            <p>用于文本处理，将列表中的文件名按照模式进行替换。</p>
+            <pre><code class="language-makefile"># 语法：$(patsubst pattern,replacement,text)
+OBJS := $(patsubst %.c, %.o, $(SRCS)) 
+# 解释：在 $(SRCS) 中找到所有匹配 %.c 的单词，替换为 %.o</code></pre>
+
+            <h3 id="sec-2-4">4. 伪目标 (.PHONY)</h3>
+            <p><strong>问题场景</strong>： 如果你的目录下恰好有一个文件也叫 <code>clean</code>。当你运行 <code>make clean</code> 时，Make
+                会认为文件已存在且无需更新，从而不执行删除命令。</p>
+            <p><strong>解决方案</strong>： 使用 <code>.PHONY</code> 将 clean 声明为伪目标。</p>
+            <pre><code class="language-makefile">.PHONY: clean install
+clean:
+	rm -f $(OBJS) $(TARGET)</code></pre>
+
+            <h3 id="sec-2-5">5. 最终通用 Makefile 模板</h3>
+            <p>这是一个可以直接用于中小型项目的通用 Makefile。</p>
+            <pre><code class="language-makefile"># 编译器设置
+CC = gcc
+# 编译选项：显示警告，生成调试信息，指定头文件路径
+CFLAGS = -Wall -g -I./include
+# 目标文件名
+TARGET = app
+# 获取当前目录下所有 .c 文件
+SRCS = $(wildcard *.c)
+# 将 .c 文件列表替换为 .o 文件列表
+OBJS = $(patsubst %.c, %.o, $(SRCS))
+# 默认目标
+all: $(TARGET)
+# 链接规则
+$(TARGET): $(OBJS)
+	$(CC) $(OBJS) -o $@
+# 编译规则 (模式匹配)
+%.o: %.c
+	$(CC) $(CFLAGS) -c $&lt; -o $@
+# 伪目标
+.PHONY: clean show
+# 清理规则
+clean:
+	rm -f $(OBJS) $(TARGET)
+# 调试用：显示变量值
+show:
+	@echo "SRCS: $(SRCS)"
+	@echo "OBJS: $(OBJS)"</code></pre>
+
+            <h3 id="sec-2-6">6. 常用 Make 命令</h3>
+            <ul>
+                <li><code>make</code>: 构建默认目标。</li>
+                <li><code>make &lt;target&gt;</code>: 构建指定目标，例如 <code>make clean</code>。</li>
+                <li><code>make -n</code> (Dry Run): 只打印要执行的命令，但不实际执行。</li>
+                <li><code>make -j&lt;n&gt;</code> (Parallel Build): 并行编译，例如 <code>make -j4</code>。</li>
+                <li><code>make -B</code>: 强制重新编译所有目标。</li>
+            </ul>
+
+            <h3 id="sec-2-7">7. 复杂 Makefile 伪代码示例</h3>
+            <p>这是一个包含多目录处理、条件编译和颜色输出等高级特性的复杂 Makefile 示例。</p>
+            <p><strong>假设目录结构:</strong></p>
+            <pre><code>├── src/
+│   ├── main.c
+│   └── utils.c
+├── include/
+│   └── utils.h
+├── build/      (自动生成，存放 .o)
+└── bin/        (自动生成，存放可执行文件)</code></pre>
+
+            <pre><code class="language-makefile"># --- 1. 变量定义 ---
+CC := gcc
+# 编译选项: 
+# -I./include: 告诉编译器头文件在哪里
+# -MMD -MP: 自动生成依赖文件 (.d)，用于处理头文件修改后的重新编译
+CFLAGS := -Wall -Wextra -I./include -MMD -MP
+LDFLAGS := 
+# 目录定义
+SRC_DIR := src
+BUILD_DIR := build
+BIN_DIR := bin
+# 目标文件 (最终生成的可执行文件路径)
+TARGET := $(BIN_DIR)/my_app
+# --- 2. 自动查找文件 ---
+# 找到 src 目录下所有的 .c 文件
+SRCS := $(wildcard $(SRC_DIR)/*.c)
+# 将 SRCS 列表中的 src/xxx.c 替换为 build/xxx.o
+OBJS := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
+# 对应的依赖文件列表 (.d)
+DEPS := $(OBJS:.o=.d)
+# --- 3. 条件编译 (高级特性) ---
+# 使用: make DEBUG=1
+ifeq ($(DEBUG), 1)
+    CFLAGS += -g -DDEBUG
+    TARGET := $(TARGET)_debug
+else
+    CFLAGS += -O2
+endif
+# --- 4. 颜色输出 (UI 优化) ---
+COLOR_RESET = \033[0m
+COLOR_GREEN = \033[32m
+COLOR_YELLOW = \033[33m
+# --- 5. 规则定义 ---
+# 默认目标
+all: check_dirs $(TARGET)
+	@echo "$(COLOR_GREEN)Build Success! -> $(TARGET)$(COLOR_RESET)"
+# 链接规则
+$(TARGET): $(OBJS)
+	@echo "$(COLOR_YELLOW)Linking $@...$(COLOR_RESET)"
+	$(CC) $(OBJS) -o $@ $(LDFLAGS)
+# 编译规则 (模式匹配)
+# 依赖 src 目录下的 .c 文件生成 build 目录下的 .o 文件
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	@echo "Compiling $&lt;..."
+	@mkdir -p $(dir $@)  # 确保 build 子目录存在
+	$(CC) $(CFLAGS) -c $&lt; -o $@
+# 引入自动生成的依赖关系
+-include $(DEPS)
+# 辅助目标: 检查并创建目录
+check_dirs:
+	@mkdir -p $(BIN_DIR) $(BUILD_DIR)
+# 清理
+clean:
+	@echo "Cleaning..."
+	rm -rf $(BUILD_DIR) $(BIN_DIR)
+# 伪目标声明
+.PHONY: all clean check_dirs</code></pre>
+
+        </article>
+    </div>
+
+    <!-- 音乐播放器悬浮窗 -->
+    <div class="music-player-widget">
+        <div class="player-controls">
+            <button id="prev-btn" title="Previous"><i class="fas fa-step-backward"></i></button>
+            <button id="play-btn" title="Play/Pause"><i class="fas fa-play"></i></button>
+            <button id="next-btn" title="Next"><i class="fas fa-step-forward"></i></button>
+            <button id="mute-btn" title="Mute"><i class="fas fa-volume-up"></i></button>
+        </div>
+        <div class="song-info">
+            <span id="song-title">Music Player Ready</span>
+        </div>
+        <!-- 隐藏的 Audio 标签 -->
+        <audio id="bg-music"></audio>
+    </div>
+
+    <!-- 定义根路径变量 (二级子目录写 ../../) -->
+    <script>var ROOT_PATH = '../../';</script>
+
+    <!-- 引入 Prism.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-makefile.min.js"></script>
+
+    <!-- 引入音乐脚本 -->
+    <script src="../../static/js/music.js"></script>
+
+    <script src="../../static/js/comment.js"></script>
+
+    <!-- 核心逻辑：处理返回链接 & 目录高亮 -->
+    <script>
+        // 1. 处理返回按钮逻辑
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromCat = urlParams.get('from');
+
+            const backBtn = document.getElementById('back-btn');
+
+            if (fromCat) {
+                // 回到 archive.html 并带上筛选参数
+                backBtn.href = `../../archive/archive.html?cat=${encodeURIComponent(fromCat)}`;
+                console.log("检测到来源，返回链接已设定为:", backBtn.href);
+            } else {
+                // 默认返回全部
+                backBtn.href = `../../archive/archive.html?cat=all`;
+            }
+        });
+
+        // 2. 目录滚动监听
+        const sections = document.querySelectorAll('h2, h3');
+        const navLinks = document.querySelectorAll('.toc-list a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            if (current) {
+                navLinks.forEach(a => {
+                    a.classList.remove('active');
+                    if (a.getAttribute('href').includes(current)) {
+                        a.classList.add('active');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
