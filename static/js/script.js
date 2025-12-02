@@ -93,3 +93,30 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.1 });
 
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+/* --- 订阅按钮交互逻辑 --- */
+document.addEventListener('DOMContentLoaded', function() {
+    const subBtn = document.getElementById('sub-btn');
+    const subMenu = document.getElementById('sub-menu');
+
+    if (subBtn && subMenu) {
+        // 1. 点击按钮切换菜单显示状态
+        subBtn.addEventListener('click', function(e) {
+            // 阻止冒泡，防止触发 document 的点击事件
+            e.stopPropagation();
+            
+            subMenu.classList.toggle('show');
+            subBtn.classList.toggle('active');
+        });
+
+        // 2. 点击页面其他地方关闭菜单
+        document.addEventListener('click', function(e) {
+            // 如果点击的不是菜单本身，也不是按钮
+            if (!subMenu.contains(e.target) && e.target !== subBtn) {
+                subMenu.classList.remove('show');
+                subBtn.classList.remove('active');
+            }
+        });
+    }
+});
+
