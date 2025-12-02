@@ -18,6 +18,35 @@ function typeWriter() {
 }
 window.addEventListener('load', typeWriter);
 
+const article = document.querySelector('article');
+    
+    // 只有当页面存在 article 标签（即详情页）时才加载评论
+    if (article) {
+        const commentDiv = document.createElement('div');
+        commentDiv.className = 'comments-section';
+        commentDiv.innerHTML = `<h3><i class="fas fa-comments"></i> Discussion</h3>`;
+        
+        const script = document.createElement('script');
+        script.src = "https://giscus.app/client.js";
+        script.setAttribute("data-repo", "777lijiaqi/lijiaqi.io");
+        script.setAttribute("data-repo-id", "R_kgDOQeiAAA");
+        script.setAttribute("data-category", "General");
+        script.setAttribute("data-category-id", "DIC_kwDOQeiAAM4CzRrj");
+        script.setAttribute("data-mapping", "pathname");
+        script.setAttribute("data-strict", "0");
+        script.setAttribute("data-reactions-enabled", "1");
+        script.setAttribute("data-emit-metadata", "0");
+        script.setAttribute("data-input-position", "top");
+        script.setAttribute("data-theme", "transparent_dark"); // 赛博朋克风格
+        script.setAttribute("data-lang", "zh-CN");
+        script.setAttribute("data-loading", "lazy");
+        script.setAttribute("crossorigin", "anonymous");
+        script.async = true;
+
+        commentDiv.appendChild(script);
+        article.appendChild(commentDiv);
+    }
+
 // --- 页面跳转与滚动 (关键修改：增加 Hash 更新) ---
 function scrollToSection(id) {
     const element = document.getElementById(id);
