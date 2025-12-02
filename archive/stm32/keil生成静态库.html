@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keil生成静态库 | STM32</title>
+    <!-- 引入网站图标 -->
+    <link rel="icon" type="image/svg+xml" href="../../static/images/favicon.svg">
+    <!-- 引入字体 -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Orbitron:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <!-- 引入图标 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 代码高亮 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+    <!-- 引入全局样式 -->
+    <link rel="stylesheet" href="../../static/css/style.css">
+
+    <style>
+        /* --- 本地覆盖样式 (文章专用) --- */
+        body {
+            padding-top: 80px;
+        }
+
+        /* 顶部导航栏 (复用 archive 风格) */
+        .article-header {
+            background: rgba(11, 17, 32, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 5%;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: var(--primary);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            color: #fff;
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        /* 布局容器 */
+        .layout {
+            display: flex;
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+            gap: 40px;
+        }
+
+        /* 文章内容区域 */
+        article {
+            flex: 1;
+            background: rgba(30, 41, 59, 0.6);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+        }
+
+        /* 侧边目录栏 */
+        aside {
+            flex: 0 0 250px;
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+            display: none;
+        }
+
+        @media (min-width: 1100px) {
+            aside {
+                display: block;
+            }
+        }
+
+        /* --- 文章内部排版 --- */
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #fff;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            border-left: 5px solid var(--primary);
+            padding-left: 15px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            margin-bottom: 0.8rem;
+            color: #fff;
+            font-family: 'Fira Code', monospace;
+        }
+
+        h4,
+        h5 {
+            color: var(--text-muted);
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        p,
+        li {
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            font-family: 'Segoe UI', sans-serif;
+            line-height: 1.8;
+            text-align: justify;
+        }
+
+        strong {
+            color: var(--accent);
+        }
+
+        /* 表格样式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+
+        th {
+            background-color: rgba(14, 165, 233, 0.1);
+            color: var(--primary);
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* 引用块 */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            background: rgba(16, 185, 129, 0.05);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            color: #d1d5db;
+        }
+
+        /* --- 代码块折叠样式 (New!) --- */
+        details {
+            background: #0d1117;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        summary {
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            font-family: 'Fira Code', monospace;
+            color: var(--primary);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            list-style: none;
+            /* 隐藏默认三角 */
+        }
+
+        summary::before {
+            content: '▶';
+            margin-right: 10px;
+            font-size: 0.8rem;
+            transition: transform 0.2s;
+        }
+
+        details[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+        /* 目录高亮 */
+        .toc-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-list li {
+            margin-bottom: 10px;
+        }
+
+        .toc-list a {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: 0.2s;
+            display: block;
+            border-left: 2px solid transparent;
+            padding-left: 10px;
+            text-decoration: none;
+        }
+
+        .toc-list a:hover,
+        .toc-list a.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+        }
+
+        /* 签名 */
+        .signature {
+            text-align: right;
+            margin-top: 4rem;
+            color: var(--text-muted);
+            font-style: italic;
+            border-top: 1px solid var(--border);
+            padding-top: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 动态背景容器 -->
+    <div class="circuit-bg">
+        <div class="line v-line" style="--delay: 0s; --left: 10%;"></div>
+        <div class="line v-line" style="--delay: 5s; --left: 90%;"></div>
+        <div class="line h-line" style="--delay: 2s; --top: 20%;"></div>
+        <div class="line h-line" style="--delay: 7s; --top: 80%;"></div>
+    </div>
+
+    <!-- 顶部导航 -->
+    <header class="article-header">
+        <!-- 返回按钮：ID 用于 JS 动态修改链接 -->
+        <a id="back-btn" href="../../archive/archive.html?cat=all" class="back-btn">
+            <i class="fas fa-chevron-left"></i> <span>Back to Archive</span>
+        </a>
+        <div style="font-family: 'Fira Code'; color: var(--text-muted); font-size: 0.9rem;">
+            system.read(mode=doc)
+        </div>
+    </header>
+
+    <div class="layout">
+        <!-- 侧边目录 (TOC) -->
+        <aside>
+            <div class="toc-title">DIRECTORY</div>
+            <ul class="toc-list">
+                <li><a href="#sec-1">一、如何生成静态库 (.lib)</a></li>
+                <li><a href="#sec-2">二、如何在工程中使用静态库</a></li>
+                <li><a href="#sec-3">三、常见问题与注意事项</a></li>
+            </ul>
+        </aside>
+
+        <!-- 文章内容 -->
+        <article>
+            <h1>Keil MDK 生成与使用静态库指南</h1>
+
+            <p>
+                在嵌入式开发中，将代码封装成库文件（Library）主要有两个目的：一是<strong>保护核心算法</strong>（不提供源码仅提供接口），二是<strong>模块化开发</strong>，加快编译速度。
+            </p>
+            <p>
+                <strong>核心说明：</strong><br>
+                在 Keil MDK-ARM（针对单片机开发）中，我们通常生成的都是<strong>静态库（Static Library, .lib 文件）</strong>。
+            </p>
+            <ul>
+                <li><strong>静态库</strong>：在编译链接阶段，库中的代码会被直接拷贝整合到最终的可执行文件（.axf/.hex）中。</li>
+                <li><strong>动态库</strong>：通常指 .dll (Windows) 或 .so (Linux)。由于单片机（如 STM32）通常运行裸机或轻量级
+                    RTOS，不支持操作系统的动态加载机制，因此 <strong>Keil MDK 不支持为单片机生成动态链接库</strong>。</li>
+            </ul>
+
+            <h2 id="sec-1">一、如何生成静态库 (.lib)</h2>
+            <p>假设我们要创建一个简单的数学库，包含加法函数。</p>
+
+            <h3>1. 准备源码</h3>
+            <p>你需要准备好你的 <code>.c</code> 源文件和对应的 <code>.h</code> 头文件。</p>
+
+            <p><strong>math_utils.c</strong></p>
+            <pre><code class="language-c">#include "math_utils.h"
+
+int my_add(int a, int b) {
+    return a + b;
+}
+
+int my_sub(int a, int b) {
+    return a - b;
+}</code></pre>
+
+            <p><strong>math_utils.h</strong></p>
+            <pre><code class="language-c">#ifndef __MATH_UTILS_H
+#define __MATH_UTILS_H
+
+int my_add(int a, int b);
+int my_sub(int a, int b);
+
+#endif</code></pre>
+
+            <h3>2. 创建库工程</h3>
+            <ol>
+                <li>打开 Keil，点击 <strong>Project -> New uVision Project</strong>。</li>
+                <li>命名工程（例如 <code>My_Math_Lib</code>），保存。</li>
+                <li><strong>选择设备</strong>：选择你目标项目将要使用的芯片型号（例如 STM32F103C8）。
+                    <br><em>注意：生成的库文件通常与 CPU 架构有关（如 Cortex-M3/M4）。为了保证兼容性，<strong>最好选择与实际使用时一致的芯片或架构配置</strong>。</em>
+                </li>
+                <li>在工程管理窗口（Project窗口）中，右键点击 <code>Source Group 1</code>，选择 <strong>Add Existing Files to
+                        Group...</strong>，将 <code>math_utils.c</code> 添加进去。</li>
+            </ol>
+
+            <h3>3. 配置输出选项（关键步骤）</h3>
+            <p>这是生成库文件最重要的一步。</p>
+            <ol>
+                <li>点击工具栏上的 <strong>"Options for Target"</strong> 按钮（魔术棒图标）。</li>
+                <li>切换到 <strong>Output</strong> 选项卡。</li>
+                <li><strong>勾选 "Create Library"</strong>（默认是 Create Executable）。</li>
+                <li>(可选) 在 "Name of Executable" 中可以修改生成的库文件名，例如 <code>My_Math_Core</code>。</li>
+                <li>点击 OK 保存。</li>
+            </ol>
+
+            <h3>4. 编译生成</h3>
+            <ol>
+                <li>点击 <strong>Build</strong>（F7）按钮。</li>
+                <li>查看下方的 "Build Output" 窗口。如果显示 <code>0 Error(s), 0 Warning(s)</code>，则说明生成成功。</li>
+                <li>打开你的工程目录，进入 <code>Objects</code> 文件夹（或者你自定义的输出目录），你会找到一个
+                    <strong><code>My_Math_Core.lib</code></strong> 文件。</li>
+            </ol>
+
+            <h2 id="sec-2">二、如何在工程中使用静态库</h2>
+            <p>现在我们有一个主工程，想要使用刚才生成的 <code>My_Math_Core.lib</code>。</p>
+
+            <h3>1. 准备文件</h3>
+            <p>将以下文件复制到你的主工程目录下的某个文件夹中（例如新建一个 <code>Libs</code> 文件夹）：</p>
+            <ul>
+                <li><code>My_Math_Core.lib</code> (刚才生成的库文件)</li>
+                <li><code>math_utils.h</code> (库的头文件，必须提供给用户，否则无法通过编译)</li>
+            </ul>
+
+            <h3>2. 将库文件添加到工程</h3>
+            <ol>
+                <li>打开你的主工程（Main Project）。</li>
+                <li>在左侧 "Project" 窗口中，建议右键点击 Target，选择 <strong>Add Group...</strong>，新建一个组，命名为 <code>MyLib</code>（方便管理）。
+                </li>
+                <li>右键点击新建的 <code>MyLib</code> 组，选择 <strong>Add Existing Files to Group 'MyLib'...</strong>。</li>
+                <li><strong>文件类型选择</strong>：将文件类型过滤器从 <code>C Source file</code> 改为
+                    <strong><code>Library file (*.lib)</code></strong> 或者 <code>All files</code>。</li>
+                <li>找到并选中 <code>My_Math_Core.lib</code>，点击 Add。</li>
+            </ol>
+
+            <h3>3. 配置头文件路径</h3>
+            <p>编译器需要知道 <code>.h</code> 文件在哪里。</p>
+            <ol>
+                <li>点击 <strong>"Options for Target"</strong>（魔术棒）。</li>
+                <li>切换到 <strong>C/C++</strong> (或 C/C++(AC6)) 选项卡。</li>
+                <li>在 <strong>Include Paths</strong> 栏中，点击右侧的 <code>...</code> 按钮。</li>
+                <li>新建一项，浏览并选择存放 <code>math_utils.h</code> 的文件夹路径。</li>
+                <li>点击 OK。</li>
+            </ol>
+
+            <h3>4. 调用库函数</h3>
+            <p>在你的 <code>main.c</code> 中引用头文件并调用函数。</p>
+
+            <p><strong>main.c</strong></p>
+            <pre><code class="language-c">#include "stm32f10x.h"  // 假设是STM32
+#include "math_utils.h" // 引用库的头文件
+
+int main(void) {
+    int result;
+    
+    // 调用库中的函数
+    result = my_add(10, 20);
+    
+    while(1) {
+        // 业务逻辑
+    }
+}</code></pre>
+
+            <h3>5. 编译链接</h3>
+            <p>点击 <strong>Build</strong>。Keil 的链接器（Linker）会自动提取 <code>.lib</code> 中的代码并将其合并到最终的 Hex/Axfr
+                文件中。如果配置正确，编译将顺利通过。</p>
+
+            <h2 id="sec-3">三、常见问题与注意事项</h2>
+
+            <h3>1. 为什么不能生成动态库 (.dll)?</h3>
+            <p>
+                嵌入式 MCU 系统（如 Cortex-M）通常是<strong>单地址空间</strong>运行，没有像 Windows/Linux 那样复杂的加载器（Loader）来在运行时加载 DLL。
+                虽然 Keil 无法生成 MCU 可用的动态库，但它可以生成<strong>位置无关代码 (PIC, Position Independent Code)</strong>，但这属于高级用法（用于
+                Bootloader 跳转或特定 RTOS 动态加载模块），通常依然是以二进制文件（.bin）形式存在，而不是标准的 .dll 格式。
+            </p>
+
+            <h3>2. 库文件的兼容性 (ABI)</h3>
+            <p>生成的 <code>.lib</code> 文件对编译器版本和设置比较敏感。</p>
+            <ul>
+                <li><strong>编译器版本</strong>：如果你用 ARMCC (Keil v5 旧版编译器) 生成的库，可能无法在 ARMCLANG (Keil v6 新版编译器)
+                    的工程中混用。建议库和主工程使用相同的编译器版本。</li>
+                <li><strong>CPU 架构</strong>：如果你编译库时选的是 Cortex-M3，而主工程选的是 Cortex-M0，链接时可能会报错。建议生成库时，Options -> Target 中的
+                    "Code Generation" 设置与主工程保持一致。</li>
+            </ul>
+
+            <h3>3. 调试问题</h3>
+            <p>
+                使用静态库时，你无法在调试模式下<strong>步入 (Step Into)</strong> 库函数的源代码内部，因为 <code>.lib</code> 文件通常不包含源码调试信息。
+            </p>
+            <ul>
+                <li><strong>解决方法</strong>：如果你拥有源码并希望调试，可以在生成库时，在 Options -> Output 选项卡中勾选 <strong>Debug
+                        Information</strong>。虽然这不会把源码放进去，但有助于调试器定位符号。</li>
+            </ul>
+
+            <h3>4. 封装建议</h3>
+            <ul>
+                <li><strong>对外接口</strong>：只把需要公开的函数在 <code>.h</code> 中声明。</li>
+                <li><strong>内部函数</strong>：不需要公开的辅助函数，在 <code>.c</code> 中用 <code>static</code> 关键字修饰，且不要在 <code>.h</code>
+                    中声明，这样可以防止外部工程误调用，实现良好的封装。</li>
+            </ul>
+
+            <div class="signature">
+                <p>Author：李家琦</p>
+                <p>Date: 2025/12/02</p>
+            </div>
+
+        </article>
+    </div>
+
+    <!-- 音乐播放器挂载 -->
+    <div class="music-player-widget">
+        <div class="player-controls">
+            <button id="prev-btn" title="Previous"><i class="fas fa-step-backward"></i></button>
+            <button id="play-btn" title="Play/Pause"><i class="fas fa-play"></i></button>
+            <button id="next-btn" title="Next"><i class="fas fa-step-forward"></i></button>
+            <button id="mute-btn" title="Mute"><i class="fas fa-volume-up"></i></button>
+        </div>
+        <div class="song-info">
+            <span id="song-title">Loading...</span>
+        </div>
+        <audio id="bg-music"></audio>
+    </div>
+
+    <!-- 引入脚本库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+
+    <!-- 核心逻辑：定义 ROOT_PATH, 音乐播放, 返回链接, 目录高亮 -->
+    <script>
+        // 1. 定义根路径 (相对于当前文件是两级: ../../)
+        var ROOT_PATH = '../../';
+
+        // 2. 处理返回按钮逻辑 (读取 URL 中的 from 参数)
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromCat = urlParams.get('from');
+
+            const backBtn = document.getElementById('back-btn');
+
+            if (fromCat) {
+                // 如果有 from 参数，构建带参数的返回链接
+                backBtn.href = `../../archive/archive.html?cat=${encodeURIComponent(fromCat)}`;
+                console.log("Back link set to:", backBtn.href);
+            } else {
+                // 默认返回全部
+                backBtn.href = `../../archive/archive.html?cat=all`;
+            }
+        });
+
+        // 3. 目录滚动监听
+        const sections = document.querySelectorAll('h2, h3'); // 监听 h2 和 h3
+        const navLinks = document.querySelectorAll('.toc-list a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            if (current) {
+                navLinks.forEach(a => {
+                    a.classList.remove('active');
+                    if (a.getAttribute('href').includes(current)) {
+                        a.classList.add('active');
+                    }
+                });
+            }
+        });
+    </script>
+
+    <!-- 引入音乐脚本 (必须在 ROOT_PATH 定义之后) -->
+    <script src="../../static/js/music.js"></script>
+
+    <script src="../../static/js/comment.js"></script>
+</body>
+
+</html>
