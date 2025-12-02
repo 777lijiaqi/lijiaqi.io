@@ -37,6 +37,14 @@ document.addEventListener('DOMContentLoaded', function() {
             tags: ["Keil", "汇编"],
             icon: "fas fa-layer-group",
             link: "stm32/keil输出汇编.html"
+        },
+        {
+            title: "Keil生成及使用静态库",
+            category: "stm32",
+            desc: "Keil MDK 生成与使用静态库指南，模块化开发必备。",
+            tags: ["Keil", "Lib", "静态库"],
+            icon: "fas fa-box-archive",
+            link: "stm32/keil生成静态库.html"
         }
     ];
 
