@@ -1093,3 +1093,103 @@ a.card:hover .click-hint {
         clip-path: none; /* 取消切角，防止显示问题 */
     }
 }
+
+/* --- 公众号全息二维码特效 --- */
+
+/* 1. 触发器容器 */
+.wechat-trigger {
+    position: relative; /* 作为二维码定位的基准 */
+    cursor: pointer;
+}
+
+/* 2. 二维码弹窗 (默认隐藏) */
+.qr-popup {
+    position: absolute;
+    /* 电脑端：显示在菜单的右侧 */
+    left: 110%; 
+    top: -20px; /* 稍微上移一点，居中对齐 */
+    
+    width: 140px; /* 二维码框宽度 */
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid #07c160; /* 微信绿边框 */
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    
+    /* 动画初始状态 */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-10px) scale(0.9);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    
+    /* 装饰 */
+    box-shadow: 0 0 20px rgba(7, 193, 96, 0.2);
+    backdrop-filter: blur(10px);
+    z-index: 101;
+}
+
+/* 3. 二维码图片 */
+.qr-popup img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    display: block;
+}
+
+/* 4. 底部文字提示 */
+.qr-tip {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.75rem;
+    color: #07c160;
+    font-family: var(--font-code);
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+/* 左侧小三角 (指向菜单) */
+.qr-popup::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 30px;
+    width: 10px;
+    height: 10px;
+    background: inherit;
+    border-left: 1px solid #07c160;
+    border-bottom: 1px solid #07c160;
+    transform: rotate(45deg);
+}
+
+/* --- 交互逻辑：悬停显示 --- */
+.wechat-trigger:hover .qr-popup {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0) scale(1); /* 弹入效果 */
+}
+
+/* --- 移动端适配 --- */
+/* 手机屏幕窄，右侧放不下，改为显示在下方 */
+@media (max-width: 768px) {
+    .qr-popup {
+        left: 50%;
+        top: 100%;
+        margin-top: 10px;
+        transform: translateX(-50%) translateY(-10px);
+    }
+    
+    .qr-popup::before {
+        /* 调整三角位置到顶部 */
+        left: 50%;
+        top: -6px;
+        margin-left: -5px;
+        border-left: none;
+        border-bottom: none;
+        border-top: 1px solid #07c160;
+        border-left: 1px solid #07c160;
+    }
+
+    .wechat-trigger:hover .qr-popup {
+        transform: translateX(-50%) translateY(0);
+    }
+}
