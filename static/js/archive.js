@@ -45,6 +45,14 @@ document.addEventListener('DOMContentLoaded', function() {
             tags: ["Keil", "Lib", "静态库"],
             icon: "fas fa-box-archive",
             link: "stm32/keil生成静态库.html"
+        },
+        {
+            title: "Keil Debug 调试指南",
+            category: "stm32",
+            desc: "详细教程：如何使用 Keil 调试器查看变量、寄存器、内存及断点调试。",
+            tags: ["Keil", "Debug", "调试"],
+            icon: "fas fa-bug",
+            link: "stm32/keil-debug教程.html"
         }
     ];
 
