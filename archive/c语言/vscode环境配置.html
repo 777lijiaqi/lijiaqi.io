@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,19 +8,22 @@
     <!-- 引入网站图标 -->
     <link rel="icon" type="image/svg+xml" href="../../static/images/favicon.svg">
     <!-- 引入字体 -->
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Orbitron:wght@400;700;900&display=swap"
+        rel="stylesheet">
     <!-- 引入图标 -->
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- 代码高亮 (Prism Tomorrow Night) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
-    
+
     <!-- 引入全局样式 -->
     <link rel="stylesheet" href="../../static/css/style.css">
 
     <style>
         /* --- 本地覆盖样式 (文章专用) --- */
         body {
-            padding-top: 80px; /* 给固定导航栏留位置 */
+            padding-top: 80px;
+            /* 给固定导航栏留位置 */
         }
 
         /* 头部样式复用 */
@@ -71,7 +75,7 @@
             border-radius: 12px;
             border: 1px solid var(--border);
             backdrop-filter: blur(5px);
-            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
             max-width: 900px;
         }
 
@@ -85,7 +89,9 @@
         }
 
         @media (min-width: 1100px) {
-            aside { display: block; }
+            aside {
+                display: block;
+            }
         }
 
         /* --- Markdown 内容排版 --- */
@@ -117,7 +123,7 @@
             color: #fff;
             font-family: 'Fira Code', monospace;
         }
-        
+
         h4 {
             font-size: 1.1rem;
             margin-top: 1.5rem;
@@ -125,15 +131,17 @@
             font-family: 'Fira Code', monospace;
         }
 
-        p, li {
+        p,
+        li {
             color: var(--text-main);
             margin-bottom: 1rem;
             font-family: 'Segoe UI', sans-serif;
             line-height: 1.8;
         }
-        
+
         /* 列表缩进优化 */
-        ul, ol {
+        ul,
+        ol {
             padding-left: 2rem;
             margin-bottom: 1rem;
         }
@@ -161,11 +169,11 @@
             margin: 1.5rem 0;
             color: #d1d5db;
         }
-        
+
         blockquote p {
             margin: 0;
         }
-        
+
         /* 作者栏特殊样式 */
         .author-quote p {
             text-align: right;
@@ -187,8 +195,16 @@
             border-bottom: 1px solid var(--border);
             padding-bottom: 5px;
         }
-        .toc-list { list-style: none; padding-left: 0; }
-        .toc-list li { margin-bottom: 10px; }
+
+        .toc-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 10px;
+        }
+
         .toc-list a {
             color: var(--text-muted);
             font-size: 0.9rem;
@@ -198,17 +214,20 @@
             padding-left: 10px;
             text-decoration: none;
         }
-        .toc-list a:hover, .toc-list a.active {
+
+        .toc-list a:hover,
+        .toc-list a.active {
             color: var(--accent);
             border-left-color: var(--accent);
         }
-        
+
         /* 强调文本 */
         strong {
             color: var(--primary);
         }
     </style>
 </head>
+
 <body>
 
     <!-- 动态背景容器 -->
@@ -249,13 +268,16 @@
         <!-- 文章内容 -->
         <article>
             <h1>VS Code C/C++ 开发环境搭建与深度配置全书</h1>
-            
-            <p>这是一份经过深度整合的 VS Code C/C++ 开发环境搭建与配置全解教程。本教程将<strong>操作步骤</strong>与<strong>底层原理/JSON详解</strong>完全合并，旨在让你不仅知道“怎么做”，还能理解“为什么”。</p>
-            
+
+            <p>这是一份经过深度整合的 VS Code C/C++
+                开发环境搭建与配置全解教程。本教程将<strong>操作步骤</strong>与<strong>底层原理/JSON详解</strong>完全合并，旨在让你不仅知道“怎么做”，还能理解“为什么”。</p>
+
             <hr>
-            
-            <p>Visual Studio Code (VS Code) 本质上是一个<strong>强大的文本编辑器</strong>，而不是像 Visual Studio 那样的集成开发环境 (IDE)。它不自带编译器，而是通过<strong>配置文件 (.json)</strong> 调用外部的<strong>编译器</strong>（Compiler）和<strong>调试器</strong>（Debugger）来工作。</p>
-            
+
+            <p>Visual Studio Code (VS Code) 本质上是一个<strong>强大的文本编辑器</strong>，而不是像 Visual Studio 那样的集成开发环境
+                (IDE)。它不自带编译器，而是通过<strong>配置文件 (.json)</strong>
+                调用外部的<strong>编译器</strong>（Compiler）和<strong>调试器</strong>（Debugger）来工作。</p>
+
             <p>本教程将涵盖：</p>
             <ol>
                 <li>编译器安装（Windows/Mac/Linux）</li>
@@ -270,11 +292,12 @@
 
             <h2 id="sec-1">一、环境准备（编译器安装）</h2>
             <p>在配置 VS Code 之前，必须确保你的系统里已经有了 C/C++ 编译器。</p>
-            
+
             <h3>1. Windows 用户 (推荐 MinGW-w64)</h3>
             <p>Windows 本身不带 C++ 编译器。</p>
             <ol>
-                <li>下载 <strong>MinGW-w64</strong> (建议使用 <a href="https://www.msys2.org/" target="_blank">MSYS2</a> 或 <a href="https://github.com/skeeto/w64devkit/releases" target="_blank">w64devkit</a>)。</li>
+                <li>下载 <strong>MinGW-w64</strong> (建议使用 <a href="https://www.msys2.org/" target="_blank">MSYS2</a> 或 <a
+                        href="https://github.com/skeeto/w64devkit/releases" target="_blank">w64devkit</a>)。</li>
                 <li>解压到一个路径，例如 <code>C:\mingw64</code>。</li>
                 <li><strong>关键步骤</strong>：配置环境变量。
                     <ul>
@@ -287,7 +310,8 @@
             </ol>
 
             <h3>2. macOS 用户</h3>
-            <p>打开终端，输入 <code>clang --version</code>。如果没有安装，系统会提示你安装 Xcode Command Line Tools，输入 <code>xcode-select --install</code> 即可。</p>
+            <p>打开终端，输入 <code>clang --version</code>。如果没有安装，系统会提示你安装 Xcode Command Line Tools，输入
+                <code>xcode-select --install</code> 即可。</p>
 
             <h3>3. Linux (Ubuntu/Debian)</h3>
             <p>打开终端安装 GCC 套件：</p>
@@ -306,41 +330,67 @@ sudo apt install build-essential gdb</code></pre>
             <hr>
 
             <h2 id="sec-3">三、JSON 配置文件编写通用规则 (必读)</h2>
-            <p>VS Code 的核心配置都在 <code>.json</code> 文件中。在修改之前，必须了解基本规则，否则少一个逗号都会导致无法编译。</p>
+            <p>VS Code 的核心配置都在 <code>.json</code> 文件中。JSON (JavaScript Object Notation)
+                是一种轻量级的数据交换格式，易于人阅读和编写，同时也易于机器解析和生成。在修改之前，必须了解基本规则，否则少一个逗号都会导致无法编译。</p>
+
+            <h3>1. 什么是 JSON？</h3>
+            <p>JSON 就像是一个“大字典”，用来存储配置信息。它由<strong>键值对</strong>组成，结构非常清晰。</p>
+
+            <h3>2. 核心语法规则</h3>
             <ol>
-                <li><strong>层级结构</strong>：
+                <li><strong>层级结构 (Hierarchy)</strong>：
                     <ul>
-                        <li><code>{ ... }</code> 大括号包裹的是<strong>对象 (Object)</strong>。</li>
-                        <li><code>[ ... ]</code> 中括号包裹的是<strong>数组 (Array/List)</strong>，里面可以放多个配置项。</li>
+                        <li><strong>对象 (Object) <code>{ ... }</code></strong>：用大括号包裹，表示一个无序的“容器”。里面存放的是“键值对”。
+                            <br><em>例子：</em> <code>"person": { "name": "Li", "age": 25 }</code>
+                        </li>
+                        <li><strong>数组 (Array) <code>[ ... ]</code></strong>：用中括号包裹，表示一个有序的“列表”。里面可以存放多个值（字符串、数字、甚至对象）。
+                            <br><em>例子：</em> <code>"colors": [ "red", "green", "blue" ]</code>
+                        </li>
                     </ul>
                 </li>
-                <li><strong>键值对</strong>：
+                <li><strong>键值对 (Key-Value Pair)</strong>：
                     <ul>
-                        <li>格式为 <code>"Key": Value</code>。</li>
-                        <li><strong>注意</strong>：Key (键) 必须用<strong>双引号</strong>包裹。</li>
+                        <li>格式为 <code>"Key": Value</code> (键: 值)。</li>
+                        <li><strong>Key (键)</strong>：必须用<strong>双引号</strong>包裹的字符串（例如 <code>"compilerPath"</code>）。</li>
+                        <li><strong>Value
+                                (值)</strong>：可以是字符串(<code>"abc"</code>)、数字(<code>123</code>)、布尔值(<code>true/false</code>)、数组(<code>[]</code>)或对象(<code>{}</code>)。
+                        </li>
                     </ul>
                 </li>
-                <li><strong>分隔符</strong>：
+                <li><strong>分隔符 (Separators)</strong>：
                     <ul>
-                        <li>每一行配置结束，如果后面还有内容，<strong>必须加逗号 <code>,</code></strong>。</li>
-                        <li><strong>最后一行配置绝对不能加逗号</strong>（这是新手最容易犯的错误）。</li>
+                        <li><strong>冒号 <code>:</code></strong>：用于分隔“键”和“值”。</li>
+                        <li><strong>逗号 <code>,</code></strong>：用于分隔多个“键值对”或“数组元素”。
+                            <br><span style="color: #ef4444; font-weight: bold;">⚠️ 致命错误警示：</span>
+                            <strong>最后一行配置绝对不能加逗号！</strong> 这是新手最容易犯的错误，会导致解析失败。
+                        </li>
                     </ul>
                 </li>
                 <li><strong>路径写法 (Windows 特有)</strong>：
                     <ul>
-                        <li>在 Windows 中路径通常是 <code>C:\Program Files</code>。但在 JSON 字符串中，反斜杠 <code>\</code> 是转义字符。</li>
-                        <li>所以必须写成双反斜杠 <code>\\</code> (例如 <code>C:\\MinGW\\bin</code>) 或者使用正斜杠 <code>/</code> (例如 <code>C:/MinGW/bin</code>)。</li>
+                        <li>在 Windows 中路径通常是 <code>C:\Program Files</code>。但在 JSON 字符串中，反斜杠 <code>\</code>
+                            是<strong>转义字符</strong>（用来表示特殊字符，如 <code>\n</code> 换行）。</li>
+                        <li>所以要表示一个普通的反斜杠，必须写成双反斜杠 <code>\\</code> (例如 <code>C:\\MinGW\\bin</code>)。</li>
+                        <li>或者推荐使用正斜杠 <code>/</code> (例如 <code>C:/MinGW/bin</code>)，VS Code 也能识别，且跨平台兼容性更好。</li>
                     </ul>
                 </li>
-                <li><strong>VS Code 预定义变量</strong>（避免写死绝对路径）：
+                <li><strong>注释 (Comments)</strong>：
                     <ul>
-                        <li><code>${workspaceFolder}</code>: 当前打开的文件夹根目录。</li>
-                        <li><code>${file}</code>: 当前正在编辑的那个文件。</li>
-                        <li><code>${fileDirname}</code>: 当前文件所在的文件夹路径。</li>
-                        <li><code>${fileBasenameNoExtension}</code>: 当前文件名，不带后缀 (例如 <code>main</code>)。</li>
+                        <li>标准的 JSON 是不支持注释的。</li>
+                        <li>但 VS Code 使用的是 <strong>JSONC (JSON with Comments)</strong>，允许使用 <code>// 单行注释</code> 和
+                            <code>/* 多行注释 */</code>。这让你可以在配置文件中写笔记。</li>
                     </ul>
                 </li>
             </ol>
+
+            <h3>3. VS Code 预定义变量 (Variables)</h3>
+            <p>为了避免把路径写死（比如你的项目从 D 盘移到了 E 盘），VS Code 提供了一些动态变量：</p>
+            <ul>
+                <li><code>${workspaceFolder}</code>: 当前打开的文件夹根目录（项目根目录）。</li>
+                <li><code>${file}</code>: 当前正在编辑的那个文件（绝对路径）。</li>
+                <li><code>${fileDirname}</code>: 当前文件所在的文件夹路径。</li>
+                <li><code>${fileBasenameNoExtension}</code>: 当前文件名，不带后缀 (例如 <code>main</code>)。</li>
+            </ul>
 
             <hr>
 
@@ -348,8 +398,10 @@ sudo apt install build-essential gdb</code></pre>
             <p>VS Code 的 C/C++ 开发主要依赖 <code>.vscode</code> 文件夹下的三个核心文件。我们将逐一“解剖”。</p>
 
             <h3>1. <code>c_cpp_properties.json</code> (智能提示配置)</h3>
-            <p><strong>作用</strong>：这个文件<strong>只管代码提示</strong>（红色波浪线报错、自动补全、跳转定义）。<strong>它不负责编译！</strong> 哪怕这里写错了，只要代码本身没问题，依然可以通过命令行编译成功。它的作用是让编辑器“看懂”你的代码。</p>
-            <p><strong>生成方式</strong>：<code>Ctrl+Shift+P</code> -> 输入 <code>C/C++: Edit Configurations (UI)</code> 或 <code>(JSON)</code>。</p>
+            <p><strong>作用</strong>：这个文件<strong>只管代码提示</strong>（红色波浪线报错、自动补全、跳转定义）。<strong>它不负责编译！</strong>
+                哪怕这里写错了，只要代码本身没问题，依然可以通过命令行编译成功。它的作用是让编辑器“看懂”你的代码。</p>
+            <p><strong>生成方式</strong>：<code>Ctrl+Shift+P</code> -> 输入 <code>C/C++: Edit Configurations (UI)</code> 或
+                <code>(JSON)</code>。</p>
             <p><strong>详细解析与配置</strong>：</p>
             <pre><code class="language-json">{
     "configurations": [
@@ -395,8 +447,10 @@ sudo apt install build-essential gdb</code></pre>
 }</code></pre>
 
             <h3>2. <code>tasks.json</code> (构建/编译指令)</h3>
-            <p><strong>作用</strong>：VS Code 自己不会编译，它通过这个文件<strong>指挥命令行</strong>去干活。这就好比你手动打开 CMD 输入 <code>g++ main.cpp -o main.exe</code>，但这个文件帮你自动完成了。</p>
-            <p><strong>生成方式</strong>：菜单栏 <code>Terminal</code> -> <code>Configure Default Build Task</code> -> 选择 <code>g++.exe build active file</code>。</p>
+            <p><strong>作用</strong>：VS Code 自己不会编译，它通过这个文件<strong>指挥命令行</strong>去干活。这就好比你手动打开 CMD 输入
+                <code>g++ main.cpp -o main.exe</code>，但这个文件帮你自动完成了。</p>
+            <p><strong>生成方式</strong>：菜单栏 <code>Terminal</code> -> <code>Configure Default Build Task</code> -> 选择
+                <code>g++.exe build active file</code>。</p>
             <p><strong>详细解析与配置</strong>：</p>
             <pre><code class="language-json">{
     "version": "2.0.0",
@@ -452,8 +506,10 @@ sudo apt install build-essential gdb</code></pre>
 
             <h3>3. <code>launch.json</code> (调试配置)</h3>
             <p><strong>作用</strong>：配置调试器（GDB/LLDB），告诉它去哪里找刚才编译好的 <code>.exe</code> 文件，以及如何启动它。</p>
-            <p><strong>逻辑链条</strong>：当你按 <code>F5</code> 时 -> VS Code 读取 <code>launch.json</code> -> 发现 <code>preLaunchTask</code> -> 先去跑 <code>tasks.json</code> 编译出 exe -> 编译成功 -> 启动 GDB 挂载该 exe。</p>
-            <p><strong>生成方式</strong>：侧边栏“运行和调试”图标 -> <code>create a launch.json file</code> -> 选择 <code>C++ (GDB/LLDB)</code>。</p>
+            <p><strong>逻辑链条</strong>：当你按 <code>F5</code> 时 -> VS Code 读取 <code>launch.json</code> -> 发现
+                <code>preLaunchTask</code> -> 先去跑 <code>tasks.json</code> 编译出 exe -> 编译成功 -> 启动 GDB 挂载该 exe。</p>
+            <p><strong>生成方式</strong>：侧边栏“运行和调试”图标 -> <code>create a launch.json file</code> -> 选择
+                <code>C++ (GDB/LLDB)</code>。</p>
             <p><strong>详细解析与配置</strong>：</p>
             <pre><code class="language-json">{
     "version": "0.2.0",
@@ -530,7 +586,8 @@ sudo apt install build-essential gdb</code></pre>
             <hr>
 
             <h2 id="sec-6">六、高级工作区定制 (settings.json)</h2>
-            <p>你提到的“屏蔽搜索和文件显示”是在 <code>settings.json</code> 中配置的。这可以让你的项目目录看起来更干净，忽略掉编译产生的中间文件（如 <code>.o</code>, <code>.exe</code>）。</p>
+            <p>你提到的“屏蔽搜索和文件显示”是在 <code>settings.json</code> 中配置的。这可以让你的项目目录看起来更干净，忽略掉编译产生的中间文件（如 <code>.o</code>,
+                <code>.exe</code>）。</p>
             <p>在 <code>.vscode</code> 文件夹下新建或编辑 <code>settings.json</code>：</p>
             <pre><code class="language-json">{
     // 【文件资源管理器】排除规则：
@@ -602,7 +659,8 @@ sudo apt install build-essential gdb</code></pre>
             <hr>
 
             <h2 id="sec-8">八、如何打包发布软件 (Release)</h2>
-            <p>C/C++ 和 Python/Java 不同，它编译出来就是机器码。但是，如果你直接把生成的 <code>.exe</code> 发给朋友，他可能打不开，提示“缺少 xxx.dll”。这是因为默认是<strong>动态链接</strong>。</p>
+            <p>C/C++ 和 Python/Java 不同，它编译出来就是机器码。但是，如果你直接把生成的 <code>.exe</code> 发给朋友，他可能打不开，提示“缺少
+                xxx.dll”。这是因为默认是<strong>动态链接</strong>。</p>
 
             <h3>1. 简单的静态链接打包 (适用于小工具)</h3>
             <p>我们要修改 <code>tasks.json</code>，让编译器把依赖库都打进 exe 里面。</p>
@@ -654,7 +712,7 @@ add_executable(MyApp src/main.cpp src/other.cpp)</code></pre>
             <p>通过这套配置，你不仅拥有了一个轻量级的 IDE，还掌握了底层构建的逻辑。这也就是 VS Code 的魅力所在。</p>
 
             <hr>
-            
+
             <blockquote class="author-quote">
                 <p>Author：李家琦</p>
                 <p>Date: 2025/12/03</p>
@@ -679,12 +737,12 @@ add_executable(MyApp src/main.cpp src/other.cpp)</code></pre>
 
     <!-- 定义根路径变量 (由于在 archive/c语言/ 下，所以是 ../../) -->
     <script>var ROOT_PATH = '../../';</script>
-    
+
     <!-- 引入音乐脚本 -->
     <script src="../../static/js/music.js"></script>
 
-	<script src="../../static/js/comment.js"></script>
-	
+    <script src="../../static/js/comment.js"></script>
+
     <!-- 引入 Prism.js 核心及语言包 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
@@ -692,16 +750,16 @@ add_executable(MyApp src/main.cpp src/other.cpp)</code></pre>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cmake.min.js"></script>
-    
+
     <!-- 核心逻辑：处理返回链接 & 目录高亮 -->
     <script>
         // 1. 处理返回按钮逻辑
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
-            const fromCat = urlParams.get('from'); 
-            
+            const fromCat = urlParams.get('from');
+
             const backBtn = document.getElementById('back-btn');
-            
+
             if (fromCat) {
                 // 如果有 from 参数，就用它，处理 c/cpp 的转码
                 backBtn.href = `../../archive/archive.html?cat=${encodeURIComponent(fromCat)}`;
@@ -734,4 +792,5 @@ add_executable(MyApp src/main.cpp src/other.cpp)</code></pre>
         });
     </script>
 </body>
+
 </html>
