@@ -1,9 +1,13 @@
 /* --- 全局变量定义 --- */
 :root {
-    --bg-color: #0b1120;       /* 深空蓝黑 */
-    --card-bg: rgba(30, 41, 59, 0.7); /* 半透明卡片 */
-    --primary: #0ea5e9;        /* 科技蓝 */
-    --accent: #10b981;         /* 电路绿 */
+    --bg-color: #0b1120;
+    /* 深空蓝黑 */
+    --card-bg: rgba(30, 41, 59, 0.7);
+    /* 半透明卡片 */
+    --primary: #0ea5e9;
+    /* 科技蓝 */
+    --accent: #10b981;
+    /* 电路绿 */
     --text-main: #f1f5f9;
     --text-muted: #94a3b8;
     --border: rgba(255, 255, 255, 0.1);
@@ -26,7 +30,7 @@ body {
     overflow-x: hidden;
     /* 背景网格线效果 */
     background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
     background-size: 40px 40px;
 }
 
@@ -56,12 +60,14 @@ header {
 nav ul {
     display: flex;
     list-style: none;
-    gap: 15px; /* 按钮之间的间距 */
+    gap: 15px;
+    /* 按钮之间的间距 */
     align-items: center;
 }
 
 .nav-item {
-    position: relative; /* 关键：作为下拉菜单的定位基准 */
+    position: relative;
+    /* 关键：作为下拉菜单的定位基准 */
     height: 100%;
     display: flex;
     align-items: center;
@@ -76,20 +82,21 @@ nav ul {
     font-size: 0.95rem;
     font-weight: 600;
     padding: 8px 20px;
-    background: rgba(11, 17, 32, 0.6); /* 半透明深底 */
-    border: 1px solid rgba(14, 165, 233, 0.3); /* 暗淡的蓝边框 */
-    
+    background: rgba(11, 17, 32, 0.6);
+    /* 半透明深底 */
+    border: 1px solid rgba(14, 165, 233, 0.3);
+    /* 暗淡的蓝边框 */
+
     /* 核心：利用 clip-path 切掉左上角和右下角，制造科技感 */
-    clip-path: polygon(
-        10px 0, 100% 0, 
-        100% calc(100% - 10px), calc(100% - 10px) 100%, 
-        0 100%, 0 10px
-    );
-    
+    clip-path: polygon(10px 0, 100% 0,
+            100% calc(100% - 10px), calc(100% - 10px) 100%,
+            0 100%, 0 10px);
+
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
-    gap: 8px; /* 文字和箭头的间距 */
+    gap: 8px;
+    /* 文字和箭头的间距 */
 }
 
 /* 按钮内部的文字 */
@@ -109,9 +116,12 @@ nav ul {
 .nav-item:hover .nav-btn,
 .nav-btn.active {
     color: #fff;
-    background: rgba(14, 165, 233, 0.15); /* 激活时背景变亮 */
-    border-color: var(--primary);          /* 边框变亮蓝 */
-    text-shadow: 0 0 8px var(--primary);   /* 文字发光 */
+    background: rgba(14, 165, 233, 0.15);
+    /* 激活时背景变亮 */
+    border-color: var(--primary);
+    /* 边框变亮蓝 */
+    text-shadow: 0 0 8px var(--primary);
+    /* 文字发光 */
     box-shadow: 0 0 15px rgba(14, 165, 233, 0.2);
 }
 
@@ -129,14 +139,16 @@ nav ul {
     left: 0;
     width: 0%;
     height: 2px;
-    background: var(--accent); /* 绿色扫描线 */
+    background: var(--accent);
+    /* 绿色扫描线 */
     transition: width 0.3s ease;
     box-shadow: 0 0 10px var(--accent);
 }
 
 .nav-item:hover .nav-btn::after,
 .nav-btn.active::after {
-    width: 100%; /* 线条填满 */
+    width: 100%;
+    /* 线条填满 */
 }
 
 /* --- 4. 下拉菜单样式 (Dropdown Menu) --- */
@@ -148,29 +160,29 @@ nav ul {
     left: 50%;
     /* 初始状态：下移且隐藏，利用 transform 居中 */
     transform: translateX(-50%) translateY(20px);
-    
-    min-width: 220px; /* 稍微宽一点，大气 */
+
+    min-width: 220px;
+    /* 稍微宽一点，大气 */
     padding: 15px 0;
-    
+
     /* 1. 背景：深色 + 极其微弱的网格纹理 */
-    background: 
+    background:
         linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.98)),
         linear-gradient(rgba(14, 165, 233, 0.1) 1px, transparent 1px),
         linear-gradient(90deg, rgba(14, 165, 233, 0.1) 1px, transparent 1px);
     background-size: 100% 100%, 20px 20px, 20px 20px;
-    
+
     /* 2. 边框与光影 */
     border: 1px solid rgba(14, 165, 233, 0.2);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 
-                0 0 15px rgba(14, 165, 233, 0.1); /* 淡淡的蓝光晕 */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6),
+        0 0 15px rgba(14, 165, 233, 0.1);
+    /* 淡淡的蓝光晕 */
     backdrop-filter: blur(12px);
-    
+
     /* 3. 异形切割：右下角切掉一块 */
-    clip-path: polygon(
-        0 0, 100% 0, 
-        100% calc(100% - 20px), calc(100% - 20px) 100%, 
-        0 100%
-    );
+    clip-path: polygon(0 0, 100% 0,
+            100% calc(100% - 20px), calc(100% - 20px) 100%,
+            0 100%);
 
     /* 动画过渡 */
     opacity: 0;
@@ -193,7 +205,8 @@ nav ul {
 .nav-item:hover .dropdown-menu {
     opacity: 1;
     visibility: visible;
-    transform: translateX(-50%) translateY(10px); /* 带有回弹的上浮效果 */
+    transform: translateX(-50%) translateY(10px);
+    /* 带有回弹的上浮效果 */
 }
 
 /* --- 下拉菜单项样式 --- */
@@ -208,15 +221,18 @@ nav ul {
     font-family: var(--font-code);
     font-size: 0.9rem;
     transition: all 0.3s;
-    overflow: hidden; /* 限制背景光效范围 */
-    border-left: 2px solid transparent; /* 左侧指示条占位 */
+    overflow: hidden;
+    /* 限制背景光效范围 */
+    border-left: 2px solid transparent;
+    /* 左侧指示条占位 */
 }
 
 /* 图标样式 */
 .item-icon {
     margin-right: 12px;
     font-size: 1rem;
-    color: #475569; /* 默认灰色 */
+    color: #475569;
+    /* 默认灰色 */
     transition: 0.3s;
 }
 
@@ -225,13 +241,14 @@ nav ul {
 /* 1. 确保图标容器有足够的宽度，且不会被挤压 */
 .item-icon {
     display: inline-block;
-    min-width: 20px; /* 给图标留位置 */
+    min-width: 20px;
+    /* 给图标留位置 */
     text-align: center;
     margin-right: 12px;
     font-size: 1rem;
     color: #475569;
     transition: 0.3s;
-    
+
     /* 关键：防止被父元素的 Fira Code 字体覆盖 */
     font-style: normal;
     font-variant: normal;
@@ -254,8 +271,9 @@ nav ul {
 /* 4. 修复下拉菜单右侧的小箭头 (确保它也用对字体) */
 .dropdown-item::after {
     /* 原有代码... */
-    content: '\f105'; 
-    font-family: "Font Awesome 6 Free" !important; /* 加上 !important */
+    content: '\f105';
+    font-family: "Font Awesome 6 Free" !important;
+    /* 加上 !important */
     font-weight: 900 !important;
     /* ...原有代码 */
 }
@@ -275,7 +293,8 @@ nav ul {
     position: absolute;
     top: 0;
     left: 0;
-    width: 0%; /* 初始宽度为0 */
+    width: 0%;
+    /* 初始宽度为0 */
     height: 100%;
     background: linear-gradient(90deg, rgba(14, 165, 233, 0.15), transparent);
     transition: width 0.4s ease;
@@ -283,18 +302,22 @@ nav ul {
 }
 
 .dropdown-item:hover::before {
-    width: 100%; /* 悬停时拉满 */
+    width: 100%;
+    /* 悬停时拉满 */
 }
 
 /* 2. 状态变化 */
 .dropdown-item:hover {
     color: #fff;
-    border-left-color: var(--primary); /* 左侧亮条出现 */
-    padding-left: 30px; /* 整体右移，产生动感 */
+    border-left-color: var(--primary);
+    /* 左侧亮条出现 */
+    padding-left: 30px;
+    /* 整体右移，产生动感 */
 }
 
 .dropdown-item:hover .item-icon {
-    color: var(--primary); /* 图标变蓝 */
+    color: var(--primary);
+    /* 图标变蓝 */
     transform: scale(1.1);
     text-shadow: 0 0 8px var(--primary);
 }
@@ -305,7 +328,8 @@ nav ul {
 
 /* 3. 装饰：右侧出现一个小箭头 */
 .dropdown-item::after {
-    content: '\f105'; /* FontAwesome 的右箭头编码 */
+    content: '\f105';
+    /* FontAwesome 的右箭头编码 */
     font-family: 'Font Awesome 6 Free';
     font-weight: 900;
     position: absolute;
@@ -386,7 +410,7 @@ h1 {
     color: var(--accent);
     margin-bottom: 1.5rem;
     font-size: 1.2rem;
-    background: rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.3);
     padding: 10px;
     border-radius: 5px;
     display: inline-block;
@@ -404,17 +428,22 @@ h1 {
     padding: 12px 32px;
     font-size: 1rem;
     font-weight: 600;
-    border-radius: 50px; /* 圆角胶囊形状 */
+    border-radius: 50px;
+    /* 圆角胶囊形状 */
     cursor: pointer;
     border: none;
     outline: none;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 弹性过渡动画 */
-    font-family: var(--font-code); /* 使用代码字体 */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* 弹性过渡动画 */
+    font-family: var(--font-code);
+    /* 使用代码字体 */
     letter-spacing: 1px;
     display: inline-flex;
     align-items: center;
-    gap: 10px; /* 图标和文字的间距 */
-    overflow: hidden; /* 用于限制光效范围 */
+    gap: 10px;
+    /* 图标和文字的间距 */
+    overflow: hidden;
+    /* 用于限制光效范围 */
     z-index: 1;
 }
 
@@ -431,14 +460,17 @@ h1 {
 /* --- 样式 A：流光霓虹主按钮 (The Neon Glow) --- */
 .btn-glow {
     background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: #000; /* 深色背景配深色字，或者改成 #fff 配白字 */
-    box-shadow: 0 5px 15px rgba(14, 165, 233, 0.4); /* 初始投影 */
+    color: #000;
+    /* 深色背景配深色字，或者改成 #fff 配白字 */
+    box-shadow: 0 5px 15px rgba(14, 165, 233, 0.4);
+    /* 初始投影 */
 }
 
 /* 悬停效果：上浮 + 强烈发光 */
 .btn-glow:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.6); /* 混合了绿色的光 */
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.6);
+    /* 混合了绿色的光 */
     color: #fff;
 }
 
@@ -450,27 +482,29 @@ h1 {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-        90deg, 
-        transparent, 
-        rgba(255, 255, 255, 0.4), 
-        transparent
-    );
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.4),
+            transparent);
     transform: skewX(-25deg);
     transition: 0.5s;
     z-index: -1;
 }
 
 .btn-glow:hover::before {
-    left: 100%; /* 鼠标放上去，一道光扫过去 */
+    left: 100%;
+    /* 鼠标放上去，一道光扫过去 */
 }
 
 /* --- 样式 B：磨砂玻璃次按钮 (The Frost Glass) --- */
 .btn-glass {
-    background: rgba(255, 255, 255, 0.03); /* 极淡的背景 */
+    background: rgba(255, 255, 255, 0.03);
+    /* 极淡的背景 */
     color: var(--text-main);
-    border: 1px solid rgba(255, 255, 255, 0.1); /* 隐约的边框 */
-    backdrop-filter: blur(5px); /* 毛玻璃模糊 */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    /* 隐约的边框 */
+    backdrop-filter: blur(5px);
+    /* 毛玻璃模糊 */
 }
 
 /* 悬停效果：边框变亮 + 文字变色 */
@@ -478,7 +512,8 @@ h1 {
     background: rgba(255, 255, 255, 0.1);
     border-color: var(--primary);
     color: var(--primary);
-    box-shadow: 0 0 15px rgba(14, 165, 233, 0.2); /* 淡淡的蓝光 */
+    box-shadow: 0 0 15px rgba(14, 165, 233, 0.2);
+    /* 淡淡的蓝光 */
     transform: translateY(-3px);
 }
 
@@ -490,12 +525,14 @@ h1 {
     right: 20px;
     width: 10px;
     height: 2px;
-    background: var(--bg-color); /* 遮断边框，制造缺口感 */
+    background: var(--bg-color);
+    /* 遮断边框，制造缺口感 */
     transition: 0.3s;
 }
 
 .btn-glass:hover::after {
-    background: var(--primary); /* 悬停时缺口补齐并发光 */
+    background: var(--primary);
+    /* 悬停时缺口补齐并发光 */
     width: 100%;
     right: 0;
 }
@@ -511,7 +548,7 @@ h1 {
     border-radius: 15px;
     overflow: hidden;
     backdrop-filter: blur(10px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     transition: transform 0.3s;
 }
 
@@ -531,9 +568,9 @@ h1 {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    
+
     /* 新增：稍微降低一点亮度，让它融入深色背景，悬停时变亮 */
-    filter: brightness(0.9); 
+    filter: brightness(0.9);
     transition: all 0.5s ease;
 }
 
@@ -609,7 +646,7 @@ h1 {
 .skill-bar {
     width: 100%;
     height: 6px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     margin: 1rem 0;
     border-radius: 3px;
 }
@@ -641,7 +678,7 @@ h1 {
 }
 
 .resource-item:hover {
-    background: rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.05);
     border-color: var(--primary);
 }
 
@@ -673,7 +710,7 @@ h1 {
     align-items: center;
     gap: 15px;
     z-index: 2000;
-    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 }
 
 .song-info {
@@ -714,10 +751,24 @@ h1 {
 
 /* 移动端适配 */
 @media (max-width: 768px) {
-    .intro-layout { flex-direction: column-reverse; }
-    .intro-right { flex: auto; width: 100%; }
-    h1 { font-size: 2rem; }
-    .music-player-widget { bottom: 10px; right: 10px; max-width: 90%; }
+    .intro-layout {
+        flex-direction: column-reverse;
+    }
+
+    .intro-right {
+        flex: auto;
+        width: 100%;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .music-player-widget {
+        bottom: 10px;
+        right: 10px;
+        max-width: 90%;
+    }
 }
 
 
@@ -726,23 +777,23 @@ h1 {
 a.card {
     /* 1. 去掉链接默认下划线 */
     text-decoration: none;
-    
+
     /* 2. 强制继承原本的文字颜色 (防止变成蓝色) */
-    color: inherit; 
-    color: inherit; 
-    
+    color: inherit;
+    color: inherit;
+
     /* 3. 确保卡片依然是块级元素 */
-    display: block; 
-    
+    display: block;
+
     /* 4. 鼠标放上去显示小手图标 */
     cursor: pointer;
 }
 
 /* 确保卡片内部的所有文字也继承颜色，不被浏览器默认链接色覆盖 */
-a.card h3, 
-a.card p, 
+a.card h3,
+a.card p,
 a.card span {
-    color: inherit; 
+    color: inherit;
 }
 
 /* (可选) 如果你加了 click-hint 提示文字，给它加点样式 */
@@ -751,8 +802,10 @@ a.card span {
     margin-top: 1rem;
     font-size: 0.9rem;
     font-weight: bold;
-    color: var(--primary); /* 使用你的主题色 */
-    opacity: 0;            /* 默认隐藏 */
+    color: var(--primary);
+    /* 使用你的主题色 */
+    opacity: 0;
+    /* 默认隐藏 */
     transform: translateX(-10px);
     transition: all 0.3s ease;
 }
@@ -772,57 +825,214 @@ a.card:hover .click-hint {
     left: 0;
     width: 100%;
     height: 100%;
-    pointer-events: none; /* 确保鼠标能穿透，不影响点击按钮 */
-    z-index: -1;          /* 放在背景图之上，但文字之下 */
+    pointer-events: none;
+    /* 确保鼠标能穿透，不影响点击按钮 */
+    z-index: -1;
+    /* 放在背景图之上，但文字之下 */
     overflow: hidden;
 }
 
 /* 2. 导线基础样式：透明的轨道 */
 .line {
     position: absolute;
-    background: rgba(255, 255, 255, 0.02); /* 极其微弱的轨道痕迹，不需要可删 */
+    background: rgba(255, 255, 255, 0.02);
+    /* 极其微弱的轨道痕迹，不需要可删 */
 }
 
 /* 3. 电流光点（伪元素）：真正的发光体 */
 .line::after {
     content: '';
     position: absolute;
-    background: linear-gradient(to bottom, transparent, var(--primary)); /* 拖尾渐变 */
-    box-shadow: 0 0 15px var(--primary); /* 强力霓虹发光 */
-    opacity: 0; /* 默认隐藏 */
+    background: linear-gradient(to bottom, transparent, var(--primary));
+    /* 拖尾渐变 */
+    box-shadow: 0 0 15px var(--primary);
+    /* 强力霓虹发光 */
+    opacity: 0;
+    /* 默认隐藏 */
 }
 
 /* --- 竖向线条 (Vertical) --- */
 .v-line {
     top: 0;
-    width: 1px; /* 线宽 */
+    width: 1px;
+    /* 线宽 */
     height: 100%;
-    left: var(--left); /* 由HTML传入位置 */
-}
-
-.v-line::after {
-    top: -50%;
-    left: 0;
-    width: 100%;
-    height: 150px; /* 电流长度 */
-    animation: dropDown 6s infinite; /* 总时长6秒，包含等待时间 */
-    animation-delay: var(--delay);   /* 错开出发时间 */
+    left: var(--left);
+    /* 由HTML传入位置 */
 }
 
 /* --- 横向线条 (Horizontal) --- */
 .h-line {
     left: 0;
-    height: 1px; /* 线宽 */
+    height: 1px;
+    /* 线宽 */
     width: 100%;
-    top: var(--top); /* 由HTML传入位置 */
+    top: var(--top);
+    /* 由HTML传入位置 */
+}
+
+/* 动画定义 */
+.v-line::after {
+    top: -50%;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    /* 拖尾长度 */
+    animation: dropDown 3s infinite linear;
+    animation-delay: var(--delay);
 }
 
 .h-line::after {
     left: -50%;
     top: 0;
     height: 100%;
-    width: 150px; /* 电流长度 */
-    background: linear-gradient(to right, transparent, var(--accent)); /* 横向用绿色(accent)区分 */
+    width: 100px;
+    /* 拖尾长度 */
+    animation: slideRight 4s infinite linear;
+    animation-delay: var(--delay);
+}
+
+@keyframes dropDown {
+    0% {
+        top: -50%;
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        top: 150%;
+        opacity: 0;
+    }
+}
+
+@keyframes slideRight {
+    0% {
+        left: -50%;
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        left: 150%;
+        opacity: 0;
+    }
+}
+
+/* --- 视频播放器组件样式 --- */
+.video-widget {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--primary);
+    border-radius: 12px;
+    padding: 15px;
+    margin: 2rem 0;
+    box-shadow: 0 0 20px rgba(14, 165, 233, 0.15);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 装饰性边角 (赛博朋克风格) */
+.video-widget::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    border-top: 2px solid var(--accent);
+    border-left: 2px solid var(--accent);
+    border-top-left-radius: 8px;
+}
+
+.video-widget::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    border-bottom: 2px solid var(--accent);
+    border-right: 2px solid var(--accent);
+    border-bottom-right-radius: 8px;
+}
+
+.video-frame {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #000;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+    margin-bottom: 15px;
+}
+
+.video-frame video {
+    width: 100%;
+    display: block;
+    outline: none;
+}
+
+.video-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.source-btn {
+    font-size: 0.9rem;
+    padding: 8px 20px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+
+.v-line::after {
+    top: -50%;
+    left: 0;
+    width: 100%;
+    height: 150px;
+    /* 电流长度 */
+    animation: dropDown 6s infinite;
+    /* 总时长6秒，包含等待时间 */
+    animation-delay: var(--delay);
+    /* 错开出发时间 */
+}
+
+/* --- 横向线条 (Horizontal) --- */
+.h-line {
+    left: 0;
+    height: 1px;
+    /* 线宽 */
+    width: 100%;
+    top: var(--top);
+    /* 由HTML传入位置 */
+}
+
+.h-line::after {
+    left: -50%;
+    top: 0;
+    height: 100%;
+    width: 150px;
+    /* 电流长度 */
+    background: linear-gradient(to right, transparent, var(--accent));
+    /* 横向用绿色(accent)区分 */
     box-shadow: 0 0 15px var(--accent);
     animation: slideRight 8s infinite;
     animation-delay: var(--delay);
@@ -836,18 +1046,26 @@ a.card:hover .click-hint {
         top: -150px;
         opacity: 0;
     }
+
     10% {
-        opacity: 1; /* 刚进入时变亮 */
+        opacity: 1;
+        /* 刚进入时变亮 */
     }
+
     50% {
-        top: 100%;  /* 跑到屏幕底部 */
+        top: 100%;
+        /* 跑到屏幕底部 */
         opacity: 1;
     }
+
     51% {
-        opacity: 0; /* 跑完立刻消失 */
+        opacity: 0;
+        /* 跑完立刻消失 */
     }
+
     100% {
-        top: 100%; /* 后半段时间保持消失（等待期） */
+        top: 100%;
+        /* 后半段时间保持消失（等待期） */
         opacity: 0;
     }
 }
@@ -858,12 +1076,20 @@ a.card:hover .click-hint {
         left: -150px;
         opacity: 0;
     }
-    10% { opacity: 1; }
+
+    10% {
+        opacity: 1;
+    }
+
     40% {
         left: 100%;
         opacity: 1;
     }
-    41% { opacity: 0; }
+
+    41% {
+        opacity: 0;
+    }
+
     100% {
         left: 100%;
         opacity: 0;
@@ -875,14 +1101,18 @@ a.card:hover .click-hint {
 /* 风格 A：代码块风格 (适合强调技术名词，如 STM32, RTOS) */
 /* 特点：不换行，不破坏布局，像代码编辑器里的高亮 */
 .code-highlight {
-    font-family: var(--font-code); /* 使用代码字体 */
-    color: var(--accent);          /* 你的电路绿 */
-    background: rgba(16, 185, 129, 0.15); /* 淡淡的绿色背景 */
+    font-family: var(--font-code);
+    /* 使用代码字体 */
+    color: var(--accent);
+    /* 你的电路绿 */
+    background: rgba(16, 185, 129, 0.15);
+    /* 淡淡的绿色背景 */
     padding: 2px 6px;
     border-radius: 4px;
     font-size: 0.9em;
     border: 1px solid rgba(16, 185, 129, 0.3);
-    margin: 0 2px; /* 左右留一点空隙 */
+    margin: 0 2px;
+    /* 左右留一点空隙 */
 }
 
 /* 风格 B：霓虹重点风格 (适合强调一整句描述) */
@@ -892,34 +1122,38 @@ a.card:hover .click-hint {
     font-weight: bold;
     background: linear-gradient(to right, rgba(14, 165, 233, 0.5), transparent);
     padding-left: 5px;
-    border-left: 3px solid var(--primary); /* 左侧加个蓝条 */
-    display: inline-block; /* 保持行内块级，防止错位 */
+    border-left: 3px solid var(--primary);
+    /* 左侧加个蓝条 */
+    display: inline-block;
+    /* 保持行内块级，防止错位 */
     line-height: 1.4;
 }
 
 /* 修改卡片标题样式 */
 .card h3 {
     /* 1. 使用科幻字体 */
-    font-family: 'Orbitron', sans-serif; 
+    font-family: 'Orbitron', sans-serif;
     font-size: 1.5rem;
     font-weight: 700;
-    letter-spacing: 2px; /* 增加字间距，更像标题 */
+    letter-spacing: 2px;
+    /* 增加字间距，更像标题 */
     margin-bottom: 1rem;
-    
+
     /* 2. 制作流光渐变文字 (核心代码) */
-    background: linear-gradient(
-        90deg, 
-        #ffffff 0%, 
-        var(--primary) 50%, 
-        var(--accent) 100%
-    );
-    background-size: 200% auto; /* 放大背景以便流动 */
-    -webkit-background-clip: text; /* 只有文字显示背景 */
-    -webkit-text-fill-color: transparent; /* 文字变透明 */
-    
+    background: linear-gradient(90deg,
+            #ffffff 0%,
+            var(--primary) 50%,
+            var(--accent) 100%);
+    background-size: 200% auto;
+    /* 放大背景以便流动 */
+    -webkit-background-clip: text;
+    /* 只有文字显示背景 */
+    -webkit-text-fill-color: transparent;
+    /* 文字变透明 */
+
     /* 3. 初始状态：无发光或微弱发光 */
     filter: drop-shadow(0 0 2px rgba(14, 165, 233, 0.3));
-    
+
     /* 4. 添加动画 */
     animation: shine 5s linear infinite;
     transition: all 0.3s ease;
@@ -934,8 +1168,10 @@ a.card:hover .click-hint {
 
 /* 鼠标悬停卡片时，标题更亮 */
 .card:hover h3 {
-    filter: drop-shadow(0 0 10px var(--primary)); /* 强力霓虹光 */
-    transform: scale(1.05); /* 微微放大 */
+    filter: drop-shadow(0 0 10px var(--primary));
+    /* 强力霓虹光 */
+    transform: scale(1.05);
+    /* 微微放大 */
 }
 
 /* 修改卡片正文样式 */
@@ -944,23 +1180,25 @@ a.card:hover .click-hint {
     font-family: 'Fira Code', monospace;
     font-size: 0.9rem;
     line-height: 1.6;
-    
+
     /* 2. 颜色处理：稍微灰一点，不抢标题风头 */
     color: #a0aec0;
-    
+
     /* 3. 稍微增加字间距 */
     letter-spacing: 0.5px;
 }
 
 /* 里面的高亮 span 样式 (配合之前的 code-highlight) */
 .card p span {
-    font-weight: 600; /* 加粗 */
+    font-weight: 600;
+    /* 加粗 */
 }
 
 .click-hint {
     font-family: 'Fira Code', monospace;
     font-size: 0.8rem;
-    color: var(--accent); /* 使用绿色 */
+    color: var(--accent);
+    /* 使用绿色 */
     margin-top: 15px;
     display: block;
     opacity: 0.8;
@@ -976,13 +1214,16 @@ a.card:hover .click-hint {
 }
 
 @keyframes blink {
-    50% { opacity: 0; }
+    50% {
+        opacity: 0;
+    }
 }
 
 /* 悬停时箭头移动 */
 .card:hover .click-hint {
     color: #fff;
-    transform: translateX(10px); /* 向右滑 */
+    transform: translateX(10px);
+    /* 向右滑 */
     text-shadow: 0 0 5px var(--accent);
 }
 
@@ -998,7 +1239,8 @@ a.card:hover .click-hint {
 
 /* 1. 订阅按钮样式 (红色/粉色霓虹流光) */
 .btn-subscribe {
-    background: linear-gradient(135deg, #ff0050, #9d00ff); /* 抖音/赛博粉配色 */
+    background: linear-gradient(135deg, #ff0050, #9d00ff);
+    /* 抖音/赛博粉配色 */
     color: #fff;
     box-shadow: 0 5px 15px rgba(255, 0, 80, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -1013,30 +1255,33 @@ a.card:hover .click-hint {
 /* 按钮点击激活状态 */
 .btn-subscribe.active {
     background: linear-gradient(135deg, #bd003b, #7000b8);
-    box-shadow: inset 0 3px 8px rgba(0,0,0,0.3);
+    box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* 2. 悬浮菜单容器 */
 .sub-menu {
     position: absolute;
-    bottom: 120%; /* 在按钮上方弹出 */
+    bottom: 120%;
+    /* 在按钮上方弹出 */
     left: 50%;
-    transform: translateX(-50%) translateY(20px) scale(0.9); /* 初始下移且缩小 */
-    
+    transform: translateX(-50%) translateY(20px) scale(0.9);
+    /* 初始下移且缩小 */
+
     min-width: 140px;
     background: rgba(15, 23, 42, 0.95);
-    border: 1px solid rgba(255, 0, 80, 0.5); /* 红边框 */
+    border: 1px solid rgba(255, 0, 80, 0.5);
+    /* 红边框 */
     border-radius: 8px;
     padding: 10px 0;
     backdrop-filter: blur(12px);
     box-shadow: 0 0 20px rgba(255, 0, 80, 0.2);
-    
+
     /* 默认隐藏 */
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     z-index: 100;
-    
+
     /* 切角设计 */
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
 }
@@ -1062,7 +1307,8 @@ a.card:hover .click-hint {
 }
 
 .sub-item i {
-    width: 25px; /* 图标固定宽度对齐 */
+    width: 25px;
+    /* 图标固定宽度对齐 */
     font-size: 1.1rem;
     text-align: center;
     margin-right: 5px;
@@ -1071,8 +1317,10 @@ a.card:hover .click-hint {
 .sub-item:hover {
     background: rgba(255, 255, 255, 0.05);
     color: #fff;
-    border-left-color: #ff0050; /* 悬停左侧红条 */
-    padding-left: 25px; /* 右滑效果 */
+    border-left-color: #ff0050;
+    /* 悬停左侧红条 */
+    padding-left: 25px;
+    /* 右滑效果 */
 }
 
 /* 顶部装饰光条 */
@@ -1089,8 +1337,10 @@ a.card:hover .click-hint {
 @media (max-width: 768px) {
     .sub-menu {
         bottom: auto;
-        top: 120%; /* 移动端在下方显示 */
-        clip-path: none; /* 取消切角，防止显示问题 */
+        top: 120%;
+        /* 移动端在下方显示 */
+        clip-path: none;
+        /* 取消切角，防止显示问题 */
     }
 }
 
@@ -1098,7 +1348,8 @@ a.card:hover .click-hint {
 
 /* 1. 触发器容器 */
 .wechat-trigger {
-    position: relative; /* 作为二维码定位的基准 */
+    position: relative;
+    /* 作为二维码定位的基准 */
     cursor: pointer;
 }
 
@@ -1106,22 +1357,25 @@ a.card:hover .click-hint {
 .qr-popup {
     position: absolute;
     /* 电脑端：显示在菜单的右侧 */
-    left: 110%; 
-    top: -20px; /* 稍微上移一点，居中对齐 */
-    
-    width: 140px; /* 二维码框宽度 */
+    left: 110%;
+    top: -20px;
+    /* 稍微上移一点，居中对齐 */
+
+    width: 140px;
+    /* 二维码框宽度 */
     background: rgba(15, 23, 42, 0.95);
-    border: 1px solid #07c160; /* 微信绿边框 */
+    border: 1px solid #07c160;
+    /* 微信绿边框 */
     border-radius: 8px;
     padding: 10px;
     text-align: center;
-    
+
     /* 动画初始状态 */
     opacity: 0;
     visibility: hidden;
     transform: translateX(-10px) scale(0.9);
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    
+
     /* 装饰 */
     box-shadow: 0 0 20px rgba(7, 193, 96, 0.2);
     backdrop-filter: blur(10px);
@@ -1165,7 +1419,8 @@ a.card:hover .click-hint {
 .wechat-trigger:hover .qr-popup {
     opacity: 1;
     visibility: visible;
-    transform: translateX(0) scale(1); /* 弹入效果 */
+    transform: translateX(0) scale(1);
+    /* 弹入效果 */
 }
 
 /* --- 移动端适配 --- */
@@ -1177,7 +1432,7 @@ a.card:hover .click-hint {
         margin-top: 10px;
         transform: translateX(-50%) translateY(-10px);
     }
-    
+
     .qr-popup::before {
         /* 调整三角位置到顶部 */
         left: 50%;
@@ -1198,13 +1453,12 @@ a.card:hover .click-hint {
 
 /* 1. 允许微信这一栏的内容溢出 (关键！) */
 .wechat-trigger {
-    overflow: visible !important; 
+    overflow: visible !important;
 }
 
 /* 2. 确保菜单容器也不遮挡溢出 (关键！) */
 .sub-menu {
     /* 移除切角效果，因为切角会把飞出去的二维码切断 */
-    clip-path: none !important; 
+    clip-path: none !important;
     overflow: visible !important;
 }
-
