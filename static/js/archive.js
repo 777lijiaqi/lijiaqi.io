@@ -39,6 +39,14 @@ document.addEventListener('DOMContentLoaded', function() {
             link: "linux/shell脚本教程.html"
         },
         {
+            title: "Cortex-A 架构及 ARM 汇编详解",
+            category: "linux",
+            desc: "基于 ARM 官方文档，详解 Cortex-A 架构原理、寄存器、流水线及 ARMv7 指令集，包含 C 与汇编混合编程实例。",
+            tags: ["ARM", "Cortex-A", "Assembly", "ATPCS"],
+            icon: "fas fa-microchip",
+            link: "arm/Cortex-A架构及ARM汇编.html"
+        },
+        {
             title: "HAL库精准延时",
             category: "stm32",
             desc: "基于HAL库定时器外设延时驱动开发。",
