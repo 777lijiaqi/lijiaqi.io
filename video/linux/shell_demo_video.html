@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shell 脚本自动化实战 | Video Tutorial</title>
+    <link rel="icon" type="image/svg+xml" href="../../static/images/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../static/css/style.css">
+    <style>
+        body { padding-top: 80px; }
+        .article-header {
+            background: rgba(11, 17, 32, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 5%;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .back-btn {
+            text-decoration: none;
+            color: var(--primary);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+        .back-btn:hover { color: #fff; text-shadow: 0 0 10px var(--primary); }
+        .layout {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .video-desc {
+            color: var(--text-main);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+            background: rgba(30, 41, 59, 0.4);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="circuit-bg">
+        <div class="line v-line" style="--delay: 0s; --left: 10%;"></div>
+        <div class="line v-line" style="--delay: 5s; --left: 90%;"></div>
+    </div>
+
+    <header class="article-header">
+        <a id="back-btn" href="../video.html" class="back-btn">
+            <i class="fas fa-chevron-left"></i> <span>Back to Videos</span>
+        </a>
+    </header>
+
+    <div class="layout">
+        <h1>Shell 脚本自动化实战</h1>
+
+        <!-- 视频播放器组件 -->
+        <div class="video-widget">
+            <div class="video-frame">
+                <!-- 这里放视频源，支持 mp4, webm 等 -->
+                <!-- 示例视频：使用一个占位符或本地视频 -->
+                <video controls poster="../../static/images/video_poster_placeholder.jpg">
+                    <source src="sample_video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="video-footer">
+                <!-- 跳转到源地址按钮 -->
+                <a href="https://www.bilibili.com/video/BV1xxxxxx" target="_blank" class="btn btn-glass source-btn">
+                    <i class="fas fa-external-link-alt"></i> Watch on Bilibili
+                </a>
+            </div>
+        </div>
+
+        <div class="video-desc">
+            <h3>视频简介</h3>
+            <p>本视频详细演示了如何编写一个生产环境可用的 Shell 自动备份脚本。涵盖了变量定义、tar 命令打包、find 命令清理旧备份以及 crontab 定时任务的配置。</p>
+            <p><strong>前置知识：</strong> Linux 基础命令。</p>
+        </div>
+    </div>
+
+    <script>var ROOT_PATH = '../../';</script>
+    <script src="../../static/js/music.js"></script>
+</body>
+</html>
