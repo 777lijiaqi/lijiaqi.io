@@ -31,6 +31,14 @@ document.addEventListener('DOMContentLoaded', function() {
             link: "c语言/cmake教程.html"
         },
         {
+            title: "Shell 脚本编程与常用命令指南",
+            category: "linux",
+            desc: "包含 Shell 基础语法、变量、流程控制、函数以及常用命令的详细用法与实战案例。",
+            tags: ["Shell", "Bash", "Linux", "Automation"],
+            icon: "fas fa-terminal",
+            link: "linux/shell脚本教程.html"
+        },
+        {
             title: "HAL库精准延时",
             category: "stm32",
             desc: "基于HAL库定时器外设延时驱动开发。",
