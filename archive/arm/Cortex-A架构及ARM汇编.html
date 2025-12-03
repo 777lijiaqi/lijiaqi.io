@@ -12,68 +12,179 @@
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../static/css/style.css">
     <style>
-        /* 页面特定样式 */
-        .article-container {
-            max-width: 1000px;
-            margin: 100px auto;
-            padding: 2rem;
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            border: 1px solid var(--border);
+        /* --- 本地覆盖样式 (文章专用) --- */
+        body {
+            padding-top: 80px;
         }
 
-        .article-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-            text-align: center;
-            text-shadow: 0 0 10px rgba(14, 165, 233, 0.3);
+        .article-header {
+            background: rgba(11, 17, 32, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 5%;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
+
+        .back-btn {
+            text-decoration: none;
+            color: var(--primary);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            color: #fff;
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        .layout {
+            display: flex;
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+            gap: 40px;
+        }
+
+        article {
+            flex: 1;
+            background: rgba(30, 41, 59, 0.6);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+        }
+
+        aside {
+            flex: 0 0 250px;
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+            display: none;
+        }
+
+        @media (min-width: 1100px) {
+            aside {
+                display: block;
+            }
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            color: #fff;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            font-family: 'Orbitron', sans-serif;
+            line-height: 1.4;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            border-left: 5px solid var(--primary);
+            padding-left: 15px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            margin-top: 2rem;
+            margin-bottom: 0.8rem;
+            color: #fff;
+            font-family: 'Fira Code', monospace;
+        }
+
+        h4 {
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+            color: var(--accent);
+            font-family: 'Fira Code', monospace;
+        }
+
+        p,
+        li {
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            font-family: 'Segoe UI', sans-serif;
+            line-height: 1.8;
+        }
+
+        ul,
+        ol {
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        pre {
+            background: #0d1117 !important;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .toc-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 10px;
+        }
+
+        .toc-list a {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .toc-list a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+
+        /* --- Cortex-A 特定样式 --- */
 
         .article-meta {
             text-align: center;
             color: var(--text-muted);
             margin-bottom: 3rem;
             font-family: var(--font-code);
-        }
-
-        h2 {
-            color: var(--accent);
-            border-left: 4px solid var(--accent);
-            padding-left: 1rem;
-            margin: 3rem 0 1.5rem;
-            font-family: 'Orbitron', sans-serif;
-        }
-
-        h3 {
-            color: var(--text-main);
-            margin: 2rem 0 1rem;
-        }
-
-        p,
-        li {
-            color: var(--text-muted);
-            line-height: 1.8;
-            margin-bottom: 1rem;
-        }
-
-        code {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 2px 6px;
-            border-radius: 4px;
-            color: var(--accent);
-            font-family: var(--font-code);
-        }
-
-        pre {
-            background: #0f172a;
-            padding: 1.5rem;
-            border-radius: 8px;
-            overflow-x: auto;
-            border: 1px solid var(--border);
-            margin: 1.5rem 0;
         }
 
         /* 指令集搜索与折叠样式 */
@@ -150,13 +261,6 @@
             background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
         }
-
-        .back-btn {
-            position: fixed;
-            top: 100px;
-            left: 20px;
-            z-index: 100;
-        }
     </style>
 </head>
 
@@ -168,10 +272,10 @@
         <div class="line v-line" style="--delay: 4s; --left: 95%;"></div>
         <div class="line h-line" style="--delay: 2s; --top: 15%;"></div>
     </div>
-    
+
     <!-- 顶部导航 -->
     <header class="article-header">
-        <a id="back-btn" href="../../archive/archive.html?cat=arm" class="back-btn">
+        <a id="back-btn" href="../../archive/archive.html?cat=linux" class="back-btn">
             <i class="fas fa-chevron-left"></i> <span>Back to Archive</span>
         </a>
         <div style="font-family: 'Fira Code'; color: var(--text-muted); font-size: 0.9rem;">
@@ -179,241 +283,256 @@
         </div>
     </header>
 
-    <main class="article-container">
-        <h1 class="article-title">Cortex-A 架构及 ARM 汇编详解</h1>
-        <div class="article-meta">
-            <span><i class="fas fa-calendar"></i> 2025-12-03</span>
-            <span style="margin: 0 10px">|</span>
-            <span><i class="fas fa-tag"></i> Linux / ARM / Assembly</span>
-        </div>
-
-        <!-- 第一部分：Cortex-A 架构与硬件特性 -->
-        <section id="architecture">
-            <h2>1. Cortex-A 架构与硬件特性</h2>
-            <p>Cortex-A 系列处理器是 ARM 公司专为高性能应用设计的处理器核心，广泛应用于智能手机、平板电脑和嵌入式 Linux 系统。本节基于 ARMv7-A 架构手册编写。</p>
-
-            <h3>1.1 运行模式 (Processor Modes)</h3>
-            <p>Cortex-A 处理器支持多种运行模式，主要用于处理不同的异常和特权级别：</p>
-            <ul>
-                <li><strong>User (USR)</strong>: 非特权模式，大多数应用程序运行于此。</li>
-                <li><strong>System (SYS)</strong>: 特权模式，与 User 模式共用寄存器，用于运行操作系统任务。</li>
-                <li><strong>FIQ</strong>: 快速中断模式，用于处理高优先级中断。</li>
-                <li><strong>IRQ</strong>: 普通中断模式，用于处理一般中断。</li>
-                <li><strong>Supervisor (SVC)</strong>: 管理模式，复位或执行 SWI 指令后进入，供 OS 内核使用。</li>
-                <li><strong>Abort (ABT)</strong>: 数据或指令预取终止时进入。</li>
-                <li><strong>Undefined (UND)</strong>: 执行未定义指令时进入。</li>
-                <li><strong>Monitor (MON)</strong>: 安全扩展模式 (TrustZone)。</li>
-                <li><strong>Hyp (HYP)</strong>: 虚拟化扩展模式。</li>
+    <div class="layout">
+        <!-- 侧边目录 -->
+        <aside>
+            <div class="toc-title">DIRECTORY</div>
+            <ul class="toc-list">
+                <li><a href="#architecture">1. Cortex-A 架构与硬件特性</a></li>
+                <li><a href="#instruction-set">2. ARMv7 指令集详解</a></li>
+                <li><a href="#mixed-programming">3. C 与 ARM 汇编混合编程</a></li>
             </ul>
+        </aside>
 
-            <h3>1.2 寄存器组 (Registers)</h3>
-            <p>ARMv7 拥有 37 个 32 位寄存器（包含程序状态寄存器）：</p>
-            <ul>
-                <li><strong>R0-R12</strong>: 通用寄存器。R0-R3 常用于参数传递。</li>
-                <li><strong>R13 (SP)</strong>: 栈指针 (Stack Pointer)，每个模式有独立的 SP。</li>
-                <li><strong>R14 (LR)</strong>: 链接寄存器 (Link Register)，保存子程序返回地址。</li>
-                <li><strong>R15 (PC)</strong>: 程序计数器 (Program Counter)。</li>
-                <li><strong>CPSR</strong>: 当前程序状态寄存器 (Current Program Status Register)，存储条件标志位 (N, Z, C, V) 和控制位 (I, F,
-                    Mode)。</li>
-                <li><strong>SPSR</strong>: 备份程序状态寄存器 (Saved Program Status Register)，异常发生时用于保存 CPSR。</li>
-            </ul>
-
-            <h3>1.3 流水线 (Pipeline)</h3>
-            <p>Cortex-A 系列通常采用多级流水线（如 Cortex-A7 为 8 级有序流水线，Cortex-A9 为乱序执行）。流水线机制使得 PC 值通常指向当前执行指令的后两条指令（PC = 当前指令地址 +
-                8）。</p>
-        </section>
-
-        <!-- 第二部分：ARMv7 指令集详解 -->
-        <section id="instruction-set">
-            <h2>2. ARMv7 指令集详解</h2>
-            <p>以下是常用 ARM 指令的详解。支持搜索和折叠查看。</p>
-
-            <input type="text" id="inst-search" class="search-box" placeholder="搜索指令 (e.g., MOV, LDR, ADD)...">
-
-            <div id="instruction-list">
-                <!-- 数据处理指令 -->
-                <div class="instruction-item" data-name="MOV">
-                    <div class="instruction-header">
-                        <span class="inst-name">MOV</span>
-                        <span class="inst-desc-short">数据传送指令</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="instruction-body">
-                        <p><strong>语法：</strong> <code>MOV{cond}{S} Rd, Operand2</code></p>
-                        <p><strong>描述：</strong> 将 Operand2 的值传送到目标寄存器 Rd。</p>
-                        <pre>MOV R0, #10      ; R0 = 10
-MOV R1, R0       ; R1 = R0</pre>
-                    </div>
-                </div>
-
-                <div class="instruction-item" data-name="MVN">
-                    <div class="instruction-header">
-                        <span class="inst-name">MVN</span>
-                        <span class="inst-desc-short">数据取反传送指令</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="instruction-body">
-                        <p><strong>语法：</strong> <code>MVN{cond}{S} Rd, Operand2</code></p>
-                        <p><strong>描述：</strong> 将 Operand2 按位取反后传送到 Rd。</p>
-                        <pre>MVN R0, #0       ; R0 = -1 (0xFFFFFFFF)</pre>
-                    </div>
-                </div>
-
-                <div class="instruction-item" data-name="ADD">
-                    <div class="instruction-header">
-                        <span class="inst-name">ADD</span>
-                        <span class="inst-desc-short">加法指令</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="instruction-body">
-                        <p><strong>语法：</strong> <code>ADD{cond}{S} Rd, Rn, Operand2</code></p>
-                        <p><strong>描述：</strong> Rd = Rn + Operand2。</p>
-                        <pre>ADD R0, R1, #1   ; R0 = R1 + 1</pre>
-                    </div>
-                </div>
-
-                <div class="instruction-item" data-name="SUB">
-                    <div class="instruction-header">
-                        <span class="inst-name">SUB</span>
-                        <span class="inst-desc-short">减法指令</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="instruction-body">
-                        <p><strong>语法：</strong> <code>SUB{cond}{S} Rd, Rn, Operand2</code></p>
-                        <p><strong>描述：</strong> Rd = Rn - Operand2。</p>
-                        <pre>SUB R0, R1, R2   ; R0 = R1 - R2</pre>
-                    </div>
-                </div>
-
-                <!-- 内存访问指令 -->
-                <div class="instruction-item" data-name="LDR">
-                    <div class="instruction-header">
-                        <span class="inst-name">LDR</span>
-                        <span class="inst-desc-short">加载寄存器指令</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="instruction-body">
-                        <p><strong>语法：</strong> <code>LDR{cond} Rd, [Rn, #offset]</code></p>
-                        <p><strong>描述：</strong> 从内存地址 (Rn + offset) 读取数据到 Rd。</p>
-                        <pre>LDR R0, [R1]     ; 读取 R1 指向的内存值到 R0
-LDR R0, =0x1234  ; 加载立即数（伪指令）</pre>
-                    </div>
-                </div>
-
-                <div class="instruction-item" data-name="STR">
-                    <div class="instruction-header">
-                        <span class="inst-name">STR</span>
-                        <span class="inst-desc-short">存储寄存器指令</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="instruction-body">
-                        <p><strong>语法：</strong> <code>STR{cond} Rd, [Rn, #offset]</code></p>
-                        <p><strong>描述：</strong> 将 Rd 的值写入到内存地址 (Rn + offset)。</p>
-                        <pre>STR R0, [R1]     ; 将 R0 的值写入 R1 指向的内存</pre>
-                    </div>
-                </div>
-
-                <div class="instruction-item" data-name="LDM">
-                    <div class="instruction-header">
-                        <span class="inst-name">LDM</span>
-                        <span class="inst-desc-short">多寄存器加载</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="instruction-body">
-                        <p><strong>语法：</strong> <code>LDM{addr_mode}{cond} Rn{!}, reglist</code></p>
-                        <p><strong>描述：</strong> 从连续内存加载多个寄存器。常用于栈操作 (LDMFD)。</p>
-                        <pre>LDMFD SP!, {R0-R3, PC} ; 恢复现场并返回</pre>
-                    </div>
-                </div>
-
-                <div class="instruction-item" data-name="STM">
-                    <div class="instruction-header">
-                        <span class="inst-name">STM</span>
-                        <span class="inst-desc-short">多寄存器存储</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="instruction-body">
-                        <p><strong>语法：</strong> <code>STM{addr_mode}{cond} Rn{!}, reglist</code></p>
-                        <p><strong>描述：</strong> 将多个寄存器保存到连续内存。常用于栈操作 (STMFD)。</p>
-                        <pre>STMFD SP!, {R0-R3, LR} ; 保存现场</pre>
-                    </div>
-                </div>
-
-                <!-- 跳转指令 -->
-                <div class="instruction-item" data-name="B">
-                    <div class="instruction-header">
-                        <span class="inst-name">B</span>
-                        <span class="inst-desc-short">相对跳转指令</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="instruction-body">
-                        <p><strong>语法：</strong> <code>B{cond} label</code></p>
-                        <p><strong>描述：</strong> 跳转到 label 处执行。范围通常为 ±32MB。</p>
-                        <pre>B loop           ; 无条件跳转到 loop 标号</pre>
-                    </div>
-                </div>
-
-                <div class="instruction-item" data-name="BL">
-                    <div class="instruction-header">
-                        <span class="inst-name">BL</span>
-                        <span class="inst-desc-short">带链接跳转指令</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="instruction-body">
-                        <p><strong>语法：</strong> <code>BL{cond} label</code></p>
-                        <p><strong>描述：</strong> 跳转前将下一条指令地址保存到 LR (R14)，用于函数调用。</p>
-                        <pre>BL my_function   ; 调用函数 my_function</pre>
-                    </div>
-                </div>
-
-                <!-- 状态寄存器访问 -->
-                <div class="instruction-item" data-name="MRS">
-                    <div class="instruction-header">
-                        <span class="inst-name">MRS</span>
-                        <span class="inst-desc-short">读状态寄存器</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="instruction-body">
-                        <p><strong>语法：</strong> <code>MRS{cond} Rd, PSR</code></p>
-                        <p><strong>描述：</strong> 将 CPSR 或 SPSR 的值读入通用寄存器。</p>
-                        <pre>MRS R0, CPSR     ; 读取 CPSR 到 R0</pre>
-                    </div>
-                </div>
-
-                <div class="instruction-item" data-name="MSR">
-                    <div class="instruction-header">
-                        <span class="inst-name">MSR</span>
-                        <span class="inst-desc-short">写状态寄存器</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="instruction-body">
-                        <p><strong>语法：</strong> <code>MSR{cond} PSR_fields, Operand2</code></p>
-                        <p><strong>描述：</strong> 将操作数写入 CPSR 或 SPSR 的特定域。</p>
-                        <pre>MSR CPSR_c, #0xD3 ; 切换到 SVC 模式并禁止中断</pre>
-                    </div>
-                </div>
+        <!-- 文章内容 -->
+        <article>
+            <h1 class="article-title">Cortex-A 架构及 ARM 汇编详解</h1>
+            <div class="article-meta">
+                <span><i class="fas fa-calendar"></i> 2025-12-03</span>
+                <span style="margin: 0 10px">|</span>
+                <span><i class="fas fa-tag"></i> Linux / ARM / Assembly</span>
             </div>
-        </section>
 
-        <!-- 第三部分：C与汇编混合编程 -->
-        <section id="mixed-programming">
-            <h2>3. C 与 ARM 汇编混合编程</h2>
-            <p>在嵌入式底层开发（如 Bootloader、OS 内核初始化）中，经常需要汇编与 C 语言互相调用。这需要遵循 <strong>ATPCS (ARM-Thumb Procedure Call
-                    Standard)</strong> 规则。</p>
+            <!-- 第一部分：Cortex-A 架构与硬件特性 -->
+            <section id="architecture">
+                <h2>1. Cortex-A 架构与硬件特性</h2>
+                <p>Cortex-A 系列处理器是 ARM 公司专为高性能应用设计的处理器核心，广泛应用于智能手机、平板电脑和嵌入式 Linux 系统。本节基于 ARMv7-A 架构手册编写。</p>
 
-            <h3>3.1 ATPCS 规则核心</h3>
-            <ul>
-                <li><strong>参数传递</strong>: 前 4 个参数通过 <code>R0-R3</code> 传递，超过 4 个的参数通过栈 (Stack) 传递。</li>
-                <li><strong>返回值</strong>: 32 位返回值保存在 <code>R0</code> 中，64 位返回值保存在 <code>R0, R1</code> 中。</li>
-                <li><strong>寄存器保护</strong>: 子程序必须保护 <code>R4-R11</code> 和
-                    <code>R14 (LR)</code>，如果使用了它们。<code>R0-R3</code> 和 <code>R12</code> 无需保护。</li>
-            </ul>
+                <h3>1.1 运行模式 (Processor Modes)</h3>
+                <p>Cortex-A 处理器支持多种运行模式，主要用于处理不同的异常和特权级别：</p>
+                <ul>
+                    <li><strong>User (USR)</strong>: 非特权模式，大多数应用程序运行于此。</li>
+                    <li><strong>System (SYS)</strong>: 特权模式，与 User 模式共用寄存器，用于运行操作系统任务。</li>
+                    <li><strong>FIQ</strong>: 快速中断模式，用于处理高优先级中断。</li>
+                    <li><strong>IRQ</strong>: 普通中断模式，用于处理一般中断。</li>
+                    <li><strong>Supervisor (SVC)</strong>: 管理模式，复位或执行 SWI 指令后进入，供 OS 内核使用。</li>
+                    <li><strong>Abort (ABT)</strong>: 数据或指令预取终止时进入。</li>
+                    <li><strong>Undefined (UND)</strong>: 执行未定义指令时进入。</li>
+                    <li><strong>Monitor (MON)</strong>: 安全扩展模式 (TrustZone)。</li>
+                    <li><strong>Hyp (HYP)</strong>: 虚拟化扩展模式。</li>
+                </ul>
 
-            <h3>3.2 实例：从 start.s 跳转到 main.c</h3>
-            <p>以下示例展示了系统启动代码 <code>start.s</code> 如何初始化栈环境，然后跳转到 C 语言入口 <code>main.c</code>。</p>
+                <h3>1.2 寄存器组 (Registers)</h3>
+                <p>ARMv7 拥有 37 个 32 位寄存器（包含程序状态寄存器）：</p>
+                <ul>
+                    <li><strong>R0-R12</strong>: 通用寄存器。R0-R3 常用于参数传递。</li>
+                    <li><strong>R13 (SP)</strong>: 栈指针 (Stack Pointer)，每个模式有独立的 SP。</li>
+                    <li><strong>R14 (LR)</strong>: 链接寄存器 (Link Register)，保存子程序返回地址。</li>
+                    <li><strong>R15 (PC)</strong>: 程序计数器 (Program Counter)。</li>
+                    <li><strong>CPSR</strong>: 当前程序状态寄存器 (Current Program Status Register)，存储条件标志位 (N, Z, C, V) 和控制位 (I,
+                        F,
+                        Mode)。</li>
+                    <li><strong>SPSR</strong>: 备份程序状态寄存器 (Saved Program Status Register)，异常发生时用于保存 CPSR。</li>
+                </ul>
 
-            <h4>汇编文件: start.s</h4>
-            <pre><code class="language-asm">
+                <h3>1.3 流水线 (Pipeline)</h3>
+                <p>Cortex-A 系列通常采用多级流水线（如 Cortex-A7 为 8 级有序流水线，Cortex-A9 为乱序执行）。流水线机制使得 PC 值通常指向当前执行指令的后两条指令（PC = 当前指令地址
+                    +
+                    8）。</p>
+            </section>
+
+            <!-- 第二部分：ARMv7 指令集详解 -->
+            <section id="instruction-set">
+                <h2>2. ARMv7 指令集详解</h2>
+                <p>以下是常用 ARM 指令的详解。支持搜索和折叠查看。</p>
+
+                <input type="text" id="inst-search" class="search-box" placeholder="搜索指令 (e.g., MOV, LDR, ADD)...">
+
+                <div id="instruction-list">
+                    <!-- 数据处理指令 -->
+                    <div class="instruction-item" data-name="MOV">
+                        <div class="instruction-header">
+                            <span class="inst-name">MOV</span>
+                            <span class="inst-desc-short">数据传送指令</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="instruction-body">
+                            <p><strong>语法：</strong> <code>MOV{cond}{S} Rd, Operand2</code></p>
+                            <p><strong>描述：</strong> 将 Operand2 的值传送到目标寄存器 Rd。</p>
+                            <pre>MOV R0, #10      ; R0 = 10
+MOV R1, R0       ; R1 = R0</pre>
+                        </div>
+                    </div>
+
+                    <div class="instruction-item" data-name="MVN">
+                        <div class="instruction-header">
+                            <span class="inst-name">MVN</span>
+                            <span class="inst-desc-short">数据取反传送指令</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="instruction-body">
+                            <p><strong>语法：</strong> <code>MVN{cond}{S} Rd, Operand2</code></p>
+                            <p><strong>描述：</strong> 将 Operand2 按位取反后传送到 Rd。</p>
+                            <pre>MVN R0, #0       ; R0 = -1 (0xFFFFFFFF)</pre>
+                        </div>
+                    </div>
+
+                    <div class="instruction-item" data-name="ADD">
+                        <div class="instruction-header">
+                            <span class="inst-name">ADD</span>
+                            <span class="inst-desc-short">加法指令</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="instruction-body">
+                            <p><strong>语法：</strong> <code>ADD{cond}{S} Rd, Rn, Operand2</code></p>
+                            <p><strong>描述：</strong> Rd = Rn + Operand2。</p>
+                            <pre>ADD R0, R1, #1   ; R0 = R1 + 1</pre>
+                        </div>
+                    </div>
+
+                    <div class="instruction-item" data-name="SUB">
+                        <div class="instruction-header">
+                            <span class="inst-name">SUB</span>
+                            <span class="inst-desc-short">减法指令</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="instruction-body">
+                            <p><strong>语法：</strong> <code>SUB{cond}{S} Rd, Rn, Operand2</code></p>
+                            <p><strong>描述：</strong> Rd = Rn - Operand2。</p>
+                            <pre>SUB R0, R1, R2   ; R0 = R1 - R2</pre>
+                        </div>
+                    </div>
+
+                    <!-- 内存访问指令 -->
+                    <div class="instruction-item" data-name="LDR">
+                        <div class="instruction-header">
+                            <span class="inst-name">LDR</span>
+                            <span class="inst-desc-short">加载寄存器指令</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="instruction-body">
+                            <p><strong>语法：</strong> <code>LDR{cond} Rd, [Rn, #offset]</code></p>
+                            <p><strong>描述：</strong> 从内存地址 (Rn + offset) 读取数据到 Rd。</p>
+                            <pre>LDR R0, [R1]     ; 读取 R1 指向的内存值到 R0
+LDR R0, =0x1234  ; 加载立即数（伪指令）</pre>
+                        </div>
+                    </div>
+
+                    <div class="instruction-item" data-name="STR">
+                        <div class="instruction-header">
+                            <span class="inst-name">STR</span>
+                            <span class="inst-desc-short">存储寄存器指令</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="instruction-body">
+                            <p><strong>语法：</strong> <code>STR{cond} Rd, [Rn, #offset]</code></p>
+                            <p><strong>描述：</strong> 将 Rd 的值写入到内存地址 (Rn + offset)。</p>
+                            <pre>STR R0, [R1]     ; 将 R0 的值写入 R1 指向的内存</pre>
+                        </div>
+                    </div>
+
+                    <div class="instruction-item" data-name="LDM">
+                        <div class="instruction-header">
+                            <span class="inst-name">LDM</span>
+                            <span class="inst-desc-short">多寄存器加载</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="instruction-body">
+                            <p><strong>语法：</strong> <code>LDM{addr_mode}{cond} Rn{!}, reglist</code></p>
+                            <p><strong>描述：</strong> 从连续内存加载多个寄存器。常用于栈操作 (LDMFD)。</p>
+                            <pre>LDMFD SP!, {R0-R3, PC} ; 恢复现场并返回</pre>
+                        </div>
+                    </div>
+
+                    <div class="instruction-item" data-name="STM">
+                        <div class="instruction-header">
+                            <span class="inst-name">STM</span>
+                            <span class="inst-desc-short">多寄存器存储</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="instruction-body">
+                            <p><strong>语法：</strong> <code>STM{addr_mode}{cond} Rn{!}, reglist</code></p>
+                            <p><strong>描述：</strong> 将多个寄存器保存到连续内存。常用于栈操作 (STMFD)。</p>
+                            <pre>STMFD SP!, {R0-R3, LR} ; 保存现场</pre>
+                        </div>
+                    </div>
+
+                    <!-- 跳转指令 -->
+                    <div class="instruction-item" data-name="B">
+                        <div class="instruction-header">
+                            <span class="inst-name">B</span>
+                            <span class="inst-desc-short">相对跳转指令</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="instruction-body">
+                            <p><strong>语法：</strong> <code>B{cond} label</code></p>
+                            <p><strong>描述：</strong> 跳转到 label 处执行。范围通常为 ±32MB。</p>
+                            <pre>B loop           ; 无条件跳转到 loop 标号</pre>
+                        </div>
+                    </div>
+
+                    <div class="instruction-item" data-name="BL">
+                        <div class="instruction-header">
+                            <span class="inst-name">BL</span>
+                            <span class="inst-desc-short">带链接跳转指令</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="instruction-body">
+                            <p><strong>语法：</strong> <code>BL{cond} label</code></p>
+                            <p><strong>描述：</strong> 跳转前将下一条指令地址保存到 LR (R14)，用于函数调用。</p>
+                            <pre>BL my_function   ; 调用函数 my_function</pre>
+                        </div>
+                    </div>
+
+                    <!-- 状态寄存器访问 -->
+                    <div class="instruction-item" data-name="MRS">
+                        <div class="instruction-header">
+                            <span class="inst-name">MRS</span>
+                            <span class="inst-desc-short">读状态寄存器</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="instruction-body">
+                            <p><strong>语法：</strong> <code>MRS{cond} Rd, PSR</code></p>
+                            <p><strong>描述：</strong> 将 CPSR 或 SPSR 的值读入通用寄存器。</p>
+                            <pre>MRS R0, CPSR     ; 读取 CPSR 到 R0</pre>
+                        </div>
+                    </div>
+
+                    <div class="instruction-item" data-name="MSR">
+                        <div class="instruction-header">
+                            <span class="inst-name">MSR</span>
+                            <span class="inst-desc-short">写状态寄存器</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="instruction-body">
+                            <p><strong>语法：</strong> <code>MSR{cond} PSR_fields, Operand2</code></p>
+                            <p><strong>描述：</strong> 将操作数写入 CPSR 或 SPSR 的特定域。</p>
+                            <pre>MSR CPSR_c, #0xD3 ; 切换到 SVC 模式并禁止中断</pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 第三部分：C与汇编混合编程 -->
+            <section id="mixed-programming">
+                <h2>3. C 与 ARM 汇编混合编程</h2>
+                <p>在嵌入式底层开发（如 Bootloader、OS 内核初始化）中，经常需要汇编与 C 语言互相调用。这需要遵循 <strong>ATPCS (ARM-Thumb Procedure Call
+                        Standard)</strong> 规则。</p>
+
+                <h3>3.1 ATPCS 规则核心</h3>
+                <ul>
+                    <li><strong>参数传递</strong>: 前 4 个参数通过 <code>R0-R3</code> 传递，超过 4 个的参数通过栈 (Stack) 传递。</li>
+                    <li><strong>返回值</strong>: 32 位返回值保存在 <code>R0</code> 中，64 位返回值保存在 <code>R0, R1</code> 中。</li>
+                    <li><strong>寄存器保护</strong>: 子程序必须保护 <code>R4-R11</code> 和
+                        <code>R14 (LR)</code>，如果使用了它们。<code>R0-R3</code> 和 <code>R12</code> 无需保护。
+                    </li>
+                </ul>
+
+                <h3>3.2 实例：从 start.s 跳转到 main.c</h3>
+                <p>以下示例展示了系统启动代码 <code>start.s</code> 如何初始化栈环境，然后跳转到 C 语言入口 <code>main.c</code>。</p>
+
+                <h4>汇编文件: start.s</h4>
+                <pre><code class="language-asm">
 .global _start          ; 声明全局入口标号
 
 _start:
@@ -431,8 +550,8 @@ halt:
     B halt
             </code></pre>
 
-            <h4>C 语言文件: main.c</h4>
-            <pre><code class="language-c">
+                <h4>C 语言文件: main.c</h4>
+                <pre><code class="language-c">
 // main.c
 int main(void) {
     int a = 10;
@@ -445,12 +564,13 @@ int main(void) {
 }
             </code></pre>
 
-            <p><strong>解析：</strong> 在 <code>_start</code> 中，最关键的一步是 <code>LDR SP, =0x40001000</code>。因为 C
-                语言的局部变量和函数调用依赖于栈，如果 SP 未初始化，跳转到 C 代码会导致系统崩溃 (Hard Fault)。使用 <code>BL</code> 指令跳转，允许 <code>main</code>
-                函数执行完毕后返回（虽然在裸机程序中通常不返回）。</p>
-        </section>
-
-    </main>
+                <p><strong>解析：</strong> 在 <code>_start</code> 中，最关键的一步是 <code>LDR SP, =0x40001000</code>。因为 C
+                    语言的局部变量和函数调用依赖于栈，如果 SP 未初始化，跳转到 C 代码会导致系统崩溃 (Hard Fault)。使用 <code>BL</code> 指令跳转，允许
+                    <code>main</code>
+                    函数执行完毕后返回（虽然在裸机程序中通常不返回）。</p>
+            </section>
+        </article>
+    </div>
 
     <footer>
         <p>&copy; 2025 Embedded Knowledge Base. Built by lijiaqi.</p>
