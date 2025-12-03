@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lijiaqi` web | Video Tutorials</title>
+    <!-- 引入网站图标 -->
+    <link rel="icon" type="image/svg+xml" href="../static/images/favicon.svg">
+    <!-- 引入字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- 引入图标 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/archive.css">
+</head>
+<body>
+
+    <!-- 动态背景容器 -->
+    <div class="circuit-bg">
+        <div class="line v-line" style="--delay: 0s; --left: 10%;"></div>
+        <div class="line v-line" style="--delay: 5s; --left: 90%;"></div>
+        <div class="line h-line" style="--delay: 2s; --top: 20%;"></div>
+        <div class="line h-line" style="--delay: 7s; --top: 80%;"></div>
+    </div>
+
+    <!-- 顶部导航与搜索栏 -->
+    <header class="archive-header">
+        <div class="header-top">
+            <!-- 返回主页按钮 -->
+            <a href="../index.html" class="back-home-btn">
+                <i class="fas fa-chevron-left"></i> <span class="logo-text">Home</span>
+            </a>
+            
+            <!-- 搜索框 -->
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="search-input" placeholder="Search videos..." autocomplete="off">
+            </div>
+        </div>
+
+        <!-- 分类筛选器 -->
+        <div class="category-filter">
+            <button class="cat-btn active" data-category="all">ALL</button>
+            <button class="cat-btn" data-category="linux">LINUX</button>
+            <button class="cat-btn" data-category="stm32">STM32</button>
+            <button class="cat-btn" data-category="c/cpp">C/C++</button>
+            <button class="cat-btn" data-category="other">OTHER</button>
+        </div>
+        
+    </header>
+
+    <!-- 文档列表容器 -->
+    <main class="archive-container">
+        <div class="result-count">Found <span id="doc-count">0</span> videos</div>
+        
+        <!-- 卡片将通过 JS 自动插入到这里 -->
+        <div id="document-list" class="doc-list">
+            <div class="loading-text">Loading Video Stream...</div>
+        </div>
+    </main>
+
+    <!-- 音乐播放器悬浮窗 -->
+    <div class="music-player-widget">
+        <div class="player-controls">
+            <button id="prev-btn" title="Previous"><i class="fas fa-step-backward"></i></button>
+            <button id="play-btn" title="Play/Pause"><i class="fas fa-play"></i></button>
+            <button id="next-btn" title="Next"><i class="fas fa-step-forward"></i></button>
+            <button id="mute-btn" title="Mute"><i class="fas fa-volume-up"></i></button>
+        </div>
+        <div class="song-info">
+            <span id="song-title">Loading...</span>
+        </div>
+        <audio id="bg-music"></audio>
+    </div>
+
+    <!-- 定义根路径变量 -->
+    <script>var ROOT_PATH = '../';</script>
+    
+    <!-- 引入音乐脚本 -->
+    <script src="../static/js/music.js"></script>
+    
+    <!-- 引入视频列表脚本 -->
+    <script src="../static/js/video.js"></script>
+</body>
+</html>
