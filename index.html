@@ -1,386 +1,360 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>lijiaqi`s web</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lijiaqi`s web</title>
 	<!-- 引入网站图标 -->
 	<link rel="icon" type="image/svg+xml" href="static/images/favicon.svg">
-	<!-- 引入图标库 -->
-	<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 引入图标库 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<!-- 引入 Google Fonts: Orbitron (科幻标题), Fira Code (代码正文) -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link
-		href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Orbitron:wght@400;700;900&family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap"
-		rel="stylesheet">
-	<!-- 引入自定义CSS -->
-	<link rel="stylesheet" href="static/css/style.css">
+	<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Orbitron:wght@400;700;900&family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <!-- 引入自定义CSS -->
+    <link rel="stylesheet" href="static/css/style.css">
 </head>
-
 <body>
 
-	<!-- 顶部导航栏 -->
-	<header>
-		<div class="logo">&lt;root/&gt;</div>
-		<nav>
-			<ul>
-				<!-- 1. 首页 (没有下拉菜单，保持简单) -->
-				<li class="nav-item">
-					<a href="#intro" class="nav-btn">
-						<span class="btn-text">首页</span>
-					</a>
-				</li>
+    <!-- 顶部导航栏 -->
+    <header>
+        <div class="logo">&lt;root/&gt;</div>
+			<nav>
+			    <ul>
+			        <!-- 1. 首页 (没有下拉菜单，保持简单) -->
+			        <li class="nav-item">
+			            <a href="#intro" class="nav-btn">
+			                <span class="btn-text">首页</span>
+			            </a>
+			        </li>
+			
+			        <!-- 2. 项目 (有下拉菜单) -->
+					<!-- 以“项目”为例，其他下拉菜单请参照修改 -->
+					<li class="nav-item has-dropdown">
+						
+					    <a href="#projects" class="nav-btn">
+					        <span class="btn-text">项目</span>
+					        <i class="fas fa-caret-down arrow-icon"></i>
+					    </a>
+					    
+					    <div class="dropdown-menu">
+					        <!-- 装饰用的顶部光条 -->
+					        <div class="menu-decoration-line"></div>
+					        
+					        <a href="projects/project.html?cat=stm32" class="dropdown-item">
+					            <i class="fas fa-microchip item-icon"></i> <!-- 图标 -->
+					            <span class="item-text">基于MODBUS协议的水质检测RTU</span>
+					        </a>
+							
+					        <a href="projects/project.html?cat=stm32" class="dropdown-item">
+					            <i class="fas fa-bolt item-icon"></i>
+					            <span class="item-text">液流称重自动升降仪</span>
+					        </a>
+							
+					        <a href="projects/project.html?cat=stm32" class="dropdown-item">
+					            <i class="fab fa-linux item-icon"></i>
+					            <span class="item-text">高速高精度ADC测试</span>
+					        </a>
 
-				<!-- 2. 项目 (有下拉菜单) -->
-				<!-- 以“项目”为例，其他下拉菜单请参照修改 -->
-				<li class="nav-item has-dropdown">
+					        <a href="projects/project.html?cat=all" class="dropdown-item">
+					            <i class="fab fa-linux item-icon"></i>
+					            <span class="item-text">other</span>
+					        </a>
+							
+					    </div>
+					</li>
+			
+			        <!-- 3. 知识库 (有下拉菜单) -->
+			        <li class="nav-item has-dropdown">
+						
+			            <a href="#knowledge" class="nav-btn">
+			                <span class="btn-text">知识库</span>
+			                <i class="fas fa-caret-down arrow-icon"></i>
+			            </a>
+						
+						<div class="dropdown-menu">
+					        <!-- 装饰用的顶部光条 -->
+					        <div class="menu-decoration-line"></div>
+					        
+					        <a href="archive/archive.html?cat=stm32" class="dropdown-item">
+					            <i class="fas fa-microchip item-icon"></i> <!-- 图标 -->
+					            <span class="item-text">STM32</span>
+					        </a>
+							
+					        <a href="archive/archive.html?cat=linux" class="dropdown-item">
+					            <i class="fab fa-linux item-icon"></i>
+					            <span class="item-text">Linux</span>
+					        </a>
+							
+					        <a href="archive/archive.html?cat=c/cpp" class="dropdown-item">
+					            <i class="fab fa-cuttlefish item-icon"></i>
+					            <span class="item-text">C/C++</span>
+					        </a>
 
-					<a href="#projects" class="nav-btn">
-						<span class="btn-text">项目</span>
-						<i class="fas fa-caret-down arrow-icon"></i>
-					</a>
+						    <a href="archive/archive.html?cat=all" class="dropdown-item">
+					            <i class="fas fa-box item-icon"></i>
 
-					<div class="dropdown-menu">
-						<!-- 装饰用的顶部光条 -->
-						<div class="menu-decoration-line"></div>
+    <!-- 1. 个人介绍板块 (Hero Section) -->
+    <section id="intro" class="section">
+        <div class="container intro-layout">
+            <!-- 左侧：文字介绍 -->
+            <div class="intro-left fade-in">
+                <span class="badge">V1.0.0 Online</span>
+                <h1>Hello，我是李家琦</h1>
+                <p><span class="highlight">一名嵌入式工程师</span></p>
+                <div class="typing-box">
+                    <span class="prompt">$</span> <span id="typewriter"></span><span class="cursor">_</span>
+                </div>
+				<div>
+	                <p class="description highlight glitch-text" data_text="#代码转化为控制世界的脉冲!">
+	                    #代码转化为控制世界的脉冲!
+	                </p>
+					<br>
+		            <p class="description highlight glitch-text" data_text="#走线搭建电子世界桥梁!">
+	                    #走线搭建电子世界桥梁!
+	                </p>
+				</div>
+                <div class="cta-group">
+                    <button onclick="scrollToSection('projects')" class="btn btn-glow">
+						<i class="fas fa-code-branch"></i>查看项目
+					</button>
+                    <button onclick="scrollToSection('knowledge')" class="btn btn-glow">
+						<i class="fas fa-code-branch"></i>知识文档
+					</button>
+                    <button onclick="scrollToSection('resources')" class="btn btn-glass">
+						<i class="fas fa-code-open"></i>获取资源
+					</button>
+					
+				    <!-- 【新增】订阅按钮容器 (Wrapper) -->
+				    <div class="subscribe-wrapper" style="position: relative;">
+				        
+				        <!-- 订阅按钮 -->
+				        <button id="sub-btn" class="btn btn-subscribe">
+				            <i class="fas fa-bell"></i> 关注/订阅
+				        </button>
+				
+				        <!-- 悬浮订阅菜单 (默认隐藏) -->
+				        <div class="sub-menu" id="sub-menu">
+				            <!-- 装饰光条 -->
+				            <div class="menu-line"></div>
+				
+				            <!-- GitHub -->
+				            <a href="https://github.com/777lijiaqi" target="_blank" class="sub-item">
+				                <i class="fab fa-github" style="color: #fff;"></i>
+				                <span>GitHub</span>
+				            </a>
+				
+				            <!-- Bilibili -->
+				            <a href="https://space.bilibili.com/486302128?spm_id_from=333.1007.0.0" target="_blank" class="sub-item">
+				                <i class="fa-brands fa-bilibili" style="color: #00aeec;"></i>
+				                <span>Bilibili</span>
+				            </a>
+				
+				            <!-- 抖音 -->
+				            <a href="https://www.douyin.com/user/MS4wLjABAAAAaLfzZSEUygwAAE10wnfen5EBrX2QydLu05kJsEkFwJ2aCOVKjX8G_WDlqRZsonKO?from_tab_name=main" target="_blank" class="sub-item">
+				                <i class="fa-brands fa-tiktok" style="color: #ff0050;"></i>
+				                <span>抖音</span>
+				            </a>
+						
+							 <!-- 【新增】CSDN -->
+						    <!-- 请将 href 换成您的 CSDN 主页链接 -->
+						    <a href="https://blog.csdn.net/qq_62496311?spm=1011.2480.3001.5343" target="_blank" class="sub-item">
+						        <!-- 使用版权符号 © 模拟 CSDN 的 C，或者用 fa-code -->
+						        <i class="fas fa-copyright" style="color: #fc5531;"></i>
+						        <span>CSDN</span>
+						    </a>
+						
+						    <!-- 【新增】博客园 (Bokeyuan) -->
+						    <!-- 我使用了您之前提供的博客园链接 -->
+						    <a href="https://home.cnblogs.com/u/2001lijiaqi" target="_blank" class="sub-item">
+						        <i class="fas fa-blog" style="color: #21759b;"></i>
+						        <span>博客园</span>
+						    </a>
+							
+							<!-- 【新增】公众号 (带悬浮二维码) -->
+						    <div class="sub-item wechat-trigger">
+						        <i class="fa-brands fa-weixin" style="color: #07c160;"></i>
+						        <span>WeChat</span>
+						        
+						        <!-- 隐藏的二维码弹窗 -->
+						        <div class="qr-popup">
+						            <img src="static/images/wechat.jpg" alt="QR Code">
+						            <span class="qr-tip">扫一扫关注公众号</span>
+						        </div>
+						    </div>
+							
+				        </div>
+				    </div>
+                </div>
+            </div>
 
-						<a href="projects/project.html?cat=stm32" class="dropdown-item">
-							<i class="fas fa-microchip item-icon"></i> <!-- 图标 -->
-							<span class="item-text">基于MODBUS协议的水质检测RTU</span>
-						</a>
+            <!-- 右侧：个人信息框架 (照片+链接) -->
+            <div class="intro-right fade-in">
+                <div class="profile-card">
+                    <div class="profile-img-box">
+                        <!-- 这里的 src 修改为你的照片路径 -->
+                        <img src="static/images/myself.jpg" alt="Profile" id="my-photo">
+                        <div class="status-indicator"></div>
+                    </div>
+                    <div class="profile-info">
+                        <h3>lijiaqi / 77</h3>
+                        <p>Linux / STM32 / FPGA</p>
+                        <div class="social-links">
+                            <!-- 邮箱链接 -->
+                            <a href="mailto:2001lijiaqi@gmail.com?subject=来自个人主页的联系" title="发送邮件"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-						<a href="projects/project.html?cat=stm32" class="dropdown-item">
-							<i class="fas fa-bolt item-icon"></i>
-							<span class="item-text">液流称重自动升降仪</span>
-						</a>
+    <!-- 2. 项目板块 -->
+    <section id="projects" class="section">
+        <div class="container">
+            <h2 class="section-title">My_Project<span class="subtitle">Repository</span></h2>
+            <div class="grid-box">
+                <!-- 项目卡片 1 -->
+	            <a href="projects/project.html?cat=stm32" class="card project-card">
+	             	<h3>基于MODBUS协议的水质检测RTU</h3>
+	              	<div class="card-icon"><div class="fill" style="width: 80%"></div></div>
+					<p>MODBUS协议、串口屏、4-20mA...</p>
+					<span class="click-hint">Open the project &rarr;</span>
+				</a>
+                <!-- 项目卡片 2 -->
+	            <a href="projects/project.html?cat=stm32" class="card project-card">
+	             	<h3>液流称重自动升降仪</h3>
+	              	<div class="card-icon"><div class="fill" style="width: 80%"></div></div>
+					<p>称重传感器、电机控制、水泵、串口屏...</p>
+					<span class="click-hint">Open the project &rarr;</span>
+				</a>
+                <!-- 项目卡片 3 -->
+	            <a href="projects/project.html?cat=stm32" class="card project-card">
+	             	<h3>高速高精度ADC测试</h3>
+	              	<div class="card-icon"><div class="fill" style="width: 80%"></div></div>
+					<p>ADC、C++、串口示波器</p>
+					<span class="click-hint">Open the project &rarr;</span>
+				</a>
+            </div>
+        </div>
+    </section>
 
-						<a href="projects/project.html?cat=stm32" class="dropdown-item">
-							<i class="fab fa-linux item-icon"></i>
-							<span class="item-text">高速高精度ADC测试</span>
-						</a>
+    <!-- 3. 知识记录板块 -->
+    <section id="knowledge" class="section">
+        <div class="container">
+            <h2 class="section-title">Knowledge<span class="subtitle">Stack</span></h2>
+            <div class="grid-box">
+				<!-- 知识记录卡片1 -->		
+	            <a href="archive/archive.html?cat=stm32" class="card knowledge-card">
+	             	<h3>STM32</h3>
+	              	<div class="skill-bar"><div class="fill" style="width: 80%"></div></div>
+					<p>STM32、外设原理、HAL库应用...</p>
+					<span class="click-hint">Open the archive &rarr;</span>
+				</a>
+				<!-- 知识记录卡片2 -->
+                <a href="archive/archive.html?cat=linux" class="card knowledge-card">
+	             	<h3>Linux</h3>
+	              	<div class="skill-bar"><div class="fill" style="width: 80%"></div></div>
+					<p>Linux-C、Linux-Uboot、Linux驱动、Linux应用...</p>
+					<span class="click-hint">Open the archive &rarr;</span>
+				</a>
+                <!-- 知识记录卡片3 -->
+                <a href="archive/archive.html?cat=c/cpp" class="card knowledge-card">
+	             	<h3>C/C++</h3>
+	              	<div class="skill-bar"><div class="fill" style="width: 80%"></div></div>
+					<p>C语言、数据结构、指针...</p>
+					<span class="click-hint">Open the archive &rarr;</span>
+				</a>
+				<!-- 知识记录卡片4 -->          
+				<a href="archive/archive.html?cat=all" class="card knowledge-card">
+	             	<h3>Everything Else</h3>
+	              	<div class="skill-bar"><div class="fill" style="width: 80%"></div></div>
+					<p>查看更多</p>
+					<span class="click-hint">Open the archive &rarr;</span>
+				</a>
+				
+            </div>
+        </div>
+    </section>
 
-						<a href="projects/project.html?cat=all" class="dropdown-item">
-							<i class="fab fa-linux item-icon"></i>
-							<span class="item-text">other</span>
-						</a>
+    <!-- 4. 资源链接板块 -->
+    <section id="resources" class="section">
+        <div class="container">
+            <h2 class="section-title">Download<span class="subtitle">Link</span></h2>
+            <div class="resource-list">
+				
+                <a href="#" class="resource-item">
+                    <i class="fas fa-code"></i>
+                    <span>STM32外设驱动源码</span>
+                    <button class="download-btn">查看下载</button>
+                </a>
+				
+                <a href="#" class="resource-item">
+                    <i class="fas fa-code"></i>
+                    <span>linux驱动程序</span>
+                    <button class="download-btn">查看下载</button>
+                </a>
+				
+                <a href="#" class="resource-item">
+                    <i class="fas fa-code"></i>
+                    <span>linux应用源码</span>
+                    <button class="download-btn">查看下载</button>
+                </a>
 
-					</div>
-				</li>
+                <a href="#" class="resource-item">
+                    <i class="fas fa-book"></i>
+                    <span>更多</span>
+                    <button class="download-btn">查看下载</button>
+                </a>
+				
+            </div>
+        </div>
+    </section>
 
-				<!-- 3. 知识库 (有下拉菜单) -->
-				<li class="nav-item has-dropdown">
+    <!-- 音乐播放器悬浮窗 (代码保持不变) -->
+    <div class="music-player-widget">
+        <div class="player-controls">
+            <button id="prev-btn" title="Previous"><i class="fas fa-step-backward"></i></button>
+            <button id="play-btn" title="Play/Pause"><i class="fas fa-play"></i></button>
+            <button id="next-btn" title="Next"><i class="fas fa-step-forward"></i></button>
+            <button id="mute-btn" title="Mute"><i class="fas fa-volume-up"></i></button>
+        </div>
+        <div class="song-info">
+            <span id="song-title">Loading...</span>
+        </div>
+        <audio id="bg-music"></audio>
+    </div>
 
-					<a href="#knowledge" class="nav-btn">
-						<span class="btn-text">知识库</span>
-						<i class="fas fa-caret-down arrow-icon"></i>
-					</a>
-
-					<div class="dropdown-menu">
-						<!-- 装饰用的顶部光条 -->
-						<div class="menu-decoration-line"></div>
-
-						<a href="archive/archive.html?cat=stm32" class="dropdown-item">
-							<i class="fas fa-microchip item-icon"></i> <!-- 图标 -->
-							<span class="item-text">STM32</span>
-						</a>
-
-						<a href="archive/archive.html?cat=linux" class="dropdown-item">
-							<i class="fab fa-linux item-icon"></i>
-							<span class="item-text">Linux</span>
-						</a>
-
-						<a href="archive/archive.html?cat=c/cpp" class="dropdown-item">
-							<i class="fab fa-cuttlefish item-icon"></i>
-							<span class="item-text">C/C++</span>
-						</a>
-
-						<a href="archive/archive.html?cat=all" class="dropdown-item">
-							<i class="fas fa-box item-icon"></i>
-
-							<!-- 1. 个人介绍板块 (Hero Section) -->
-							<section id="intro" class="section">
-								<div class="container intro-layout">
-									<!-- 左侧：文字介绍 -->
-									<div class="intro-left fade-in">
-										<span class="badge">V1.0.0 Online</span>
-										<h1>Hello，我是李家琦</h1>
-										<p><span class="highlight">一名嵌入式工程师</span></p>
-										<div class="typing-box">
-											<span class="prompt">$</span> <span id="typewriter"></span><span
-												class="cursor">_</span>
-										</div>
-										<div>
-											<p class="description highlight glitch-text" data_text="#代码转化为控制世界的脉冲!">
-												#代码转化为控制世界的脉冲!
-											</p>
-											<br>
-											<p class="description highlight glitch-text" data_text="#走线搭建电子世界桥梁!">
-												#走线搭建电子世界桥梁!
-											</p>
-										</div>
-										<div class="cta-group">
-											<button onclick="scrollToSection('projects')" class="btn btn-glow">
-												<i class="fas fa-code-branch"></i>查看项目
-											</button>
-											<button onclick="scrollToSection('knowledge')" class="btn btn-glow">
-												<i class="fas fa-code-branch"></i>知识文档
-											</button>
-											<button onclick="scrollToSection('resources')" class="btn btn-glass">
-												<i class="fas fa-code-open"></i>获取资源
-											</button>
-
-											<!-- 【新增】订阅按钮容器 (Wrapper) -->
-											<div class="subscribe-wrapper" style="position: relative;">
-
-												<!-- 订阅按钮 -->
-												<button id="sub-btn" class="btn btn-subscribe">
-													<i class="fas fa-bell"></i> 关注/订阅
-												</button>
-
-												<!-- 悬浮订阅菜单 (默认隐藏) -->
-												<div class="sub-menu" id="sub-menu">
-													<!-- 装饰光条 -->
-													<div class="menu-line"></div>
-
-													<!-- GitHub -->
-													<a href="https://github.com/777lijiaqi" target="_blank"
-														class="sub-item">
-														<i class="fab fa-github" style="color: #fff;"></i>
-														<span>GitHub</span>
-													</a>
-
-													<!-- Bilibili -->
-													<a href="https://space.bilibili.com/486302128?spm_id_from=333.1007.0.0"
-														target="_blank" class="sub-item">
-														<i class="fa-brands fa-bilibili" style="color: #00aeec;"></i>
-														<span>Bilibili</span>
-													</a>
-
-													<!-- 抖音 -->
-													<a href="https://www.douyin.com/user/MS4wLjABAAAAaLfzZSEUygwAAE10wnfen5EBrX2QydLu05kJsEkFwJ2aCOVKjX8G_WDlqRZsonKO?from_tab_name=main"
-														target="_blank" class="sub-item">
-														<i class="fa-brands fa-tiktok" style="color: #ff0050;"></i>
-														<span>抖音</span>
-													</a>
-
-													<!-- 【新增】CSDN -->
-													<!-- 请将 href 换成您的 CSDN 主页链接 -->
-													<a href="https://blog.csdn.net/qq_62496311?spm=1011.2480.3001.5343"
-														target="_blank" class="sub-item">
-														<!-- 使用版权符号 © 模拟 CSDN 的 C，或者用 fa-code -->
-														<i class="fas fa-copyright" style="color: #fc5531;"></i>
-														<span>CSDN</span>
-													</a>
-
-													<!-- 【新增】博客园 (Bokeyuan) -->
-													<!-- 我使用了您之前提供的博客园链接 -->
-													<a href="https://home.cnblogs.com/u/2001lijiaqi" target="_blank"
-														class="sub-item">
-														<i class="fas fa-blog" style="color: #21759b;"></i>
-														<span>博客园</span>
-													</a>
-
-													<!-- 【新增】公众号 (带悬浮二维码) -->
-													<div class="sub-item wechat-trigger">
-														<i class="fa-brands fa-weixin" style="color: #07c160;"></i>
-														<span>WeChat</span>
-
-														<!-- 隐藏的二维码弹窗 -->
-														<div class="qr-popup">
-															<img src="static/images/wechat.jpg" alt="QR Code">
-															<span class="qr-tip">扫一扫关注公众号</span>
-														</div>
-													</div>
-
-												</div>
-											</div>
-										</div>
-									</div>
-
-									<!-- 右侧：个人信息框架 (照片+链接) -->
-									<div class="intro-right fade-in">
-										<div class="profile-card">
-											<div class="profile-img-box">
-												<!-- 这里的 src 修改为你的照片路径 -->
-												<img src="static/images/myself.jpg" alt="Profile" id="my-photo">
-												<div class="status-indicator"></div>
-											</div>
-											<div class="profile-info">
-												<h3>lijiaqi / 77</h3>
-												<p>Linux / STM32 / FPGA</p>
-												<div class="social-links">
-													<!-- 邮箱链接 -->
-													<a href="mailto:2001lijiaqi@gmail.com?subject=来自个人主页的联系"
-														title="发送邮件"><i class="fas fa-envelope"></i></a>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</section>
-
-							<!-- 2. 项目板块 -->
-							<section id="projects" class="section">
-								<div class="container">
-									<h2 class="section-title">My_Project<span class="subtitle">Repository</span></h2>
-									<div class="grid-box">
-										<!-- 项目卡片 1 -->
-										<a href="projects/project.html?cat=stm32" class="card project-card">
-											<h3>基于MODBUS协议的水质检测RTU</h3>
-											<div class="card-icon">
-												<div class="fill" style="width: 80%"></div>
-											</div>
-											<p>MODBUS协议、串口屏、4-20mA...</p>
-											<span class="click-hint">Open the project &rarr;</span>
-										</a>
-										<!-- 项目卡片 2 -->
-										<a href="projects/project.html?cat=stm32" class="card project-card">
-											<h3>液流称重自动升降仪</h3>
-											<div class="card-icon">
-												<div class="fill" style="width: 80%"></div>
-											</div>
-											<p>称重传感器、电机控制、水泵、串口屏...</p>
-											<span class="click-hint">Open the project &rarr;</span>
-										</a>
-										<!-- 项目卡片 3 -->
-										<a href="projects/project.html?cat=stm32" class="card project-card">
-											<h3>高速高精度ADC测试</h3>
-											<div class="card-icon">
-												<div class="fill" style="width: 80%"></div>
-											</div>
-											<p>ADC、C++、串口示波器</p>
-											<span class="click-hint">Open the project &rarr;</span>
-										</a>
-									</div>
-								</div>
-							</section>
-
-							<!-- 3. 知识记录板块 -->
-							<section id="knowledge" class="section">
-								<div class="container">
-									<h2 class="section-title">Knowledge<span class="subtitle">Stack</span></h2>
-									<div class="grid-box">
-										<!-- 知识记录卡片1 -->
-										<a href="archive/archive.html?cat=stm32" class="card knowledge-card">
-											<h3>STM32</h3>
-											<div class="skill-bar">
-												<div class="fill" style="width: 80%"></div>
-											</div>
-											<p>STM32、外设原理、HAL库应用...</p>
-											<span class="click-hint">Open the archive &rarr;</span>
-										</a>
-										<!-- 知识记录卡片2 -->
-										<a href="archive/archive.html?cat=linux" class="card knowledge-card">
-											<h3>Linux</h3>
-											<div class="skill-bar">
-												<div class="fill" style="width: 80%"></div>
-											</div>
-											<p>Linux-C、Linux-Uboot、Linux驱动、Linux应用...</p>
-											<span class="click-hint">Open the archive &rarr;</span>
-										</a>
-										<!-- 知识记录卡片3 -->
-										<a href="archive/archive.html?cat=c/cpp" class="card knowledge-card">
-											<h3>C/C++</h3>
-											<div class="skill-bar">
-												<div class="fill" style="width: 80%"></div>
-											</div>
-											<p>C语言、数据结构、指针...</p>
-											<span class="click-hint">Open the archive &rarr;</span>
-										</a>
-										<!-- 知识记录卡片4 -->
-										<a href="archive/archive.html?cat=all" class="card knowledge-card">
-											<h3>Everything Else</h3>
-											<div class="skill-bar">
-												<div class="fill" style="width: 80%"></div>
-											</div>
-											<p>查看更多</p>
-											<span class="click-hint">Open the archive &rarr;</span>
-										</a>
-
-									</div>
-								</div>
-							</section>
-
-							<!-- 4. 资源链接板块 -->
-							<section id="resources" class="section">
-								<div class="container">
-									<h2 class="section-title">Download<span class="subtitle">Link</span></h2>
-									<div class="resource-list">
-
-										<a href="#" class="resource-item">
-											<i class="fas fa-code"></i>
-											<span>STM32外设驱动源码</span>
-											<button class="download-btn">查看下载</button>
-										</a>
-
-										<a href="#" class="resource-item">
-											<i class="fas fa-code"></i>
-											<span>linux驱动程序</span>
-											<button class="download-btn">查看下载</button>
-										</a>
-
-										<a href="#" class="resource-item">
-											<i class="fas fa-code"></i>
-											<span>linux应用源码</span>
-											<button class="download-btn">查看下载</button>
-										</a>
-
-										<a href="#" class="resource-item">
-											<i class="fas fa-book"></i>
-											<span>更多</span>
-											<button class="download-btn">查看下载</button>
-										</a>
-
-									</div>
-								</div>
-							</section>
-
-							<!-- 音乐播放器悬浮窗 (代码保持不变) -->
-							<div class="music-player-widget">
-								<div class="player-controls">
-									<button id="prev-btn" title="Previous"><i class="fas fa-step-backward"></i></button>
-									<button id="play-btn" title="Play/Pause"><i class="fas fa-play"></i></button>
-									<button id="next-btn" title="Next"><i class="fas fa-step-forward"></i></button>
-									<button id="mute-btn" title="Mute"><i class="fas fa-volume-up"></i></button>
-								</div>
-								<div class="song-info">
-									<span id="song-title">Loading...</span>
-								</div>
-								<audio id="bg-music"></audio>
-							</div>
-
-							<!-- 定义根路径变量 (根目录写 ./) -->
-							<script>var ROOT_PATH = './';</script>
-
-							<!-- 引入新的音乐脚本 -->
-							<script src="static/js/music.js"></script>
+    <!-- 定义根路径变量 (根目录写 ./) -->
+    <script>var ROOT_PATH = './';</script>
+    
+    <!-- 引入新的音乐脚本 -->
+    <script src="static/js/music.js"></script>
 
 </body>
 
-<footer>
-	<p>&copy; 2023 Embedded Portfolio. Built with Logic & Voltage.</p>
-</footer>
+    <footer>
+        <p>&copy; 2023 Embedded Portfolio. Built with Logic & Voltage.</p>
+    </footer>
 
-<!-- 引入自定义JS -->
-<script src="static/js/script.js"></script>
-
-<!-- 电流背景特效容器 -->
+    <!-- 引入自定义JS -->
+    <script src="static/js/script.js"></script>
+	
+    <!-- 电流背景特效容器 -->
 <div class="circuit-bg">
-	<!-- 竖向电流线 -->
-	<div class="line v-line" style="--delay: 0s; --left: 10%;"></div>
-	<div class="line v-line" style="--delay: 3s; --left: 30%;"></div>
-	<div class="line v-line" style="--delay: 7s; --left: 50%;"></div>
-	<div class="line v-line" style="--delay: 5s; --left: 70%;"></div>
-	<div class="line v-line" style="--delay: 2s; --left: 90%;"></div>
-
-	<!-- 横向电流线 -->
-	<div class="line h-line" style="--delay: 1s; --top: 20%;"></div>
-	<div class="line h-line" style="--delay: 4s; --top: 40%;"></div>
-	<div class="line h-line" style="--delay: 6s; --top: 60%;"></div>
-	<div class="line h-line" style="--delay: 8s; --top: 80%;"></div>
+    <!-- 竖向电流线 -->
+    <div class="line v-line" style="--delay: 0s; --left: 10%;"></div>
+    <div class="line v-line" style="--delay: 3s; --left: 30%;"></div>
+    <div class="line v-line" style="--delay: 7s; --left: 50%;"></div>
+    <div class="line v-line" style="--delay: 5s; --left: 70%;"></div>
+    <div class="line v-line" style="--delay: 2s; --left: 90%;"></div>
+    
+    <!-- 横向电流线 -->
+    <div class="line h-line" style="--delay: 1s; --top: 20%;"></div>
+    <div class="line h-line" style="--delay: 4s; --top: 40%;"></div>
+    <div class="line h-line" style="--delay: 6s; --top: 60%;"></div>
+    <div class="line h-line" style="--delay: 8s; --top: 80%;"></div>
 </div>
 </body>
-
 </html>
