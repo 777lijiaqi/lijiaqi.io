@@ -231,6 +231,30 @@
             color: var(--accent);
             border-color: var(--accent);
         }
+		
+		/* 官方文档链接特别样式 */
+        .official-link-box {
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid var(--primary);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .official-link-box i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .official-link-box a {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+		
     </style>
 </head>
 
@@ -260,6 +284,7 @@
         <aside>
             <div class="toc-title">DIRECTORY</div>
             <ul class="toc-list">
+				<li><a href="#sec-0">官方文档</a></li>
                 <li><a href="#part-1">一、GCC 编译指令</a></li>
                 <li><a href="#sec-1-1">1. 基础编译流程</a></li>
                 <li><a href="#sec-1-2">2. 常用参数详解</a></li>
@@ -280,14 +305,19 @@
         <!-- 文章内容 -->
         <article>
             <h1>GCC 编译指令及 Makefile 详细操作应用教程</h1>
-            <p>本教程将详细介绍 Linux 下 C/C++ 开发中必不可少的两个工具：<strong>GCC 编译器</strong>和 <strong>Makefile 构建工具</strong>。</p>
-
+    
+			<div id="sec-0" class="official-link-box">
+                <i class="fas fa-book-open"></i>
+                <div>
+					<p>本教程将详细介绍 Linux 下 C/C++ 开发中必不可少的两个工具：<strong>GCC 编译器</strong>和 <strong>Makefile 构建工具</strong>。</p>
+                    <p style="margin:0; font-size:0.9rem; color:var(--text-muted);">本文参考自 GNU Make 官方文档，建议配合阅读：</p>
+                    <a href="https://www.gnu.org/software/make/manual/html_node/index.html" target="_blank">GNU Make Reference Manual <i class="fas fa-external-link-alt" style="font-size:0.8rem;"></i></a>
+                </div>
+            </div>
+			
             <h2 id="part-1">一、GCC 编译指令详解</h2>
             <p>GCC (GNU Compiler Collection) 是 Linux 下最常用的编译器。将 C 源代码编译成可执行文件通常经过四个步骤：预处理 (Preprocessing)、编译
                 (Compilation)、汇编 (Assembly) 和 链接 (Linking)。</p>
-
-            <p>更多详细信息请参考：<a href="https://www.gnu.org/software/make/manual/html_node/index.html" target="_blank">GNU
-                    Make 官方文档</a></p>
 
             <h3 id="sec-1-1">1. 基础编译流程</h3>
             <p>假设我们有一个源文件 <code>hello.c</code>。</p>
