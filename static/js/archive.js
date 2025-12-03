@@ -16,11 +16,19 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         {
             title: "Makefile 构建指南",
-            category: "linux", 
+            category: "c/cpp", 
             desc: "深入理解GCC Makefile 编译原理、规则、伪目标及常用函数。",
             tags: ["Makefile", "GCC"],
             icon: "fas fa-file-code",
-            link: "linux/Makefile教程.html" 
+            link: "c语言/Makefile教程.html" 
+        },
+        {
+            title: "CMake 构建与打包指南",
+            category: "c/cpp",
+            desc: "CMake 基础教程，包含 CMakeLists.txt 编写规则、外部构建流程以及使用 CPack 打包发布程序。",
+            tags: ["CMake", "Build", "CPack"],
+            icon: "fas fa-cubes",
+            link: "c语言/cmake教程.html"
         },
         {
             title: "HAL库精准延时",
