@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         {
             title: "linux驱动程序",
-            category: "linuxDriver", // 注意：需与按钮 data-category 一致
+            category: "linuxdriver", // 注意：需与按钮 data-category 一致
             desc: "Windows 平台 Modbus RTU/TCP 调试工具，支持主从模式。",
             tags: ["Tool", "Debug"],
             icon: "fas fa-toolbox",
@@ -23,15 +23,15 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         {
             title: "linux应用源码",
-            category: "linuxC", // 注意：需与按钮 data-category 一致
+            category: "linuxc", // 注意：需与按钮 data-category 一致
             desc: "通用的增量式/位置式 PID 控制算法实现模板。",
             tags: ["Source Code", "Algorithm"],
             icon: "fas fa-code",
             link: "#"
         },
         {
-            title: "其他文档",
-            category: "stm32", // 暂时归为 stm32 或其他，避免孤立
+            title: "OHTER",
+            category: "all", 
             desc: "从 Bootloader 到文件系统的完整学习路径规划。",
             tags: ["Guide", "Roadmap"],
             icon: "fas fa-map-signs",
