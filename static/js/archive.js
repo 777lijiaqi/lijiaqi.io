@@ -7,6 +7,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // 【修改点】：link 字段只写纯净路径，不要带参数，参数由 JS 动态生成
     const documents = [
         {
+            title: "VS Code环境配置",
+            category: "c/cpp",
+            desc: "VS Code C/C++ 开发环境搭建与深度配置全书，涵盖编译器安装、JSON配置详解及调试指南。",
+            tags: ["VSCode", "C/C++", "Environment"],
+            icon: "fas fa-tools",
+            link: "c语言/vscode环境配置.html"
+        },
+        {
             title: "Makefile 构建指南",
             category: "linux", 
             desc: "深入理解GCC Makefile 编译原理、规则、伪目标及常用函数。",
