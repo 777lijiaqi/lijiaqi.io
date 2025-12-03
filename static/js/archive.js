@@ -32,11 +32,11 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         {
             title: "Shell 脚本编程与常用命令指南",
-            category: "linux",
+            category: "arm",
             desc: "包含 Shell 基础语法、变量、流程控制、函数以及常用命令的详细用法与实战案例。",
             tags: ["Shell", "Bash", "Linux", "Automation"],
             icon: "fas fa-terminal",
-            link: "linux/shell脚本教程.html"
+            link: "arm/shell脚本教程.html"
         },
         {
             title: "Cortex-A 架构及 ARM 汇编详解",
