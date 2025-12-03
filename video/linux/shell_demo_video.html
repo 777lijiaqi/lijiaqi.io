@@ -77,12 +77,17 @@
         <!-- 视频播放器组件 -->
         <div class="video-widget">
             <div class="video-frame">
-                <!-- 这里放视频源，支持 mp4, webm 等 -->
-                <!-- 示例视频：使用一个占位符或本地视频 -->
-                <video controls poster="../../static/images/video_poster_placeholder.jpg">
-                    <source src="sample_video.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+            <!-- Bilibili视频嵌入 -->
+            <iframe 
+                src="//player.bilibili.com/player.html?isOutside=true&aid=953616387&bvid=BV14s4y1g7Zj&cid=1127511172&p=1"
+                scrolling="no" 
+                border="0" 
+                frameborder="no" 
+                framespacing="0" 
+                allowfullscreen="true"
+                style="width: 100%; height: 600px; border: none;">
+            </iframe>
+                
             </div>
             <div class="video-footer">
                 <!-- 跳转到源地址按钮 -->
