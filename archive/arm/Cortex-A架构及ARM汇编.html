@@ -403,6 +403,114 @@ MOV R1, R0       ; R1 = R0</pre>
                         </div>
                     </div>
 
+
+                    <!-- 逻辑运算指令 -->
+                    <div class="instruction-item" data-name="AND">
+                        <div class="instruction-header">
+                            <span class="inst-name">AND</span>
+                            <span class="inst-desc-short">逻辑与指令</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="instruction-body">
+                            <p><strong>语法：</strong> <code>AND{cond}{S} Rd, Rn, Operand2</code></p>
+                            <p><strong>描述：</strong> 将 Rn 与 Operand2 进行按位与操作，结果存入 Rd。</p>
+                            <pre>AND R0, R0, #0xFF ; 保留 R0 低 8 位，其余清零</pre>
+                        </div>
+                    </div>
+
+                    <div class="instruction-item" data-name="ORR">
+                        <div class="instruction-header">
+                            <span class="inst-name">ORR</span>
+                            <span class="inst-desc-short">逻辑或指令</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="instruction-body">
+                            <p><strong>语法：</strong> <code>ORR{cond}{S} Rd, Rn, Operand2</code></p>
+                            <p><strong>描述：</strong> 将 Rn 与 Operand2 进行按位或操作，结果存入 Rd。</p>
+                            <pre>ORR R0, R0, #0x80 ; 将 R0 第 7 位置 1</pre>
+                        </div>
+                    </div>
+
+                    <div class="instruction-item" data-name="EOR">
+                        <div class="instruction-header">
+                            <span class="inst-name">EOR</span>
+                            <span class="inst-desc-short">逻辑异或指令</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="instruction-body">
+                            <p><strong>语法：</strong> <code>EOR{cond}{S} Rd, Rn, Operand2</code></p>
+                            <p><strong>描述：</strong> 将 Rn 与 Operand2 进行按位异或操作，结果存入 Rd。</p>
+                            <pre>EOR R0, R0, R0    ; R0 = 0 (自己异或自己)</pre>
+                        </div>
+                    </div>
+
+                    <div class="instruction-item" data-name="BIC">
+                        <div class="instruction-header">
+                            <span class="inst-name">BIC</span>
+                            <span class="inst-desc-short">位清除指令</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="instruction-body">
+                            <p><strong>语法：</strong> <code>BIC{cond}{S} Rd, Rn, Operand2</code></p>
+                            <p><strong>描述：</strong> 将 Rn 与 Operand2 的反码按位与，实现清除特定位。</p>
+                            <pre>BIC R0, R0, #0x03 ; 清除 R0 的第 0 和第 1 位</pre>
+                        </div>
+                    </div>
+
+                    <!-- 比较与测试指令 -->
+                    <div class="instruction-item" data-name="TST">
+                        <div class="instruction-header">
+                            <span class="inst-name">TST</span>
+                            <span class="inst-desc-short">位测试指令</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="instruction-body">
+                            <p><strong>语法：</strong> <code>TST{cond} Rn, Operand2</code></p>
+                            <p><strong>描述：</strong> 执行按位与操作，不保存结果，只更新 CPSR 标志位。</p>
+                            <pre>TST R0, #0x01     ; 测试 R0 最低位是否为 1</pre>
+                        </div>
+                    </div>
+
+                    <div class="instruction-item" data-name="TEQ">
+                        <div class="instruction-header">
+                            <span class="inst-name">TEQ</span>
+                            <span class="inst-desc-short">测试相等指令</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="instruction-body">
+                            <p><strong>语法：</strong> <code>TEQ{cond} Rn, Operand2</code></p>
+                            <p><strong>描述：</strong> 执行按位异或操作，不保存结果，只更新 CPSR 标志位。</p>
+                            <pre>TEQ R0, #0        ; 测试 R0 是否为 0</pre>
+                        </div>
+                    </div>
+
+                    <!-- 移位指令 (作为 Operand2 的一部分，但也常单独列出) -->
+                    <div class="instruction-item" data-name="LSL">
+                        <div class="instruction-header">
+                            <span class="inst-name">LSL</span>
+                            <span class="inst-desc-short">逻辑左移</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="instruction-body">
+                            <p><strong>语法：</strong> <code>LSL{cond}{S} Rd, Rm, Rs/#imm</code></p>
+                            <p><strong>描述：</strong> 逻辑左移，低位补 0。</p>
+                            <pre>MOV R0, R1, LSL #2 ; R0 = R1 * 4</pre>
+                        </div>
+                    </div>
+
+                    <div class="instruction-item" data-name="LSR">
+                        <div class="instruction-header">
+                            <span class="inst-name">LSR</span>
+                            <span class="inst-desc-short">逻辑右移</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="instruction-body">
+                            <p><strong>语法：</strong> <code>LSR{cond}{S} Rd, Rm, Rs/#imm</code></p>
+                            <p><strong>描述：</strong> 逻辑右移，高位补 0。</p>
+                            <pre>MOV R0, R1, LSR #1 ; R0 = R1 / 2 (无符号)</pre>
+                        </div>
+                    </div>
+                    
                     <!-- 内存访问指令 -->
                     <div class="instruction-item" data-name="LDR">
                         <div class="instruction-header">
