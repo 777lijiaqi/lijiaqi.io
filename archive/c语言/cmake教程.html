@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMake 构建与打包指南 | 知识文档</title>
+    <!-- 引入网站图标 -->
+    <link rel="icon" type="image/svg+xml" href="../../static/images/favicon.svg">
+    <!-- 引入字体 -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Orbitron:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <!-- 引入图标 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 代码高亮 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+    <!-- 引入全局样式 -->
+    <link rel="stylesheet" href="../../static/css/style.css">
+
+    <style>
+        /* --- 本地覆盖样式 (文章专用) --- */
+        body {
+            padding-top: 80px;
+        }
+
+        .article-header {
+            background: rgba(11, 17, 32, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 5%;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: var(--primary);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            color: #fff;
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        .layout {
+            display: flex;
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+            gap: 40px;
+        }
+
+        article {
+            flex: 1;
+            background: rgba(30, 41, 59, 0.6);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+        }
+
+        aside {
+            flex: 0 0 250px;
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+            display: none;
+        }
+
+        @media (min-width: 1100px) {
+            aside {
+                display: block;
+            }
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            color: #fff;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            font-family: 'Orbitron', sans-serif;
+            line-height: 1.4;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            border-left: 5px solid var(--primary);
+            padding-left: 15px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            margin-top: 2rem;
+            margin-bottom: 0.8rem;
+            color: #fff;
+            font-family: 'Fira Code', monospace;
+        }
+
+        p,
+        li {
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            font-family: 'Segoe UI', sans-serif;
+            line-height: 1.8;
+        }
+
+        ul,
+        ol {
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        pre {
+            background: #0d1117 !important;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        blockquote {
+            border-left: 4px solid var(--accent);
+            background: rgba(16, 185, 129, 0.05);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            color: #d1d5db;
+        }
+
+        blockquote p {
+            margin: 0;
+        }
+
+        .author-quote p {
+            text-align: right;
+            font-style: italic;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid var(--border);
+            margin: 3rem 0;
+        }
+
+        .toc-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 10px;
+        }
+
+        .toc-list a {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: 0.2s;
+            display: block;
+            border-left: 2px solid transparent;
+            padding-left: 10px;
+            text-decoration: none;
+        }
+
+        .toc-list a:hover,
+        .toc-list a.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+        }
+
+        strong {
+            color: var(--primary);
+        }
+
+        /* 文章内链接样式 */
+        article a {
+            color: var(--primary);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--primary);
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0 2px;
+        }
+
+        article a:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 4px;
+            text-shadow: 0 0 5px var(--accent);
+        }
+
+        /* 官方文档链接特别样式 */
+        .official-link-box {
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid var(--primary);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .official-link-box i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .official-link-box a {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 动态背景容器 -->
+    <div class="circuit-bg">
+        <div class="line v-line" style="--delay: 0s; --left: 10%;"></div>
+        <div class="line v-line" style="--delay: 5s; --left: 90%;"></div>
+        <div class="line h-line" style="--delay: 2s; --top: 20%;"></div>
+        <div class="line h-line" style="--delay: 7s; --top: 80%;"></div>
+    </div>
+
+    <!-- 顶部导航 -->
+    <header class="article-header">
+        <a id="back-btn" href="../../archive/archive.html?cat=all" class="back-btn">
+            <i class="fas fa-chevron-left"></i> <span>Back to Archive</span>
+        </a>
+        <div style="font-family: 'Fira Code'; color: var(--text-muted); font-size: 0.9rem;">
+            system.read(mode=doc_cmake)
+        </div>
+    </header>
+
+    <div class="layout">
+        <!-- 侧边目录 -->
+        <aside>
+            <div class="toc-title">DIRECTORY</div>
+            <ul class="toc-list">
+                <li><a href="#sec-0">官方文档</a></li>
+                <li><a href="#sec-1">一、CMake 简介</a></li>
+                <li><a href="#sec-2">二、基础语法与构建</a></li>
+                <li><a href="#sec-3">三、项目结构示例</a></li>
+                <li><a href="#sec-4">四、打包发布 (CPack)</a></li>
+            </ul>
+        </aside>
+
+        <!-- 文章内容 -->
+        <article>
+            <h1>CMake 构建与打包指南</h1>
+
+            <div id="sec-0" class="official-link-box">
+                <i class="fas fa-book-open"></i>
+                <div>
+                    <p style="margin:0; font-size:0.9rem; color:var(--text-muted);">本文参考自 CMake 官方文档，建议配合阅读：</p>
+                    <a href="https://cmake.org/cmake/help/latest/" target="_blank">CMake Reference Documentation
+                        (Latest) <i class="fas fa-external-link-alt" style="font-size:0.8rem;"></i></a>
+                </div>
+            </div>
+
+            <p>CMake 是一个跨平台的安装（编译）工具，可以用简单的语句来描述所有平台的安装(编译过程)。他能够输出各种各样的 makefile 或者 project 文件，能测试编译器所支持的 C++ 特性,类似
+                UNIX 下的 automake。</p>
+
+            <hr>
+
+            <h2 id="sec-1">一、CMake 简介</h2>
+            <p>在 Linux 下我们通常使用 Makefile 来构建项目，但手动编写 Makefile 非常繁琐且难以跨平台。CMake 的出现就是为了解决这个问题。</p>
+            <p><strong>核心优势：</strong></p>
+            <ul>
+                <li><strong>跨平台</strong>：一份 <code>CMakeLists.txt</code> 可以在 Linux 下生成 Makefile，在 Windows 下生成 Visual
+                    Studio 工程。</li>
+                <li><strong>自动化</strong>：自动检测编译器、库文件路径。</li>
+                <li><strong>打包支持</strong>：内置 CPack 工具，可以轻松生成安装包（.deb, .rpm, .zip, .nsis 等）。</li>
+            </ul>
+
+            <hr>
+
+            <h2 id="sec-2">二、基础语法与构建</h2>
+
+            <h3>1. 最小工程示例</h3>
+            <p>在项目根目录下创建一个名为 <code>CMakeLists.txt</code> 的文件（文件名区分大小写，必须完全一致）：</p>
+            <pre><code class="language-cmake"># 1. 设定 CMake 最低版本要求
+cmake_minimum_required(VERSION 3.10)
+
+# 2. 设定项目名称和版本
+project(MyProject VERSION 1.0)
+
+# 3. 设定 C++ 标准 (C++17)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# 4. 添加可执行文件
+# 语法: add_executable(程序名 源代码文件...)
+add_executable(MyApp main.cpp src/utils.cpp)
+
+# 5. 添加头文件搜索路径
+target_include_directories(MyApp PUBLIC "${PROJECT_SOURCE_DIR}/include")</code></pre>
+
+            <h3>2. 编译流程 (Out-of-source Build)</h3>
+            <p>CMake 推荐使用“外部构建”，即把生成的中间文件放在单独的 <code>build</code> 目录中，保持源码目录干净。</p>
+            <pre><code class="language-bash"># 1. 生成构建系统 (在 build 目录下生成 Makefile)
+# -B build : 指定构建目录为 build
+cmake -B build
+
+# 2. 开始编译
+# --build build : 指挥 cmake 去构建 build 目录下的目标
+cmake --build build</code></pre>
+            <p>执行完毕后，可执行文件 <code>MyApp</code> (或 <code>MyApp.exe</code>) 就会出现在 <code>build</code> 目录下。</p>
+
+            <hr>
+
+            <h2 id="sec-3">三、项目结构示例</h2>
+            <p>一个标准的 CMake 项目结构如下：</p>
+            <pre><code class="language-text">MyProject/
+├── CMakeLists.txt       # 主配置文件
+├── include/             # 头文件
+│   └── utils.h
+├── src/                 # 源代码
+│   ├── main.cpp
+│   └── utils.cpp
+└── build/               # (自动生成) 构建目录</code></pre>
+
+            <hr>
+
+            <h2 id="sec-4">四、打包发布 (CPack)</h2>
+            <p>这是 CMake 最强大的功能之一。通过内置的 <strong>CPack</strong> 模块，我们可以将编译好的程序打包成安装包发给用户。</p>
+
+            <h3>1. 配置 CPack</h3>
+            <p>在 <code>CMakeLists.txt</code> 的<strong>末尾</strong>添加以下内容：</p>
+            <pre><code class="language-cmake"># ... (前面的 add_executable 等代码) ...
+
+# 1. 安装规则 (Install Rules)
+# 告诉 CMake 哪些文件需要被打包，以及放到安装包的哪个目录下
+# TARGETS MyApp : 指定要安装的目标是 MyApp
+# DESTINATION bin : 安装到系统的 bin 目录 (Windows下通常是安装目录根目录)
+install(TARGETS MyApp DESTINATION bin)
+install(FILES "${PROJECT_SOURCE_DIR}/include/utils.h" DESTINATION include)
+
+# 2. CPack 设置
+# 设置包的供应商
+set(CPACK_PACKAGE_VENDOR "LiJiaQi.io")
+# 设置包的描述
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "My Awesome CMake Project")
+# 设置版本号 (自动从 project() 命令中获取)
+set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+
+# 3. 选择打包生成器 (Generator)
+if(WIN32)
+    # Windows 下推荐生成 ZIP 压缩包或 NSIS 安装程序
+    set(CPACK_GENERATOR "ZIP") 
+    # 如果安装了 NSIS，可以使用 "NSIS" 生成 .exe 安装向导
+    # set(CPACK_GENERATOR "NSIS") 
+elseif(UNIX)
+    # Linux 下生成 .tar.gz 或 .deb
+    set(CPACK_GENERATOR "TGZ") 
+    # set(CPACK_GENERATOR "DEB") # 需要设置 CPACK_DEBIAN_PACKAGE_MAINTAINER
+endif()
+
+# 4. 必须放在最后：包含 CPack 模块
+include(CPack)</code></pre>
+
+            <h3>2. 生成安装包</h3>
+            <p>配置完成后，重新运行 CMake 配置，然后使用 <code>cpack</code> 命令打包：</p>
+            <pre><code class="language-bash"># 1. 重新配置
+cmake -B build
+
+# 2. 编译项目 (必须先编译，因为打包的是编译后的产物)
+cmake --build build
+
+# 3. 运行打包
+cd build
+cpack</code></pre>
+            <p>运行成功后，你会在 <code>build</code> 目录下看到生成的安装包（例如 <code>MyProject-1.0-win64.zip</code> 或
+                <code>MyProject-1.0-Linux.tar.gz</code>）。你可以直接把这个文件发送给用户。</p>
+
+            <hr>
+
+            <blockquote class="author-quote">
+                <p>Author：李家琦</p>
+                <p>Date: 2025/12/03</p>
+            </blockquote>
+
+        </article>
+    </div>
+
+    <!-- 音乐播放器 -->
+    <div class="music-player-widget">
+        <div class="player-controls">
+            <button id="prev-btn"><i class="fas fa-step-backward"></i></button>
+            <button id="play-btn"><i class="fas fa-play"></i></button>
+            <button id="next-btn"><i class="fas fa-step-forward"></i></button>
+            <button id="mute-btn"><i class="fas fa-volume-up"></i></button>
+        </div>
+        <div class="song-info"><span id="song-title">Loading...</span></div>
+        <audio id="bg-music"></audio>
+    </div>
+
+    <script>var ROOT_PATH = '../../';</script>
+    <script src="../../static/js/music.js"></script>
+    <script src="../../static/js/comment.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromCat = urlParams.get('from');
+            const backBtn = document.getElementById('back-btn');
+            if (fromCat) {
+                backBtn.href = `../../archive/archive.html?cat=${encodeURIComponent(fromCat)}`;
+            } else {
+                backBtn.href = `../../archive/archive.html?cat=c/cpp`;
+            }
+        });
+
+        const sections = document.querySelectorAll('h2, .official-link-box');
+        const navLinks = document.querySelectorAll('.toc-list a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(a => {
+                a.classList.remove('active');
+                if (a.getAttribute('href').includes(current)) {
+                    a.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
