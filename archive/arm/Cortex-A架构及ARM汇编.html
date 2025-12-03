@@ -288,9 +288,9 @@
         <aside>
             <div class="toc-title">DIRECTORY</div>
             <ul class="toc-list">
-                <li><a href="#architecture">1. Cortex-A 架构与硬件特性</a></li>
-                <li><a href="#instruction-set">2. ARMv7 指令集详解</a></li>
-                <li><a href="#mixed-programming">3. C 与 ARM 汇编混合编程</a></li>
+                <li><a href="#architecture">一、 Cortex-A 架构与硬件特性</a></li>
+                <li><a href="#instruction-set">二、 ARMv7 指令集详解</a></li>
+                <li><a href="#mixed-programming">三、 C 与 ARM 汇编混合编程</a></li>
             </ul>
         </aside>
 
@@ -305,7 +305,7 @@
 
             <!-- 第一部分：Cortex-A 架构与硬件特性 -->
             <section id="architecture">
-                <h2>1. Cortex-A 架构与硬件特性</h2>
+                <h2>一、 Cortex-A 架构与硬件特性</h2>
                 <p>Cortex-A 系列处理器是 ARM 公司专为高性能应用设计的处理器核心，广泛应用于智能手机、平板电脑和嵌入式 Linux 系统。本节基于 ARMv7-A 架构手册编写。</p>
 
                 <h3>1.1 运行模式 (Processor Modes)</h3>
@@ -343,7 +343,7 @@
 
             <!-- 第二部分：ARMv7 指令集详解 -->
             <section id="instruction-set">
-                <h2>2. ARMv7 指令集详解</h2>
+                <h2>二、 ARMv7 指令集详解</h2>
                 <p>以下是常用 ARM 指令的详解。支持搜索和折叠查看。</p>
 
                 <input type="text" id="inst-search" class="search-box" placeholder="搜索指令 (e.g., MOV, LDR, ADD)...">
@@ -515,7 +515,7 @@ LDR R0, =0x1234  ; 加载立即数（伪指令）</pre>
 
             <!-- 第三部分：C与汇编混合编程 -->
             <section id="mixed-programming">
-                <h2>3. C 与 ARM 汇编混合编程</h2>
+                <h2>三、 C 与 ARM 汇编混合编程</h2>
                 <p>在嵌入式底层开发（如 Bootloader、OS 内核初始化）中，经常需要汇编与 C 语言互相调用。这需要遵循 <strong>ATPCS (ARM-Thumb Procedure Call
                         Standard)</strong> 规则。</p>
 
