@@ -563,22 +563,22 @@ sudo apt install build-essential gdb</code></pre>
 
             <hr>
 
-            <h2 id="sec-5">五、协作逻辑总结（厨房比喻）</h2>
+            <h2 id="sec-5">五、协作逻辑</h2>
             <p>为了帮你更好地理解这三个文件的关系，想象你在做菜：</p>
             <ol>
-                <li><strong><code>c_cpp_properties.json</code> (菜谱校验)</strong>：
+                <li><strong><code>c_cpp_properties.json</code> (菜谱/语法检查)</strong>：
                     <ul>
                         <li>当你切菜（写代码）时，它在旁边告诉你：“哎，这个配方（语法）不对，找不到这个调料（头文件）”。</li>
                     </ul>
                 </li>
-                <li><strong><code>tasks.json</code> (厨师/烹饪)</strong>：
+                <li><strong><code>tasks.json</code> (厨师/生成可执行文件)</strong>：
                     <ul>
-                        <li>负责把食材（.cpp）扔进锅里（编译器），开火（运行 g++），做成成品菜（.exe）。</li>
+                        <li>负责把食材（.cpp）扔进锅里（编译器），开火（运行 g++），做成菜肴（.exe）。</li>
                     </ul>
                 </li>
                 <li><strong><code>launch.json</code> (试吃员/调试)</strong>：
                     <ul>
-                        <li>负责把做好的菜（.exe）端上来，并在你要求的地方停嘴（断点），让你检查味道（查看变量）。它会先喊厨师（<code>preLaunchTask</code>）先把菜做好。</li>
+                        <li>负责把做好的菜肴（.exe）端上来，并在你要求的地方停嘴（断点），让你检查味道（查看变量）。它会先喊厨师（<code>preLaunchTask</code>）先把菜做好。</li>
                     </ul>
                 </li>
             </ol>
@@ -586,7 +586,7 @@ sudo apt install build-essential gdb</code></pre>
             <hr>
 
             <h2 id="sec-6">六、高级工作区定制 (settings.json)</h2>
-            <p>你提到的“屏蔽搜索和文件显示”是在 <code>settings.json</code> 中配置的。这可以让你的项目目录看起来更干净，忽略掉编译产生的中间文件（如 <code>.o</code>,
+            <p><code>settings.json</code>可以让你的项目目录看起来更干净，忽略掉编译产生的中间文件（如 <code>.o</code>,
                 <code>.exe</code>）。</p>
             <p>在 <code>.vscode</code> 文件夹下新建或编辑 <code>settings.json</code>：</p>
             <pre><code class="language-json">{
