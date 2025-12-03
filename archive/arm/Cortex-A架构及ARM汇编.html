@@ -168,16 +168,15 @@
         <div class="line v-line" style="--delay: 4s; --left: 95%;"></div>
         <div class="line h-line" style="--delay: 2s; --top: 15%;"></div>
     </div>
-
-    <!-- 导航栏 -->
-    <header>
-        <div class="logo">&lt;root/&gt;</div>
-        <nav>
-            <ul>
-                <li class="nav-item"><a href="../../index.html" class="nav-btn">首页</a></li>
-                <li class="nav-item"><a href="../archive.html" class="nav-btn">知识库</a></li>
-            </ul>
-        </nav>
+    
+    <!-- 顶部导航 -->
+    <header class="article-header">
+        <a id="back-btn" href="../../archive/archive.html?cat=arm" class="back-btn">
+            <i class="fas fa-chevron-left"></i> <span>Back to Archive</span>
+        </a>
+        <div style="font-family: 'Fira Code'; color: var(--text-muted); font-size: 0.9rem;">
+            system.read(mode=doc_arm)
+        </div>
     </header>
 
     <main class="article-container">
