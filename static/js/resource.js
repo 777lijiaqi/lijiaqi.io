@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
             category: "stm32",
             desc: "ST 官方英文参考手册，包含寄存器定义与电气特性。",
             tags: ["C源码", "Reference"],
-            icon: "fas fa-file-pdf",
+            icon: "fas fa-code",
             link: "#" 
         },
         {
