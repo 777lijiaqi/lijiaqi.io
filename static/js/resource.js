@@ -11,7 +11,23 @@ document.addEventListener('DOMContentLoaded', function() {
             desc: "基于HAL库的DHT20温湿度传感器驱动源码。",
             tags: ["C源码", "Reference"],
             icon: "fas fa-code",
-            link: "https://github.com/777lijiaqi/STM32-/archive/refs/heads/DHT20%E6%B8%A9%E6%B9%BF%E5%BA%A6%E4%BC%A0%E6%84%9F%E5%99%A8%E9%A9%B1%E5%8A%A8.zip" 
+            link: "https://github.com/777lijiaqi/STM32-/archive/refs/heads/DHT20-Driver.zip" 
+        },
+        {
+            title: "定时器精准延时驱动",
+            category: "stm32",
+            desc: "基于HAL库的定时器精准延时驱动源码。",
+            tags: ["C源码", "Reference"],
+            icon: "fas fa-code",
+            link: "https://github.com/777lijiaqi/STM32-/archive/refs/heads/TIM-Delay-Driver.zip" 
+        },
+        {
+            title: "串口重定向(DEBUG)驱动",
+            category: "stm32",
+            desc: "基于HAL库的串口重定向(DEBUG)驱动源码。",
+            tags: ["C源码", "Reference"],
+            icon: "fas fa-code",
+            link: "https://github.com/777lijiaqi/STM32-/archive/refs/heads/Usart-Debug-Driver.zip" 
         },
         {
             title: "linux驱动程序",
