@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
             desc: "ST 官方英文参考手册，包含寄存器定义与电气特性。",
             tags: ["C源码", "Reference"],
             icon: "fas fa-code",
-            link: "#" 
+            link: "https://github.com/777lijiaqi/STM32-/archive/refs/heads/DHT20%E6%B8%A9%E6%B9%BF%E5%BA%A6%E4%BC%A0%E6%84%9F%E5%99%A8%E9%A9%B1%E5%8A%A8.zip" 
         },
         {
             title: "linux驱动程序",
