@@ -6,10 +6,10 @@ document.addEventListener('DOMContentLoaded', function() {
     /* --- 1. 资源数据源 --- */
     const resources = [
         {
-            title: "STM32外设驱动源码",
+            title: "DHT20温湿度传感器驱动",
             category: "stm32",
             desc: "ST 官方英文参考手册，包含寄存器定义与电气特性。",
-            tags: ["PDF", "Reference"],
+            tags: ["C源码", "Reference"],
             icon: "fas fa-file-pdf",
             link: "#" 
         },
