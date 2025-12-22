@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
             tags: ["Datasheet"],
             icon: "fas fa-pdf",
             link: "https://github.com/777lijiaqi/Datasheet/blob/Temperature-Humidity-Sensor/DHT20.pdf" 
-        },
+        }
     ];
 
     const listContainer = document.getElementById('document-list');
