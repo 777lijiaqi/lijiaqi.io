@@ -30,29 +30,13 @@ document.addEventListener('DOMContentLoaded', function() {
             link: "https://github.com/777lijiaqi/STM32-/archive/refs/heads/Usart-Debug-Driver.zip" 
         },
         {
-            title: "linux驱动程序",
-            category: "linuxdriver", // 注意：需与按钮 data-category 一致
-            desc: "Windows 平台 Modbus RTU/TCP 调试工具，支持主从模式。",
-            tags: ["Tool", "Debug"],
-            icon: "fas fa-toolbox",
-            link: "#"
+            title: "DHT20温湿度传感器数据手册",
+            category: "datasheet",
+            desc: "DHT20温湿度传感器数据手册",
+            tags: ["Datasheet"],
+            icon: "fas fa-pdf",
+            link: "https://github.com/777lijiaqi/Datasheet/blob/Temperature-Humidity-Sensor/DHT20.pdf" 
         },
-        {
-            title: "linux应用源码",
-            category: "linuxc", // 注意：需与按钮 data-category 一致
-            desc: "通用的增量式/位置式 PID 控制算法实现模板。",
-            tags: ["Source Code", "Algorithm"],
-            icon: "fas fa-code",
-            link: "#"
-        },
-        {
-            title: "OHTER",
-            category: "all", 
-            desc: "从 Bootloader 到文件系统的完整学习路径规划。",
-            tags: ["Guide", "Roadmap"],
-            icon: "fas fa-map-signs",
-            link: "#"
-        }
     ];
 
     const listContainer = document.getElementById('document-list');
