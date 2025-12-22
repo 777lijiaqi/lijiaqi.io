@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
             icon: "fas fa-pdf",
             link: "https://github.com/777lijiaqi/Datasheet/blob/Temperature-Humidity-Sensor/HDC3120.pdf" 
         },
-            {
+        {
             title: "LMT70温湿度传感器数据手册",
             category: "datasheet",
             desc: "LMT70温湿度传感器数据手册",
