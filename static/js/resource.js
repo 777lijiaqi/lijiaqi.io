@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
             desc: "DHT20温湿度传感器数据手册",
             tags: ["Datasheet"],
             icon: "fas fa-pdf",
-            link: "https://github.com/777lijiaqi/Datasheet/blob/Temperature-Humidity-Sensor/DHT20.pdf" 
+            link: "https://downgit.github.io/#/home?url=https://github.com/777lijiaqi/Datasheet/blob/Temperature-Humidity-Sensor/DHT20.pdf" 
         }
     ];
 
