@@ -38,36 +38,36 @@ document.addEventListener('DOMContentLoaded', function() {
             link: "https://github.com/777lijiaqi/Datasheet/blob/Temperature-Humidity-Sensor/DHT20.pdf" 
         },
         {
-            title: "DHT20温湿度传感器数据手册",
+            title: "AD590S温湿度传感器数据手册",
             category: "datasheet",
-            desc: "DHT20温湿度传感器数据手册",
+            desc: "AD590S温湿度传感器数据手册",
             tags: ["Datasheet"],
             icon: "fas fa-pdf",
-            link: "https://github.com/777lijiaqi/Datasheet/blob/Temperature-Humidity-Sensor/DHT20.pdf" 
+            link: "https://github.com/777lijiaqi/Datasheet/blob/Temperature-Humidity-Sensor/AD590S.pdf" 
         },
         {
-            title: "DHT20温湿度传感器数据手册",
+            title: "HDC3020温湿度传感器数据手册",
             category: "datasheet",
-            desc: "DHT20温湿度传感器数据手册",
+            desc: "HDC3020温湿度传感器数据手册",
             tags: ["Datasheet"],
             icon: "fas fa-pdf",
-            link: "https://github.com/777lijiaqi/Datasheet/blob/Temperature-Humidity-Sensor/DHT20.pdf" 
+            link: "https://github.com/777lijiaqi/Datasheet/blob/Temperature-Humidity-Sensor/HDC3020.pdf" 
         },
         {
-            title: "DHT20温湿度传感器数据手册",
+            title: "HDC3120温湿度传感器数据手册",
             category: "datasheet",
-            desc: "DHT20温湿度传感器数据手册",
+            desc: "HDC3120温湿度传感器数据手册",
             tags: ["Datasheet"],
             icon: "fas fa-pdf",
-            link: "https://github.com/777lijiaqi/Datasheet/blob/Temperature-Humidity-Sensor/DHT20.pdf" 
+            link: "https://github.com/777lijiaqi/Datasheet/blob/Temperature-Humidity-Sensor/HDC3120.pdf" 
         },
             {
-            title: "DHT20温湿度传感器数据手册",
+            title: "LMT70温湿度传感器数据手册",
             category: "datasheet",
-            desc: "DHT20温湿度传感器数据手册",
+            desc: "LMT70温湿度传感器数据手册",
             tags: ["Datasheet"],
             icon: "fas fa-pdf",
-            link: "https://github.com/777lijiaqi/Datasheet/blob/Temperature-Humidity-Sensor/DHT20.pdf" 
+            link: "https://github.com/777lijiaqi/Datasheet/blob/Temperature-Humidity-Sensor/LMT70.pdf" 
         }
     ];
 
