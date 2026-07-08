@@ -33,37 +33,6 @@
 					</a>
 				</li>
 
-				<!-- 2. 项目 (有下拉菜单) -->
-				<!-- 以“项目”为例，其他下拉菜单请参照修改 -->
-				<li class="nav-item has-dropdown">
-
-					<a href="#projects" class="nav-btn">
-						<span class="btn-text">项目</span>
-						<i class="fas fa-caret-down arrow-icon"></i>
-					</a>
-
-					<div class="dropdown-menu">
-						<!-- 装饰用的顶部光条 -->
-						<div class="menu-decoration-line"></div>
-
-						<a href="projects/project.html?cat=stm32" class="dropdown-item">
-							<i class="fas fa-microchip item-icon"></i> <!-- 图标 -->
-							<span class="item-text">基于MODBUS协议的水质检测RTU</span>
-						</a>
-
-						<a href="projects/project.html?cat=stm32" class="dropdown-item">
-							<i class="fas fa-bolt item-icon"></i>
-							<span class="item-text">称重自动升降仪</span>
-						</a>
-
-						<a href="projects/project.html?cat=stm32" class="dropdown-item">
-							<i class="fab fa-linux item-icon"></i>
-							<span class="item-text">高速高精度ADC测试</span>
-						</a>
-
-					</div>
-				</li>
-
 				<!-- 3. 知识库 (有下拉菜单) -->
 				<li class="nav-item has-dropdown">
 
@@ -189,9 +158,6 @@
 					</p>
 				</div>
 				<div class="cta-group">
-					<button onclick="scrollToSection('projects')" class="btn btn-glow">
-						<i class="fas fa-code-branch"></i>查看项目
-					</button>
 					<button onclick="scrollToSection('knowledge')" class="btn btn-glow">
 						<i class="fas fa-code-branch"></i>知识文档
 					</button>
@@ -287,41 +253,7 @@
 		</div>
 	</section>
 
-	<!-- 2. 项目板块 -->
-	<section id="projects" class="section">
-		<div class="container">
-			<h2 class="section-title">My_Project<span class="subtitle">Repository</span></h2>
-			<div class="grid-box">
-				<!-- 项目卡片 1 -->
-				<a href="projects/project.html?cat=stm32" class="card project-card">
-					<h3>基于MODBUS协议的水质检测RTU</h3>
-					<div class="card-icon">
-						<div class="fill" style="width: 80%"></div>
-					</div>
-					<p>MODBUS协议、串口屏、4-20mA...</p>
-					<span class="click-hint">Open the project &rarr;</span>
-				</a>
-				<!-- 项目卡片 2 -->
-				<a href="projects/project.html?cat=stm32" class="card project-card">
-					<h3>液流称重自动升降仪</h3>
-					<div class="card-icon">
-						<div class="fill" style="width: 80%"></div>
-					</div>
-					<p>称重传感器、电机控制、水泵、串口屏...</p>
-					<span class="click-hint">Open the project &rarr;</span>
-				</a>
-				<!-- 项目卡片 3 -->
-				<a href="projects/project.html?cat=stm32" class="card project-card">
-					<h3>高速高精度ADC测试</h3>
-					<div class="card-icon">
-						<div class="fill" style="width: 80%"></div>
-					</div>
-					<p>ADC、C++、串口示波器</p>
-					<span class="click-hint">Open the project &rarr;</span>
-				</a>
-			</div>
-		</div>
-	</section>
+
 
 	<!-- 3. 知识记录板块 -->
 	<section id="knowledge" class="section">
