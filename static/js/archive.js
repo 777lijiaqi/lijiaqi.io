@@ -39,6 +39,14 @@ document.addEventListener('DOMContentLoaded', function() {
             link: "linux/shell脚本教程.html"
         },
         {
+            title: "Input子系统：Platform设备模型-GPIO按键中断驱动",
+            category: "linux",
+            desc: "基于 NXP i.MX6ULL 与 Linux 4.1.15 内核，全景详解 Platform 驱动模型、Input 子系统架构、双边沿中断申请、内核消抖定时器与防 UAF 并发安全机制。",
+            tags: ["Linux", "Driver", "Input", "Platform", "i.MX6ULL"],
+            icon: "fab fa-linux",
+            link: "linux/Input子系统：Platform设备模型-GPIO按键中断驱动.html"
+        },
+        {
             title: "Cortex-A 架构及 ARM 汇编详解",
             category: "arm",
             desc: "基于 ARM 官方文档，详解 Cortex-A 架构原理、寄存器、流水线及 ARMv7 指令集，包含 C 与汇编混合编程实例。",
