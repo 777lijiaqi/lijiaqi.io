@@ -214,6 +214,42 @@
             border-radius: 0 8px 8px 0;
         }
 
+        /* --- 文章内部链接统一美化 (Unified Article Link Style) --- */
+        article a {
+            color: var(--primary);
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(14, 165, 233, 0.45);
+            padding: 1px 4px;
+            border-radius: 3px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-block;
+        }
+
+        article a:visited {
+            color: var(--primary);
+        }
+
+        article a:hover, article a:focus {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+            background: rgba(16, 185, 129, 0.12);
+            text-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+        }
+
+        /* 按钮与组件类链接排除下划线与虚线 */
+        a.btn-back-code,
+        a.btn-back-nav,
+        a.code-jump-badge,
+        a.api-card-btn,
+        a.back-btn,
+        .toc-list a {
+            border-bottom: none !important;
+            background: revert;
+            text-shadow: none;
+            display: revert;
+            padding: revert;
+        }
+
         pre {
             margin: 1.5rem 0 !important;
             border-radius: 8px !important;
@@ -322,34 +358,15 @@
                 <p><i class="fas fa-tv" style="color: #f59e0b;"></i> <strong>通信总线</strong>：ECSPI3 控制器 (最高通信速率 <code>20MHz</code> / ST7789V 240x240 RGB565 彩屏)</p>
             </div>
 
-</li>
-<li><a href="#二设备树-device-tree-中-spi-节点配置规范">二、设备树
-(Device Tree) 中 SPI 节点配置规范</a>
-</li>
-<li><a
-href="#三4线制-spi-彩屏硬件控制原理-以-240x240-lcd-为例">三、4线制 SPI
-彩屏硬件控制原理 (以 240x240 LCD 为例)</a>
-</li>
-<li><a
-href="#四spi-数据传输协议与通信时序-spi_message--spi_transfer">四、SPI
-数据传输协议与通信时序 (<code>spi_message</code> /
-<code>spi_transfer</code>)</a>
-</li>
-<li><a href="#五工业级-spi-屏幕驱动核心黄金源码剖析-spi_lcdc">五、工业级
-SPI 屏幕驱动核心黄金源码剖析 (spi_lcd.c)</a>
-</li>
-<li><a href="#六linux-spi-核心-api-全景百科全书">六、Linux SPI 核心 API
-全景百科全书</a>
-</li>
-<li><a href="#七spi-驱动开发高频避坑指南-top-pitfalls">七、SPI
-驱动开发高频避坑指南 (Top Pitfalls)</a></li>
-<li><a
-href="#八常用编译设备树与板端测试指令速查">八、常用编译、设备树与板端测试指令速查</a></li>
-</ul>
-<hr />
-<h2
+<div class="doc-intro" style="color: var(--text-main); font-size: 1.02rem; line-height: 1.8; margin-bottom: 2.2rem; border-left: 4px solid var(--accent); background: rgba(16, 185, 129, 0.05); padding: 14px 18px; border-radius: 0 8px 8px 0;"><p>本文档基于 Linux 2.6+ / 4.x / 5.x 现代内核标准，全面系统地总结了
+<strong>Linux SPI 子系统的核心体系架构</strong>、<strong>设备树 (Device
+Tree) 中 SPI
+控制器与从机节点规范</strong>、<strong><code>spi_message</code> 与
+<code>spi_transfer</code> 核心通信时序机制</strong>、<strong>4线制 SPI
+LCD 屏幕硬件初始化与显存刷屏原理</strong>，以及 <strong>全套 Linux SPI
+核心 API 全景解析与工程避坑指南</strong>。</p></div>
 
-id="sec-1">一、Linux SPI 子系统体系架构全景图</h2>
+<h2 id="sec-1">一、Linux SPI 子系统体系架构全景图</h2>
 <p>Linux 内核将 SPI 驱动模型划分为三个高内聚、低耦合的标准层级：</p>
 <pre class="language-text"><code class="language-text">┌─────────────────────────────────────────────────────────────────────────┐
 │                    Linux SPI 子系统三层体系架构                          │
@@ -559,7 +576,6 @@ insmod spi_lcd.ko
 # 3. 查看 SPI 从机设备与驱动匹配
 ls -l /dev/spi_screen
 dmesg | grep spi</code></pre>
-
 
             <hr style="border: 0; border-top: 1px solid var(--border); margin: 3rem 0 1.5rem 0;">
 

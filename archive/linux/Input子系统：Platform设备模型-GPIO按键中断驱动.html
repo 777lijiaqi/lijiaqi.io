@@ -230,6 +230,42 @@
             border-radius: 0 8px 8px 0;
         }
 
+        /* --- 文章内部链接统一美化 (Unified Article Link Style) --- */
+        article a {
+            color: var(--primary);
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(14, 165, 233, 0.45);
+            padding: 1px 4px;
+            border-radius: 3px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-block;
+        }
+
+        article a:visited {
+            color: var(--primary);
+        }
+
+        article a:hover, article a:focus {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+            background: rgba(16, 185, 129, 0.12);
+            text-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+        }
+
+        /* 按钮与徽章排除正文下划线 */
+        a.btn-back-code,
+        a.btn-back-nav,
+        a.code-jump-badge,
+        a.api-card-btn,
+        a.back-btn,
+        .toc-list a {
+            border-bottom: none !important;
+            background: revert;
+            text-shadow: none;
+            display: revert;
+            padding: revert;
+        }
+
         /* 代码块与折叠 */
         pre {
             margin: 1.5rem 0 !important;

@@ -214,6 +214,42 @@
             border-radius: 0 8px 8px 0;
         }
 
+        /* --- 文章内部链接统一美化 (Unified Article Link Style) --- */
+        article a {
+            color: var(--primary);
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(14, 165, 233, 0.45);
+            padding: 1px 4px;
+            border-radius: 3px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-block;
+        }
+
+        article a:visited {
+            color: var(--primary);
+        }
+
+        article a:hover, article a:focus {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+            background: rgba(16, 185, 129, 0.12);
+            text-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+        }
+
+        /* 按钮与组件类链接排除下划线与虚线 */
+        a.btn-back-code,
+        a.btn-back-nav,
+        a.code-jump-badge,
+        a.api-card-btn,
+        a.back-btn,
+        .toc-list a {
+            border-bottom: none !important;
+            background: revert;
+            text-shadow: none;
+            display: revert;
+            padding: revert;
+        }
+
         pre {
             margin: 1.5rem 0 !important;
             border-radius: 8px !important;
@@ -322,36 +358,13 @@
                 <p><i class="fas fa-lightbulb" style="color: #f59e0b;"></i> <strong>物理引脚</strong>：RGB 三色 LED (GPIO1_IO04 红灯, GPIO4_IO20 绿灯, GPIO4_IO19 蓝灯)</p>
             </div>
 
-</li>
-<li><a
-href="#二驱动编程不同流派与架构选型对比">二、驱动编程不同流派与架构选型对比</a>
-</li>
-<li><a
-href="#三全流程黄金代码模板-两种主流写法完整对比">三、全流程黄金代码模板
-(两种主流写法完整对比)</a>
-</li>
-<li><a
-href="#四核心-api-对根文件系统-proc-sys-dev-的影响全景映射">四、核心 API
-对根文件系统 (<code>/proc</code>、<code>/sys</code>、<code>/dev</code>)
-的影响全景映射</a></li>
-<li><a
-href="#五c-语言指针参数传参大解密-直接传变量-vs-取地址--传参">五、C
-语言指针参数传参大解密 (直接传变量 vs 取地址 <code>&amp;</code>
-传参)</a></li>
-<li><a
-href="#六驱动核心-api-全景百科全书-参数返回值机制详解">六、驱动核心 API
-全景百科全书 (参数/返回值/机制详解)</a>
-</li>
-<li><a
-href="#七驱动开发核心避坑指南-top-pitfalls">七、驱动开发核心避坑指南
-(Top Pitfalls)</a></li>
-<li><a
-href="#八常用编译设备树与板端测试指令速查">八、常用编译、设备树与板端测试指令速查</a></li>
-</ul>
-<hr />
-<h2
+<div class="doc-intro" style="color: var(--text-main); font-size: 1.02rem; line-height: 1.8; margin-bottom: 2.2rem; border-left: 4px solid var(--accent); background: rgba(16, 185, 129, 0.05); padding: 14px 18px; border-radius: 0 8px 8px 0;"><p>本文档基于 Linux 2.6+ / 4.x / 5.x 现代内核标准，全面系统地总结了从
+<strong>经典字符设备（cdev）</strong> 到 <strong>Platform
+平台总线模型</strong>，再到 <strong>现代设备树（Device Tree + Pinctrl
+子系统 + GPIO 子系统）</strong>
+的全生命周期驱动开发框架、执行时序逻辑、架构设计哲学。</p></div>
 
-id="sec-1">一、Linux 驱动架构演进与全生命周期流转图</h2>
+<h2 id="sec-1">一、Linux 驱动架构演进与全生命周期流转图</h2>
 <h3 id="1-架构演进的三大阶段-why--what">1. 架构演进的三大阶段 (Why &amp;
 What)</h3>
 <pre class="language-text"><code class="language-text">【阶段一：传统纯字符设备驱动】
@@ -1710,7 +1723,6 @@ echo 0 &gt; /dev/led_blue</code></pre>
 <h3 id="5-模块卸载">5. 模块卸载</h3>
 <pre class="language-bash"><code class="language-bash"># 卸载驱动 (自动触发 remove 清理所有节点与设备号)
 rmmod led_rgb_drv</code></pre>
-
 
             <hr style="border: 0; border-top: 1px solid var(--border); margin: 3rem 0 1.5rem 0;">
 

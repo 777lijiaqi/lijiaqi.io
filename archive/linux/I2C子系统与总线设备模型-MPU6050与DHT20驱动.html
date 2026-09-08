@@ -214,6 +214,42 @@
             border-radius: 0 8px 8px 0;
         }
 
+        /* --- 文章内部链接统一美化 (Unified Article Link Style) --- */
+        article a {
+            color: var(--primary);
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(14, 165, 233, 0.45);
+            padding: 1px 4px;
+            border-radius: 3px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-block;
+        }
+
+        article a:visited {
+            color: var(--primary);
+        }
+
+        article a:hover, article a:focus {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+            background: rgba(16, 185, 129, 0.12);
+            text-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+        }
+
+        /* 按钮与组件类链接排除下划线与虚线 */
+        a.btn-back-code,
+        a.btn-back-nav,
+        a.code-jump-badge,
+        a.api-card-btn,
+        a.back-btn,
+        .toc-list a {
+            border-bottom: none !important;
+            background: revert;
+            text-shadow: none;
+            display: revert;
+            padding: revert;
+        }
+
         pre {
             margin: 1.5rem 0 !important;
             border-radius: 8px !important;
@@ -321,31 +357,14 @@
                 <p><i class="fas fa-project-diagram" style="color: #f59e0b;"></i> <strong>通信总线</strong>：I2C1 控制器 (MPU6050: 从机地址 <code>0x68</code> / DHT20: 从机地址 <code>0x38</code>)</p>
             </div>
 
-</li>
-<li><a href="#二设备树-device-tree-中-i2c-节点配置规范">二、设备树
-(Device Tree) 中 I2C 节点配置规范</a>
-</li>
-<li><a href="#三i2c-驱动全生命周期流转与双向绑定机制">三、I2C
-驱动全生命周期流转与双向绑定机制</a>
-</li>
-<li><a
-href="#四i2c-通信时序与万能传输协议-i2c_msg--i2c_transfer">四、I2C
-通信时序与万能传输协议 (<code>i2c_msg</code> /
-<code>i2c_transfer</code>)</a>
-</li>
-<li><a
-href="#五现代-i2c-字符设备驱动黄金源码模板-golden-template">五、现代 I2C
-字符设备驱动黄金源码模板 (Golden Template)</a></li>
-<li><a href="#六i2c-核心-api-全景百科全书">六、I2C 核心 API
-全景百科全书</a>
-</li>
-<li><a href="#七i2c-驱动开发高频避坑指南-top-pitfalls">七、I2C
-驱动开发高频避坑指南 (Top Pitfalls)</a></li>
-</ul>
-<hr />
-<h2
+<div class="doc-intro" style="color: var(--text-main); font-size: 1.02rem; line-height: 1.8; margin-bottom: 2.2rem; border-left: 4px solid var(--accent); background: rgba(16, 185, 129, 0.05); padding: 14px 18px; border-radius: 0 8px 8px 0;"><p>本文档基于 Linux 2.6+ / 4.x / 5.x 现代内核标准，全面系统地总结了
+<strong>Linux I2C 子系统的核心分层架构</strong>、<strong>设备树（Device
+Tree）节点拓扑</strong>、<strong>驱动全生命周期流转</strong>、<strong><code>i2c_msg</code>
+/ <code>i2c_transfer</code>
+核心通信时序机制</strong>、<strong>面向对象双向绑定模式</strong>，以及
+<strong>全套 I2C 核心 API 详解与工程避坑指南</strong>。</p></div>
 
-id="sec-1">一、Linux I2C 子系统三层架构全景图</h2>
+<h2 id="sec-1">一、Linux I2C 子系统三层架构全景图</h2>
 <p>Linux 内核将 I2C 子系统高度抽象解耦为三层架构：</p>
 <pre class="language-text"><code class="language-text">┌─────────────────────────────────────────────────────────────────────────┐
 │                    Linux I2C 子系统三层体系架构                          │
@@ -959,7 +978,6 @@ void dev_info(const struct device *dev, const char *fmt, ...);</code></pre></li>
 <code>return 0;</code>。</li>
 </ul></li>
 </ol>
-
 
             <hr style="border: 0; border-top: 1px solid var(--border); margin: 3rem 0 1.5rem 0;">
 
