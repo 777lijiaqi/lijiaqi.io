@@ -310,6 +310,235 @@
             color: var(--accent);
             border-left-color: var(--accent);
         }
+    
+        span[id^="api-"] {
+            scroll-margin-top: 100px;
+            display: block;
+            height: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        span[id^="call-"] {
+            scroll-margin-top: 100px;
+            display: inline-block;
+        }
+
+        /* --- 源码内嵌 API 跳转徽章 --- */
+        .code-jump-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(14, 165, 233, 0.2);
+            color: #38bdf8 !important;
+            border: 1px solid rgba(14, 165, 233, 0.45);
+            border-radius: 4px;
+            padding: 1px 7px;
+            font-size: 0.75rem !important;
+            font-family: 'Fira Code', monospace !important;
+            text-decoration: none;
+            margin-left: 12px;
+            vertical-align: middle;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 6px rgba(14, 165, 233, 0.2);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .code-jump-badge:hover {
+            background: var(--primary);
+            color: #0b1120 !important;
+            box-shadow: 0 0 12px var(--primary);
+            transform: translateY(-1px);
+        }
+
+        /* --- API 源码直达卡片网格 --- */
+        .api-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 2rem 0;
+        }
+
+        .api-card {
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(14, 165, 233, 0.25);
+            border-radius: 8px;
+            padding: 16px 18px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .api-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 16px rgba(14, 165, 233, 0.35);
+            transform: translateY(-3px);
+        }
+
+        .api-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .api-badge {
+            flex-shrink: 0;
+            background: rgba(14, 165, 233, 0.15);
+            color: var(--primary);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            white-space: nowrap;
+        }
+
+        .api-func-name {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.92rem;
+            font-weight: bold;
+            color: #38bdf8;
+            word-break: break-all;
+            text-align: right;
+            line-height: 1.3;
+        }
+
+        .api-card-desc {
+            color: #cbd5e1;
+            font-size: 0.88rem;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .api-card-call {
+            font-size: 0.82rem;
+            color: #94a3b8;
+            margin-bottom: 6px;
+        }
+
+        .api-card-path {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.76rem;
+            color: #64748b;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 6px 10px;
+            border-radius: 4px;
+            margin-bottom: 14px;
+            word-break: break-all;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .api-card-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            background: rgba(14, 165, 233, 0.12);
+            color: var(--primary);
+            border: 1px solid rgba(14, 165, 233, 0.35);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.82rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .api-card-btn:hover {
+            background: var(--primary);
+            color: #0b1120;
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* --- API 详情源码头部标识 --- */
+        .source-header-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-left: 3px solid var(--accent);
+            border-radius: 6px;
+            padding: 8px 14px;
+            margin: 12px 0 16px 0;
+            gap: 10px;
+        }
+
+        .source-tag {
+            color: var(--accent);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .source-path {
+            color: #94a3b8;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.82rem;
+        }
+
+        /* --- 双向返回按钮栏 --- */
+        .api-back-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-back-code {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 15px;
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--accent);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            border-radius: 6px;
+            text-decoration: none;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.82rem;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .btn-back-code:hover {
+            background: var(--accent);
+            color: #0b1120;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .btn-back-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 15px;
+            background: rgba(14, 165, 233, 0.12);
+            color: var(--primary);
+            border: 1px solid rgba(14, 165, 233, 0.35);
+            border-radius: 6px;
+            text-decoration: none;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.82rem;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .btn-back-nav:hover {
+            background: var(--primary);
+            color: #0b1120;
+            box-shadow: 0 0 10px var(--primary);
+        }
+
     </style>
 </head>
 
@@ -447,9 +676,9 @@ memset(&amp;xfer, 0, sizeof(xfer));
 xfer.tx_buf = buf;
 xfer.len = total_bytes;
 
-spi_message_init(&amp;m);
-spi_message_add_tail(&amp;xfer, &amp;m);
-spi_sync(dev-&gt;spi_dev, &amp;m);</code></pre>
+<span id="call-spi-message-init"></span>spi_message_init(&amp;m); <a href="#api-spi-message-init" class="code-jump-badge" title="跳转至 spi_message_init() 全景解析"><i class="fas fa-bolt"></i> API 04 详解 ↗</a>
+<span id="call-spi-message-add-tail"></span>spi_message_add_tail(&amp;xfer, &amp;m); <a href="#api-spi-message-add-tail" class="code-jump-badge" title="跳转至 spi_message_add_tail() 全景解析"><i class="fas fa-bolt"></i> API 05 详解 ↗</a>
+<span id="call-spi-sync"></span>spi_sync(dev-&gt;spi_dev, &amp;m); <a href="#api-spi-sync" class="code-jump-badge" title="跳转至 spi_sync() 全景解析"><i class="fas fa-bolt"></i> API 02 详解 ↗</a></code></pre>
 <hr />
 <h2 id="sec-5">五、工业级 SPI 屏幕驱动核心黄金源码剖析 (spi_lcd.c)</h2>
 <pre class="language-c"><code class="language-c">#include &quot;spi_drv.h&quot;
@@ -459,8 +688,8 @@ spi_sync(dev-&gt;spi_dev, &amp;m);</code></pre>
 
 /* 1. SPI 发送命令与数据底层接口 */
 static int spi_screen_write_cmd(struct spi_dev* dev, uint8_t* cmd, uint32_t len) {
-    gpio_set_value(dev-&gt;dc_gpio, CMD_MODE);
-    return spi_write(dev-&gt;spi_dev, cmd, len);
+    <span id="call-gpio-set-value"></span>gpio_set_value(dev-&gt;dc_gpio, CMD_MODE); <a href="#api-gpio-set-value" class="code-jump-badge" title="跳转至 gpio_set_value() 全景解析"><i class="fas fa-bolt"></i> API 07 详解 ↗</a>
+    <span id="call-spi-write"></span>return spi_write(dev-&gt;spi_dev, cmd, len); <a href="#api-spi-write" class="code-jump-badge" title="跳转至 spi_write() 全景解析"><i class="fas fa-bolt"></i> API 03 详解 ↗</a>
 }
 
 static int spi_screen_write_data(struct spi_dev* dev, uint8_t* data, uint32_t len) {
@@ -514,30 +743,209 @@ static void spi_screen_clear(struct spi_dev* dev, uint16_t color) {
     spi_sync(dev-&gt;spi_dev, &amp;m);
 
     kfree(buf);
-}</code></pre>
+}
+
+/* 3. SPI 驱动探测与设备初始化 */
+static int spi_lcd_probe(struct spi_device *spi) {
+    struct spi_dev *dev;
+    dev = devm_kzalloc(&amp;spi-&gt;dev, sizeof(*dev), GFP_KERNEL);
+    if (!dev) return -ENOMEM;
+
+    dev-&gt;spi_dev = spi;
+    dev-&gt;dc_gpio = of_get_named_gpio(spi-&gt;dev.of_node, "dc-gpios", 0);
+    if (gpio_is_valid(dev-&gt;dc_gpio)) {
+        gpio_direction_output(dev-&gt;dc_gpio, 1);
+    }
+
+    <span id="call-spi-set-drvdata"></span>spi_set_drvdata(spi, dev); <a href="#api-spi-set-drvdata" class="code-jump-badge" title="跳转至 spi_set_drvdata() 全景解析"><i class="fas fa-bolt"></i> API 06 详解 ↗</a>
+    pr_info("ST7789V SPI LCD Driver Probed successfully\n");
+    return 0;
+}
+
+static int spi_lcd_remove(struct spi_device *spi) {
+    pr_info("ST7789V SPI LCD Driver Removed\n");
+    return 0;
+}
+
+static const struct of_device_id spi_lcd_of_match[] = {
+    { .compatible = "sitronix,st7789v" },
+    { /* sentinel */ }
+};
+MODULE_DEVICE_TABLE(of, spi_lcd_of_match);
+
+static struct spi_driver spi_lcd_driver = {
+    .driver = {
+        .name = "st7789v_lcd",
+        .of_match_table = spi_lcd_of_match,
+    },
+    .probe  = spi_lcd_probe,
+    .remove = spi_lcd_remove,
+};
+
+<span id="call-module-spi-driver"></span>module_spi_driver(spi_lcd_driver); <a href="#api-module-spi-driver" class="code-jump-badge" title="跳转至 module_spi_driver() 全景解析"><i class="fas fa-bolt"></i> API 01 详解 ↗</a>
+MODULE_LICENSE("GPL");
+</code></pre>
+<hr />
+<div id="sec-driver-nav"></div>
+<h3 id="5.2-驱动核心调用点--api-完整源码与参数直达对照表">5.2 驱动核心调用点 ➔ API 完整源码与参数直达对照表</h3>
+<p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
+    💡 <strong>交互指南</strong>：下述各卡片收录了本驱动的核心调用点。点击任意卡片即可瞬间穿透至该 API 在 Linux 4.1.15 官方内核中的完整参数与底层机制剖析，并支持随时一键返回驱动源码对应行！
+</p>
+<div class="api-grid">
+    <div class="api-card">
+        <div class="api-card-top">
+            <span class="api-badge">API 01</span>
+            <span class="api-func-name">module_spi_driver()</span>
+        </div>
+        <div class="api-card-desc">一键宏：向 SPI 核心层注册/注销 spi_driver 驱动模型</div>
+        <div class="api-card-call"><i class="fas fa-code-branch" style="color: var(--primary);"></i> 驱动位置：<code>spi_lcd.c 模块出口</code></div>
+        <div class="api-card-path"><i class="fab fa-linux" style="color: var(--accent);"></i> <code>include/linux/spi/spi.h:234-240</code></div>
+        <div class="api-card-actions">
+            <a href="#api-module-spi-driver" class="api-card-btn">
+                <span>参数与全景解析</span> <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="api-card">
+        <div class="api-card-top">
+            <span class="api-badge">API 02</span>
+            <span class="api-func-name">spi_sync()</span>
+        </div>
+        <div class="api-card-desc">同步阻塞提交完整 spi_message 事务并等待硬件传输完成</div>
+        <div class="api-card-call"><i class="fas fa-code-branch" style="color: var(--primary);"></i> 驱动位置：<code>spi_screen_clear() 行 60</code></div>
+        <div class="api-card-path"><i class="fab fa-linux" style="color: var(--accent);"></i> <code>drivers/spi/spi.c:2378-2415</code></div>
+        <div class="api-card-actions">
+            <a href="#api-spi-sync" class="api-card-btn">
+                <span>参数与全景解析</span> <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="api-card">
+        <div class="api-card-top">
+            <span class="api-badge">API 03</span>
+            <span class="api-func-name">spi_write()</span>
+        </div>
+        <div class="api-card-desc">极速同步发送单块连续缓冲区 (发送 LCD 命令/参数)</div>
+        <div class="api-card-call"><i class="fas fa-code-branch" style="color: var(--primary);"></i> 驱动位置：<code>spi_screen_write_cmd() 行 9</code></div>
+        <div class="api-card-path"><i class="fab fa-linux" style="color: var(--accent);"></i> <code>include/linux/spi/spi.h:698-709</code></div>
+        <div class="api-card-actions">
+            <a href="#api-spi-write" class="api-card-btn">
+                <span>参数与全景解析</span> <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="api-card">
+        <div class="api-card-top">
+            <span class="api-badge">API 04</span>
+            <span class="api-func-name">spi_message_init()</span>
+        </div>
+        <div class="api-card-desc">初始化 SPI 报文容器并建立传输段链表头</div>
+        <div class="api-card-call"><i class="fas fa-code-branch" style="color: var(--primary);"></i> 驱动位置：<code>spi_screen_clear() 行 58</code></div>
+        <div class="api-card-path"><i class="fab fa-linux" style="color: var(--accent);"></i> <code>include/linux/spi/spi.h:582-588</code></div>
+        <div class="api-card-actions">
+            <a href="#api-spi-message-init" class="api-card-btn">
+                <span>参数与全景解析</span> <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="api-card">
+        <div class="api-card-top">
+            <span class="api-badge">API 05</span>
+            <span class="api-func-name">spi_message_add_tail()</span>
+        </div>
+        <div class="api-card-desc">向 SPI 报文尾部追加一个传输段 (spi_transfer)</div>
+        <div class="api-card-call"><i class="fas fa-code-branch" style="color: var(--primary);"></i> 驱动位置：<code>spi_screen_clear() 行 59</code></div>
+        <div class="api-card-path"><i class="fab fa-linux" style="color: var(--accent);"></i> <code>include/linux/spi/spi.h:590-596</code></div>
+        <div class="api-card-actions">
+            <a href="#api-spi-message-add-tail" class="api-card-btn">
+                <span>参数与全景解析</span> <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="api-card">
+        <div class="api-card-top">
+            <span class="api-badge">API 06</span>
+            <span class="api-func-name">spi_set_drvdata() / spi_get_drvdata()</span>
+        </div>
+        <div class="api-card-desc">将 LCD 屏私有控制结构体绑定至/提取自 struct spi_device</div>
+        <div class="api-card-call"><i class="fas fa-code-branch" style="color: var(--primary);"></i> 驱动位置：<code>spi_lcd_probe() / open()</code></div>
+        <div class="api-card-path"><i class="fab fa-linux" style="color: var(--accent);"></i> <code>include/linux/spi/spi.h:207-215</code></div>
+        <div class="api-card-actions">
+            <a href="#api-spi-set-drvdata" class="api-card-btn">
+                <span>参数与全景解析</span> <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="api-card">
+        <div class="api-card-top">
+            <span class="api-badge">API 07</span>
+            <span class="api-func-name">gpio_set_value()</span>
+        </div>
+        <div class="api-card-desc">精准拉高/拉低 DC(命令/数据)、CS片选与 RST复位引脚</div>
+        <div class="api-card-call"><i class="fas fa-code-branch" style="color: var(--primary);"></i> 驱动位置：<code>spi_screen_write_cmd() 行 8</code></div>
+        <div class="api-card-path"><i class="fab fa-linux" style="color: var(--accent);"></i> <code>include/linux/gpio.h:58-66</code></div>
+        <div class="api-card-actions">
+            <a href="#api-gpio-set-value" class="api-card-btn">
+                <span>参数与全景解析</span> <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
 <hr />
 <h2 id="sec-6">六、Linux SPI 核心 API 全景百科全书</h2>
-<h3 id="1-module_spi_driver--spi_register_driver">1.
-<code>module_spi_driver</code> / <code>spi_register_driver</code></h3>
+<span id="api-module-spi-driver"></span>
+<h3 id="1-module_spi_driver--spi_register_driver">1. <code>module_spi_driver</code> / <code>spi_register_driver</code></h3>
+<div class="source-header-bar"><span class="source-tag"><i class="fab fa-linux"></i> Linux 4.1.15 官方内核源码</span><span class="source-path"><i class="fas fa-file-code"></i> include/linux/spi/spi.h:234-240</span></div>
 <ul>
 <li><strong>函数原型</strong>：<code>int spi_register_driver(struct spi_driver *sdrv);</code></li>
-<li><strong>作用</strong>：向 Linux SPI
-总线注册驱动对象，展开后完成内核模块初始化与注销挂载。</li>
+<li><strong>作用</strong>：向 Linux SPI 总线注册驱动对象，展开后全自动注册模块入口与注销出口。</li>
 </ul>
-<h3 id="2-spi_sync">2. <code>spi_sync</code></h3>
+<div class="api-back-bar"><a href="#call-module-spi-driver" class="btn-back-code"><i class="fas fa-arrow-left"></i> 返回驱动源码调用处 (spi_lcd.c 模块出口)</a><a href="#sec-driver-nav" class="btn-back-nav"><i class="fas fa-th-large"></i> 返回 API 导航总览</a></div>
+<hr />
+
+<span id="api-spi-sync"></span>
+<span id="api-spi-message-init"></span>
+<span id="api-spi-message-add-tail"></span>
+<h3 id="2-spi_sync--spi_message">2. <code>spi_sync</code> / <code>spi_message_init</code> / <code>spi_message_add_tail</code></h3>
+<div class="source-header-bar"><span class="source-tag"><i class="fab fa-linux"></i> Linux 4.1.15 官方内核源码</span><span class="source-path"><i class="fas fa-file-code"></i> drivers/spi/spi.c:2378-2415</span></div>
 <ul>
-<li><strong>函数原型</strong>：<code>int spi_sync(struct spi_device *spi, struct spi_message *message);</code></li>
-<li><strong>作用</strong>：同步阻塞提交 SPI
-传输事务，等待底层硬件传输完成并返回。进程上下文安全。</li>
+<li><strong>函数原型</strong>：<pre class="language-c"><code class="language-c">void spi_message_init(struct spi_message *m);
+void spi_message_add_tail(struct spi_transfer *t, struct spi_message *m);
+int spi_sync(struct spi_device *spi, struct spi_message *message);</code></pre></li>
+<li><strong>作用</strong>：初始化 <code>spi_message</code> 传输事务，串联单次物理传输段，并同步阻塞提交硬件发送。</li>
 </ul>
-<h3 id="3-spi_write">3. <code>spi_write</code></h3>
+<div class="api-back-bar"><a href="#call-spi-sync" class="btn-back-code"><i class="fas fa-arrow-left"></i> 返回驱动源码调用处 (spi_screen_clear() 行 60)</a><a href="#sec-driver-nav" class="btn-back-nav"><i class="fas fa-th-large"></i> 返回 API 导航总览</a></div>
+<hr />
+
+<span id="api-spi-write"></span>
+<h3 id="3-spi_write">3. <code>spi_write</code> (轻量同步发送)</h3>
+<div class="source-header-bar"><span class="source-tag"><i class="fab fa-linux"></i> Linux 4.1.15 官方内核源码</span><span class="source-path"><i class="fas fa-file-code"></i> include/linux/spi/spi.h:698-709</span></div>
 <ul>
 <li><strong>函数原型</strong>：<code>int spi_write(struct spi_device *spi, const void *buf, size_t len);</code></li>
-<li><strong>作用</strong>：快捷发送单块连续缓冲区，底层自动封装单
-<code>spi_transfer</code> 与 <code>spi_message</code>。</li>
+<li><strong>作用</strong>：快捷发送单块连续缓冲区，底层内核自动打包单 <code>spi_transfer</code> 事务提交。</li>
 </ul>
-<h3 id="4-spi_set_drvdata--spi_get_drvdata">4.
-<code>spi_set_drvdata</code> / <code>spi_get_drvdata</code></h3>
+<div class="api-back-bar"><a href="#call-spi-write" class="btn-back-code"><i class="fas fa-arrow-left"></i> 返回驱动源码调用处 (spi_screen_write_cmd() 行 9)</a><a href="#sec-driver-nav" class="btn-back-nav"><i class="fas fa-th-large"></i> 返回 API 导航总览</a></div>
+<hr />
+
+<span id="api-spi-set-drvdata"></span>
+<h3 id="4-spi_set_drvdata--spi_get_drvdata">4. <code>spi_set_drvdata</code> / <code>spi_get_drvdata</code></h3>
+<div class="source-header-bar"><span class="source-tag"><i class="fab fa-linux"></i> Linux 4.1.15 官方内核源码</span><span class="source-path"><i class="fas fa-file-code"></i> include/linux/spi/spi.h:207-215</span></div>
+<ul>
+<li><strong>作用</strong>：将自定义私有结构体指针绑定至 <code>spi->dev.driver_data</code>，实现驱动生命周期解耦。</li>
+</ul>
+<div class="api-back-bar"><a href="#call-spi-set-drvdata" class="btn-back-code"><i class="fas fa-arrow-left"></i> 返回驱动源码调用处 (spi_lcd_probe() 行 84)</a><a href="#sec-driver-nav" class="btn-back-nav"><i class="fas fa-th-large"></i> 返回 API 导航总览</a></div>
+<hr />
+
+<span id="api-gpio-set-value"></span>
+<h3 id="5-gpio_set_value-引脚电平翻转">5. <code>gpio_set_value</code> (DC 控制引脚电平翻转)</h3>
+<div class="source-header-bar"><span class="source-tag"><i class="fab fa-linux"></i> Linux 4.1.15 官方内核源码</span><span class="source-path"><i class="fas fa-file-code"></i> include/linux/gpio.h:58-65</span></div>
+<ul>
+<li><strong>函数原型</strong>：<code>static inline void gpio_set_value(unsigned int gpio, int value);</code></li>
+<li><strong>作用</strong>：翻转 GPIO 输出电平。低电平为命令（Command）模式，高电平为显存色彩（Data）模式。</li>
+</ul>
+<div class="api-back-bar"><a href="#call-gpio-set-value" class="btn-back-code"><i class="fas fa-arrow-left"></i> 返回驱动源码调用处 (spi_screen_write_cmd() 行 9)</a><a href="#sec-driver-nav" class="btn-back-nav"><i class="fas fa-th-large"></i> 返回 API 导航总览</a></div>
+<div class="source-header-bar"><span class="source-tag"><i class="fab fa-linux"></i> Linux 4.1.15 官方内核源码</span><span class="source-path"><i class="fas fa-file-code"></i> include/linux/spi/spi.h:207-215</span></div>
 <ul>
 <li><strong>作用</strong>：将自定义私有结构体指针绑定至
 <code>spi-&gt;dev.driver_data</code>，实现驱动生命周期解耦。</li>

@@ -310,6 +310,235 @@
             color: var(--accent);
             border-left-color: var(--accent);
         }
+    
+        span[id^="api-"] {
+            scroll-margin-top: 100px;
+            display: block;
+            height: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        span[id^="call-"] {
+            scroll-margin-top: 100px;
+            display: inline-block;
+        }
+
+        /* --- 源码内嵌 API 跳转徽章 --- */
+        .code-jump-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(14, 165, 233, 0.2);
+            color: #38bdf8 !important;
+            border: 1px solid rgba(14, 165, 233, 0.45);
+            border-radius: 4px;
+            padding: 1px 7px;
+            font-size: 0.75rem !important;
+            font-family: 'Fira Code', monospace !important;
+            text-decoration: none;
+            margin-left: 12px;
+            vertical-align: middle;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 6px rgba(14, 165, 233, 0.2);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .code-jump-badge:hover {
+            background: var(--primary);
+            color: #0b1120 !important;
+            box-shadow: 0 0 12px var(--primary);
+            transform: translateY(-1px);
+        }
+
+        /* --- API 源码直达卡片网格 --- */
+        .api-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 2rem 0;
+        }
+
+        .api-card {
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(14, 165, 233, 0.25);
+            border-radius: 8px;
+            padding: 16px 18px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .api-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 16px rgba(14, 165, 233, 0.35);
+            transform: translateY(-3px);
+        }
+
+        .api-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .api-badge {
+            flex-shrink: 0;
+            background: rgba(14, 165, 233, 0.15);
+            color: var(--primary);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            white-space: nowrap;
+        }
+
+        .api-func-name {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.92rem;
+            font-weight: bold;
+            color: #38bdf8;
+            word-break: break-all;
+            text-align: right;
+            line-height: 1.3;
+        }
+
+        .api-card-desc {
+            color: #cbd5e1;
+            font-size: 0.88rem;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .api-card-call {
+            font-size: 0.82rem;
+            color: #94a3b8;
+            margin-bottom: 6px;
+        }
+
+        .api-card-path {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.76rem;
+            color: #64748b;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 6px 10px;
+            border-radius: 4px;
+            margin-bottom: 14px;
+            word-break: break-all;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .api-card-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            background: rgba(14, 165, 233, 0.12);
+            color: var(--primary);
+            border: 1px solid rgba(14, 165, 233, 0.35);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.82rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .api-card-btn:hover {
+            background: var(--primary);
+            color: #0b1120;
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* --- API 详情源码头部标识 --- */
+        .source-header-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-left: 3px solid var(--accent);
+            border-radius: 6px;
+            padding: 8px 14px;
+            margin: 12px 0 16px 0;
+            gap: 10px;
+        }
+
+        .source-tag {
+            color: var(--accent);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .source-path {
+            color: #94a3b8;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.82rem;
+        }
+
+        /* --- 双向返回按钮栏 --- */
+        .api-back-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-back-code {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 15px;
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--accent);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            border-radius: 6px;
+            text-decoration: none;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.82rem;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .btn-back-code:hover {
+            background: var(--accent);
+            color: #0b1120;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .btn-back-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 15px;
+            background: rgba(14, 165, 233, 0.12);
+            color: var(--primary);
+            border: 1px solid rgba(14, 165, 233, 0.35);
+            border-radius: 6px;
+            text-decoration: none;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.82rem;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .btn-back-nav:hover {
+            background: var(--primary);
+            color: #0b1120;
+            box-shadow: 0 0 10px var(--primary);
+        }
+
     </style>
 </head>
 
@@ -588,7 +817,7 @@ MPU6050，各个设备的内存与 <code>client</code>
     msgs[1].buf   = (u8 *)data;
 
     /* ⚠️ 核心注意：发送了 2 个 msg，全部成功时 i2c_transfer 返回 2！ */
-    return (i2c_transfer(client-&gt;adapter, msgs, 2) == 2) ? 0 : -EIO;
+    <span id="call-i2c-transfer"></span>return (i2c_transfer(client-&gt;adapter, msgs, 2) == 2) ? 0 : -EIO; <a href="#api-i2c-transfer" class="code-jump-badge" title="跳转至 i2c_transfer() 全景解析"><i class="fas fa-bolt"></i> API 02 详解 ↗</a>
 }</code></pre></li>
 </ul>
 <hr />
@@ -713,7 +942,7 @@ static ssize_t mpu6050_read(struct file *filp, char __user *buf, size_t cnt, lof
         return -EIO;
     }
 
-    if (copy_to_user(buf, data, sizeof(data)))
+    <span id="call-copy-to-user"></span>if (copy_to_user(buf, data, sizeof(data))) <a href="#api-copy-to-user" class="code-jump-badge" title="跳转至 copy_to_user() 全景解析"><i class="fas fa-bolt"></i> API 07 详解 ↗</a>
         return -EFAULT;
 
     return sizeof(data);
@@ -738,17 +967,17 @@ static int mpu6050_probe(struct i2c_client *client, const struct i2c_device_id *
     int ret;
 
     /* 5.1 动态分配大结构体 (自动垃圾回收) */
-    mpu = devm_kzalloc(&amp;client-&gt;dev, sizeof(*mpu), GFP_KERNEL);
+    <span id="call-devm-kzalloc"></span>mpu = devm_kzalloc(&amp;client-&gt;dev, sizeof(*mpu), GFP_KERNEL); <a href="#api-devm-kzalloc" class="code-jump-badge" title="跳转至 devm_kzalloc() 全景解析"><i class="fas fa-bolt"></i> API 05 详解 ↗</a>
     if (!mpu) return -ENOMEM;
 
     /* 5.2 双向绑定 */
     mpu-&gt;client = client;
-    i2c_set_clientdata(client, mpu);
+    <span id="call-i2c-set-clientdata"></span>i2c_set_clientdata(client, mpu); <a href="#api-i2c-set-clientdata" class="code-jump-badge" title="跳转至 i2c_set_clientdata() 全景解析"><i class="fas fa-bolt"></i> API 03 详解 ↗</a>
 
     /* 5.3 申请设备号与注册 cdev */
     ret = alloc_chrdev_region(&amp;mpu-&gt;devno, 0, 1, DEV_NAME);
     if (ret &lt; 0) {
-        dev_err(&amp;client-&gt;dev, &quot;Alloc chrdev region failed!\n&quot;);
+        <span id="call-dev-err"></span>dev_err(&amp;client-&gt;dev, &quot;Alloc chrdev region failed!\n&quot;); <a href="#api-dev-err" class="code-jump-badge" title="跳转至 dev_err() / dev_info() 全景解析"><i class="fas fa-bolt"></i> API 06 详解 ↗</a>
         return ret;
     }
     mpu-&gt;major = MAJOR(mpu-&gt;devno);
@@ -799,7 +1028,7 @@ unregister_devno:
 /* 6. Remove 注销函数 */
 static int mpu6050_remove(struct i2c_client *client)
 {
-    struct mpu6050_dev *mpu = i2c_get_clientdata(client);
+    <span id="call-i2c-get-clientdata"></span>struct mpu6050_dev *mpu = i2c_get_clientdata(client); <a href="#api-i2c-get-clientdata" class="code-jump-badge" title="跳转至 i2c_get_clientdata() 全景解析"><i class="fas fa-bolt"></i> API 04 详解 ↗</a>
 
     device_destroy(mpu-&gt;class, mpu-&gt;devno);
     class_destroy(mpu-&gt;class);
@@ -834,16 +1063,139 @@ static struct i2c_driver mpu6050_driver = {
     },
 };
 
-module_i2c_driver(mpu6050_driver);
+<span id="call-module-i2c-driver"></span>module_i2c_driver(mpu6050_driver); <a href="#api-module-i2c-driver" class="code-jump-badge" title="跳转至 module_i2c_driver() 全景解析"><i class="fas fa-bolt"></i> API 01 详解 ↗</a>
 
 MODULE_LICENSE(&quot;GPL v2&quot;);
 MODULE_AUTHOR(&quot;rkljq&quot;);</code></pre>
 <hr />
+<div id="sec-driver-nav"></div>
+<h3 id="5.2-驱动核心调用点--api-完整源码与参数直达对照表">5.2 驱动核心调用点 ➔ API 完整源码与参数直达对照表</h3>
+<p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
+    💡 <strong>交互指南</strong>：下述各卡片收录了本驱动的核心调用点。点击任意卡片即可瞬间穿透至该 API 在 Linux 4.1.15 官方内核中的完整参数与底层机制剖析，并支持随时一键返回驱动源码对应行！
+</p>
+<div class="api-grid">
+    <div class="api-card">
+        <div class="api-card-top">
+            <span class="api-badge">API 01</span>
+            <span class="api-func-name">module_i2c_driver()</span>
+        </div>
+        <div class="api-card-desc">一键宏：自动展开并向 I2C 核心层注册/注销 i2c_driver</div>
+        <div class="api-card-call"><i class="fas fa-code-branch" style="color: var(--primary);"></i> 驱动位置：<code>mpu6050.c 行 222</code></div>
+        <div class="api-card-path"><i class="fab fa-linux" style="color: var(--accent);"></i> <code>include/linux/i2c.h:572-578</code></div>
+        <div class="api-card-actions">
+            <a href="#api-module-i2c-driver" class="api-card-btn">
+                <span>参数与全景解析</span> <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="api-card">
+        <div class="api-card-top">
+            <span class="api-badge">API 02</span>
+            <span class="api-func-name">i2c_transfer()</span>
+        </div>
+        <div class="api-card-desc">I2C 核心层万能时序传输函数，原子化调度执行一组 i2c_msg</div>
+        <div class="api-card-call"><i class="fas fa-code-branch" style="color: var(--primary);"></i> 驱动位置：<code>i2c_read_mpu6050() 行 50</code></div>
+        <div class="api-card-path"><i class="fab fa-linux" style="color: var(--accent);"></i> <code>drivers/i2c/i2c-core.c:1968-2005</code></div>
+        <div class="api-card-actions">
+            <a href="#api-i2c-transfer" class="api-card-btn">
+                <span>参数与全景解析</span> <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="api-card">
+        <div class="api-card-top">
+            <span class="api-badge">API 03</span>
+            <span class="api-func-name">i2c_set_clientdata()</span>
+        </div>
+        <div class="api-card-desc">将驱动私有数据绑定至从设备通信句柄 struct i2c_client</div>
+        <div class="api-card-call"><i class="fas fa-code-branch" style="color: var(--primary);"></i> 驱动位置：<code>mpu6050_probe() 行 131</code></div>
+        <div class="api-card-path"><i class="fab fa-linux" style="color: var(--accent);"></i> <code>include/linux/i2c.h:314-317</code></div>
+        <div class="api-card-actions">
+            <a href="#api-i2c-set-clientdata" class="api-card-btn">
+                <span>参数与全景解析</span> <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="api-card">
+        <div class="api-card-top">
+            <span class="api-badge">API 04</span>
+            <span class="api-func-name">i2c_get_clientdata()</span>
+        </div>
+        <div class="api-card-desc">从 struct i2c_client 中提取私有数据指针</div>
+        <div class="api-card-call"><i class="fas fa-code-branch" style="color: var(--primary);"></i> 驱动位置：<code>mpu6050_remove() 行 187</code></div>
+        <div class="api-card-path"><i class="fab fa-linux" style="color: var(--accent);"></i> <code>include/linux/i2c.h:319-322</code></div>
+        <div class="api-card-actions">
+            <a href="#api-i2c-get-clientdata" class="api-card-btn">
+                <span>参数与全景解析</span> <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="api-card">
+        <div class="api-card-top">
+            <span class="api-badge">API 05</span>
+            <span class="api-func-name">devm_kzalloc()</span>
+        </div>
+        <div class="api-card-desc">申请由从设备生命周期托管的内核全零内存</div>
+        <div class="api-card-call"><i class="fas fa-code-branch" style="color: var(--primary);"></i> 驱动位置：<code>mpu6050_probe() 行 126</code></div>
+        <div class="api-card-path"><i class="fab fa-linux" style="color: var(--accent);"></i> <code>include/linux/device.h:614-617</code></div>
+        <div class="api-card-actions">
+            <a href="#api-devm-kzalloc" class="api-card-btn">
+                <span>参数与全景解析</span> <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="api-card">
+        <div class="api-card-top">
+            <span class="api-badge">API 06</span>
+            <span class="api-func-name">dev_err() / dev_info()</span>
+        </div>
+        <div class="api-card-desc">附带设备总线识别前缀的格式化内核诊断日志</div>
+        <div class="api-card-call"><i class="fas fa-code-branch" style="color: var(--primary);"></i> 驱动位置：<code>mpu6050_probe() 行 136</code></div>
+        <div class="api-card-path"><i class="fab fa-linux" style="color: var(--accent);"></i> <code>include/linux/device.h:992-1005</code></div>
+        <div class="api-card-actions">
+            <a href="#api-dev-err" class="api-card-btn">
+                <span>参数与全景解析</span> <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="api-card">
+        <div class="api-card-top">
+            <span class="api-badge">API 07</span>
+            <span class="api-func-name">copy_to_user()</span>
+        </div>
+        <div class="api-card-desc">跨空间安全校验并将传感器采样数据拷贝至用户空间</div>
+        <div class="api-card-call"><i class="fas fa-code-branch" style="color: var(--primary);"></i> 驱动位置：<code>mpu6050_read() 行 101</code></div>
+        <div class="api-card-path"><i class="fab fa-linux" style="color: var(--accent);"></i> <code>arch/arm/include/asm/uaccess.h:514-526</code></div>
+        <div class="api-card-actions">
+            <a href="#api-copy-to-user" class="api-card-btn">
+                <span>参数与全景解析</span> <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="api-card">
+        <div class="api-card-top">
+            <span class="api-badge">API 08</span>
+            <span class="api-func-name">i2c_smbus_read_byte_data()</span>
+        </div>
+        <div class="api-card-desc">SMBus 标准单字节读写寄存器极简封装接口</div>
+        <div class="api-card-call"><i class="fas fa-code-branch" style="color: var(--primary);"></i> 驱动位置：<code>SMBus 接口封装段</code></div>
+        <div class="api-card-path"><i class="fab fa-linux" style="color: var(--accent);"></i> <code>drivers/i2c/i2c-core.c:2652-2680</code></div>
+        <div class="api-card-actions">
+            <a href="#api-i2c-smbus" class="api-card-btn">
+                <span>参数与全景解析</span> <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<hr />
 <h2 id="sec-6">六、I2C 核心 API 全景百科全书</h2>
 <hr />
 <h3 id="1-驱动注册与注销-api">1. 驱动注册与注销 API</h3>
+<span id="api-module-i2c-driver"></span>
 <h4 id="①-module_i2c_driver-一键驱动注册宏">①
 <code>module_i2c_driver</code> (一键驱动注册宏)</h4>
+<div class="source-header-bar"><span class="source-tag"><i class="fab fa-linux"></i> Linux 4.1.15 官方内核源码</span><span class="source-path"><i class="fas fa-file-code"></i> include/linux/i2c.h:572-578</span></div>
 <ul>
 <li><strong>语法</strong>：<code>module_i2c_driver(mpu6050_driver);</code></li>
 <li><strong>底层原理</strong>：宏展开后自动生成标准
@@ -853,9 +1205,13 @@ MODULE_AUTHOR(&quot;rkljq&quot;);</code></pre>
 <pre class="language-c"><code class="language-c">int i2c_add_driver(struct i2c_driver *driver);
 void i2c_del_driver(struct i2c_driver *driver);</code></pre></li>
 </ul>
+<div class="api-back-bar"><a href="#call-module-i2c-driver" class="btn-back-code"><i class="fas fa-arrow-left"></i> 返回驱动源码调用处 (mpu6050.c 行 222)</a><a href="#sec-driver-nav" class="btn-back-nav"><i class="fas fa-th-large"></i> 返回 API 导航总览</a></div>
 <hr />
+<span id="api-i2c-transfer"></span>
 <h3 id="2-数据传输核心-api-i2c_transfer">2. 数据传输核心 API
 (<code>i2c_transfer</code>)</h3>
+<div class="source-header-bar"><span class="source-tag"><i class="fab fa-linux"></i> Linux 4.1.15 官方内核源码</span><span class="source-path"><i class="fas fa-file-code"></i> drivers/i2c/i2c-core.c:1968-2005</span></div>
+<div class="api-back-bar"><a href="#call-i2c-transfer" class="btn-back-code"><i class="fas fa-arrow-left"></i> 返回驱动源码调用处 (i2c_read_mpu6050() 行 50)</a><a href="#sec-driver-nav" class="btn-back-nav"><i class="fas fa-th-large"></i> 返回 API 导航总览</a></div>
 <h4 id="①-i2c_transfer-底层万能传输函数">① <code>i2c_transfer</code>
 (底层万能传输函数)</h4>
 <ul>
@@ -890,8 +1246,14 @@ if (ret != 2) {
 <hr />
 <h3 id="3-私有数据挂载与取回-api-clientdata">3. 私有数据挂载与取回 API
 (<code>clientdata</code>)</h3>
+<span id="api-i2c-set-clientdata"></span>
+<span id="api-i2c-get-clientdata"></span>
+<div class="api-back-bar"><a href="#call-i2c-set-clientdata" class="btn-back-code"><i class="fas fa-arrow-left"></i> 返回驱动源码调用处 (mpu6050_probe() 行 131)</a><a href="#sec-driver-nav" class="btn-back-nav"><i class="fas fa-th-large"></i> 返回 API 导航总览</a></div>
+<div class="api-back-bar"><a href="#call-i2c-get-clientdata" class="btn-back-code"><i class="fas fa-arrow-left"></i> 返回驱动源码调用处 (mpu6050_remove() 行 187)</a><a href="#sec-driver-nav" class="btn-back-nav"><i class="fas fa-th-large"></i> 返回 API 导航总览</a></div>
 <h4 id="①-i2c_set_clientdata--i2c_get_clientdata">①
 <code>i2c_set_clientdata</code> / <code>i2c_get_clientdata</code></h4>
+<div class="source-header-bar"><span class="source-tag"><i class="fab fa-linux"></i> Linux 4.1.15 官方内核源码</span><span class="source-path"><i class="fas fa-file-code"></i> include/linux/i2c.h:319-322</span></div>
+<div class="source-header-bar"><span class="source-tag"><i class="fab fa-linux"></i> Linux 4.1.15 官方内核源码</span><span class="source-path"><i class="fas fa-file-code"></i> include/linux/i2c.h:314-317</span></div>
 <ul>
 <li><strong>函数原型</strong>：
 <pre class="language-c"><code class="language-c">void i2c_set_clientdata(struct i2c_client *dev, void *data);
@@ -905,8 +1267,10 @@ void *i2c_get_clientdata(const struct i2c_client *dev);</code></pre></li>
 </ul></li>
 </ul>
 <hr />
+<span id="api-i2c-smbus"></span>
 <h3 id="4-高层-smbus-协议读写-api-单字节极简封装">4. 高层 SMBus 协议读写
 API (单字节极简封装)</h3>
+<div class="source-header-bar"><span class="source-tag"><i class="fab fa-linux"></i> Linux 4.1.15 官方内核源码</span><span class="source-path"><i class="fas fa-file-code"></i> drivers/i2c/i2c-core.c:2652-2680</span></div>
 <p>对于简单的寄存器读写，内核还提供了一套 SMBus
 协议级简化函数（底层自动调用 <code>i2c_transfer</code>）：</p>
 <pre class="language-c"><code class="language-c">/* 读 1 字节寄存器: 成功返回读取的 8 位数据 (&gt;=0)，失败返回负数错误码 */
@@ -914,9 +1278,12 @@ s32 i2c_smbus_read_byte_data(const struct i2c_client *client, u8 command);
 
 /* 写 1 字节寄存器: 成功返回 0，失败返回负数错误码 */
 s32 i2c_smbus_write_byte_data(const struct i2c_client *client, u8 command, u8 value);</code></pre>
+<div class="api-back-bar"><a href="#call-i2c-transfer" class="btn-back-code"><i class="fas fa-arrow-left"></i> 返回驱动源码调用处 (SMBus 接口封装段)</a><a href="#sec-driver-nav" class="btn-back-nav"><i class="fas fa-th-large"></i> 返回 API 导航总览</a></div>
 <hr />
+<span id="api-devm-kzalloc"></span>
 <h3 id="5-内存管理与托管-api-devm_kzalloc">5. 内存管理与托管 API
 (<code>devm_kzalloc</code>)</h3>
+<div class="source-header-bar"><span class="source-tag"><i class="fab fa-linux"></i> Linux 4.1.15 官方内核源码</span><span class="source-path"><i class="fas fa-file-code"></i> include/linux/device.h:614-617</span></div>
 <ul>
 <li><strong>函数原型</strong>：
 <pre class="language-c"><code class="language-c">void *devm_kzalloc(struct device *dev, size_t size, gfp_t gfp);</code></pre></li>
@@ -928,10 +1295,13 @@ s32 i2c_smbus_write_byte_data(const struct i2c_client *client, u8 command, u8 va
 回收，彻底消灭内存泄漏！</strong></li>
 </ol></li>
 </ul>
+<div class="api-back-bar"><a href="#call-devm-kzalloc" class="btn-back-code"><i class="fas fa-arrow-left"></i> 返回驱动源码调用处 (mpu6050_probe() 行 126)</a><a href="#sec-driver-nav" class="btn-back-nav"><i class="fas fa-th-large"></i> 返回 API 导航总览</a></div>
 <hr />
+<span id="api-dev-err"></span>
 <h3 id="6-设备级诊断日志打印-api-dev_err--dev_info">6.
 设备级诊断日志打印 API (<code>dev_err</code> /
 <code>dev_info</code>)</h3>
+<div class="source-header-bar"><span class="source-tag"><i class="fab fa-linux"></i> Linux 4.1.15 官方内核源码</span><span class="source-path"><i class="fas fa-file-code"></i> include/linux/device.h:992-1005</span></div>
 <ul>
 <li><strong>函数原型</strong>：
 <pre class="language-c"><code class="language-c">void dev_err(const struct device *dev, const char *fmt, ...);
@@ -941,7 +1311,20 @@ void dev_info(const struct device *dev, const char *fmt, ...);</code></pre></li>
 <li><strong>输出效果</strong>：终端会自动前缀硬件身份（如
 <code>[ 12.345678] mpu6050 0-0068: ...</code>）。</li>
 </ul>
+<div class="api-back-bar"><a href="#call-dev-err" class="btn-back-code"><i class="fas fa-arrow-left"></i> 返回驱动源码调用处 (mpu6050_probe() 行 136)</a><a href="#sec-driver-nav" class="btn-back-nav"><i class="fas fa-th-large"></i> 返回 API 导航总览</a></div>
 <hr />
+
+<span id="api-copy-to-user"></span>
+<h3 id="7-内核空间至用户空间数据拷贝-copy_to_user">7. 内核空间至用户空间数据拷贝 (<code>copy_to_user</code>)</h3>
+<div class="source-header-bar"><span class="source-tag"><i class="fab fa-linux"></i> Linux 4.1.15 官方内核源码</span><span class="source-path"><i class="fas fa-file-code"></i> arch/arm/include/asm/uaccess.h:482</span></div>
+<ul>
+<li><strong>函数原型</strong>：<pre class="language-c"><code class="language-c">static inline unsigned long __must_check copy_to_user(void __user *to, const void *from, unsigned long n);</code></pre></li>
+<li><strong>底层机制</strong>：跨 MMU 权限边界将传感器 14 字节原始姿态数据拷贝至用户空间，自动校验目标内存地址有效性。</li>
+<li><strong>返回值</strong>：返回未成功拷贝的字节数，<strong>返回 0 代表成功完整传输</strong>。</li>
+</ul>
+<div class="api-back-bar"><a href="#call-copy-to-user" class="btn-back-code"><i class="fas fa-arrow-left"></i> 返回驱动源码调用处 (mpu6050_read() 行 68)</a><a href="#sec-driver-nav" class="btn-back-nav"><i class="fas fa-th-large"></i> 返回 API 导航总览</a></div>
+<hr />
+
 <h2 id="sec-7">七、I2C 驱动开发高频避坑指南 (Top Pitfalls)</h2>
 <ol type="1">
 <li><strong><code>i2c_msg.addr</code> 严禁手动移位 ⚠️</strong>：

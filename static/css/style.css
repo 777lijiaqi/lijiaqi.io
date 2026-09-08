@@ -34,63 +34,6 @@ body {
     background-size: 40px 40px;
 }
 
-/* --- 全局统一链接视觉系统 (Cyberpunk Unified Links) --- */
-a {
-    color: var(--primary);
-    text-decoration: none;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-a:visited {
-    color: var(--primary);
-}
-
-a:hover, a:focus {
-    color: var(--accent);
-}
-
-/* 文章正文内链接统一美化 (Unified Article Link Style) */
-article a {
-    color: var(--primary);
-    text-decoration: none;
-    border-bottom: 1px dashed rgba(14, 165, 233, 0.45);
-    padding: 1px 4px;
-    border-radius: 3px;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    display: inline-block;
-}
-
-article a:visited {
-    color: var(--primary);
-}
-
-article a:hover, article a:focus {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-    background: rgba(16, 185, 129, 0.12);
-    text-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
-}
-
-/* 特殊组件与功能按钮类链接排除下划线与虚线 */
-a.btn-back-code,
-a.btn-back-nav,
-a.code-jump-badge,
-a.api-card-btn,
-a.back-btn,
-a.back-home-btn,
-a.doc-item,
-a.project-card,
-a.cat-btn,
-.toc-list a,
-.nav-links a,
-.social-links a {
-    border-bottom: none !important;
-    background: revert;
-    text-shadow: none;
-    display: revert;
-    padding: revert;
-}
-
 /* --- 导航栏 --- */
 header {
     position: fixed;
