@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPI子系统：SPI总线设备模型-SPILCD屏幕驱动 | 知识文档</title>
+    <!-- 引入网站图标 -->
+    <link rel="icon" type="image/svg+xml" href="../../static/images/favicon.svg">
+    <!-- 引入字体 -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Orbitron:wght@400;700;900&family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <!-- 引入图标 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 代码高亮 (Prism Tomorrow 暗色主题) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+    <!-- 引入全局样式 -->
+    <link rel="stylesheet" href="../../static/css/style.css">
+
+    <style>
+        /* --- 本地覆盖样式 (文章专用) --- */
+        body {
+            padding-top: 80px;
+        }
+
+        .article-header {
+            background: rgba(11, 17, 32, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 5%;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: var(--primary);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            color: #fff;
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        .layout {
+            display: flex;
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+            gap: 40px;
+        }
+
+        article {
+            flex: 1;
+            background: rgba(30, 41, 59, 0.6);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            max-width: 950px;
+            min-width: 0;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        aside {
+            flex: 0 0 260px;
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+            display: none;
+        }
+
+        @media (min-width: 1100px) {
+            aside {
+                display: block;
+            }
+        }
+
+        h1.article-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            color: #fff;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.2rem;
+            font-family: 'Orbitron', sans-serif;
+            line-height: 1.4;
+        }
+
+        h1.article-title .subtitle {
+            font-size: 1.6rem;
+            color: var(--primary);
+            display: inline-block;
+            margin-top: 0.3rem;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            margin-top: 3.5rem;
+            margin-bottom: 1.2rem;
+            color: var(--primary);
+            border-left: 5px solid var(--primary);
+            padding-left: 15px;
+            font-family: 'Orbitron', sans-serif;
+            scroll-margin-top: 100px;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            margin-top: 2.2rem;
+            margin-bottom: 0.8rem;
+            color: #f1f5f9;
+            font-family: 'Fira Code', monospace;
+            scroll-margin-top: 100px;
+        }
+
+        h4, h5 {
+            color: var(--text-muted);
+            margin-top: 1.4rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        p, li {
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            font-family: 'Segoe UI', sans-serif;
+            line-height: 1.8;
+            text-align: justify;
+        }
+
+        strong {
+            color: var(--accent);
+        }
+
+        .target-info-card {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--primary);
+            border-radius: 8px;
+            padding: 18px 22px;
+            margin-bottom: 2.5rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .target-info-card p {
+            margin: 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: rgba(15, 23, 42, 0.6);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .table-responsive table {
+            width: 100%;
+            margin: 0;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            text-align: left;
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        th {
+            background-color: rgba(14, 165, 233, 0.15);
+            color: var(--primary);
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        td {
+            color: #cbd5e1;
+        }
+
+        blockquote {
+            border-left: 4px solid var(--accent);
+            background: rgba(16, 185, 129, 0.06);
+            padding: 1rem 1.2rem;
+            margin: 1.5rem 0;
+            color: #e2e8f0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        pre {
+            margin: 1.5rem 0 !important;
+            border-radius: 8px !important;
+            border: 1px solid var(--border) !important;
+            background: #0b1120 !important;
+            overflow-x: auto !important;
+            max-width: 100% !important;
+            white-space: pre !important;
+            word-wrap: normal !important;
+        }
+
+        code {
+            font-family: 'Fira Code', Consolas, monospace !important;
+        }
+
+        p code, li code {
+            background: rgba(14, 165, 233, 0.15);
+            color: #38bdf8;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            border: 1px solid rgba(14, 165, 233, 0.25);
+        }
+
+        .toc-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 10px;
+        }
+
+        .toc-list a {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            transition: 0.2s;
+            display: block;
+            border-left: 2px solid transparent;
+            padding-left: 10px;
+            text-decoration: none;
+            line-height: 1.4;
+        }
+
+        .toc-list a:hover,
+        .toc-list a.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="circuit-bg">
+        <div class="line v-line" style="--delay: 0s; --left: 10%;"></div>
+        <div class="line v-line" style="--delay: 5s; --left: 90%;"></div>
+        <div class="line h-line" style="--delay: 2s; --top: 20%;"></div>
+        <div class="line h-line" style="--delay: 7s; --top: 80%;"></div>
+    </div>
+
+    <header class="article-header">
+        <a id="back-btn" href="../../archive/archive.html?cat=linux" class="back-btn">
+            <i class="fas fa-chevron-left"></i> <span>Back to Archive</span>
+        </a>
+        <div style="font-family: 'Fira Code'; color: var(--text-muted); font-size: 0.9rem;">
+            system.read(mode=driver_doc)
+        </div>
+    </header>
+
+    <div class="layout">
+        <aside>
+            <div class="toc-title">DIRECTORY</div>
+            <ul class="toc-list">
+                <li><a href="#sec-1">一、Linux SPI 子系统体系架构全景图</a></li>
+                <li><a href="#sec-2">二、设备树 (Device Tree) 中 SPI 节点配置规范</a></li>
+                <li><a href="#sec-3">三、4线制 SPI 彩屏硬件控制原理 (以 240x240 LCD 为例)</a></li>
+                <li><a href="#sec-4">四、SPI 数据传输协议与通信时序 (spi_message / spi_transfer)</a></li>
+                <li><a href="#sec-5">五、工业级 SPI 屏幕驱动核心黄金源码剖析 (spi_lcd.c)</a></li>
+                <li><a href="#sec-6">六、Linux SPI 核心 API 全景百科全书</a></li>
+                <li><a href="#sec-7">七、SPI 驱动开发高频避坑指南 (Top Pitfalls)</a></li>
+                <li><a href="#sec-8">八、常用编译、设备树与板端测试指令速查</a></li>
+            </ul>
+        </aside>
+
+        <article>
+            <h1 class="article-title">
+                SPI子系统：SPI总线设备模型<br>
+                <span class="subtitle">- SPI LCD屏幕驱动</span>
+            </h1>
+
+            <div class="target-info-card">
+                <p><i class="fas fa-microchip" style="color: var(--primary);"></i> <strong>目标硬件</strong>：野火 i.MX6ULL Pro 底板 (MCIMX6Y2CVM08AB / Cortex-A7)</p>
+                <p><i class="fab fa-linux" style="color: var(--accent);"></i> <strong>目标内核</strong>：Linux 4.1.15</p>
+                <p><i class="fas fa-tv" style="color: #f59e0b;"></i> <strong>通信总线</strong>：ECSPI3 控制器 (最高通信速率 <code>20MHz</code> / ST7789V 240x240 RGB565 彩屏)</p>
+            </div>
+
+</li>
+<li><a href="#二设备树-device-tree-中-spi-节点配置规范">二、设备树
+(Device Tree) 中 SPI 节点配置规范</a>
+</li>
+<li><a
+href="#三4线制-spi-彩屏硬件控制原理-以-240x240-lcd-为例">三、4线制 SPI
+彩屏硬件控制原理 (以 240x240 LCD 为例)</a>
+</li>
+<li><a
+href="#四spi-数据传输协议与通信时序-spi_message--spi_transfer">四、SPI
+数据传输协议与通信时序 (<code>spi_message</code> /
+<code>spi_transfer</code>)</a>
+</li>
+<li><a href="#五工业级-spi-屏幕驱动核心黄金源码剖析-spi_lcdc">五、工业级
+SPI 屏幕驱动核心黄金源码剖析 (spi_lcd.c)</a>
+</li>
+<li><a href="#六linux-spi-核心-api-全景百科全书">六、Linux SPI 核心 API
+全景百科全书</a>
+</li>
+<li><a href="#七spi-驱动开发高频避坑指南-top-pitfalls">七、SPI
+驱动开发高频避坑指南 (Top Pitfalls)</a></li>
+<li><a
+href="#八常用编译设备树与板端测试指令速查">八、常用编译、设备树与板端测试指令速查</a></li>
+</ul>
+<hr />
+<h2
+
+id="sec-1">一、Linux SPI 子系统体系架构全景图</h2>
+<p>Linux 内核将 SPI 驱动模型划分为三个高内聚、低耦合的标准层级：</p>
+<pre class="language-text"><code class="language-text">┌─────────────────────────────────────────────────────────────────────────┐
+│                    Linux SPI 子系统三层体系架构                          │
+└─────────────────────────────────────────────────────────────────────────┘
+
+  【层级 3：SPI 设备驱动层 (SPI Device Driver)】── (👉 驱动工程师编写 👈)
+    * 代表具体从机芯片（如 SPI LCD 屏、W25Qxx Flash、SPI 传感器）的业务协议；
+    * 核心结构体：struct spi_driver, struct spi_device；
+    * 负责组装业务数据（如写入显存指令、寄存器读写），并向核心层发起数据收发请求。
+                          │
+                          ▼ (调用标准 API: spi_sync / spi_write)
+  【层级 2：SPI 核心层 (SPI Core)】────────────── (Linux 内核维护: drivers/spi/spi.c)
+    * 提供统一的 API 抽象，向上为驱动层提供接口，向下为控制器层管理通信队列；
+    * 自动匹配设备树（DTS）节点与驱动，触发执行驱动的 probe(struct spi_device *spi)；
+    * 管理传输队列与并发保护。
+                          │
+                          ▼ (调用 master-&gt;transfer_one_message)
+  【层级 1：SPI 控制器驱动层 (SPI Master Driver)】 (芯片原厂维护: 如 drivers/spi/spi-imx.c)
+    * 针对 SoC 内部硬件 SPI 控制器（如 i.MX6ULL 的 ECSPI1~ECSPI4）；
+    * 核心结构体：struct spi_master / struct spi_controller；
+    * 负责直接操作物理寄存器、DMA 搬运与硬件时钟分频，驱动物理引脚发送比特流。</code></pre>
+<hr />
+<h2 id="sec-2">二、设备树 (Device Tree) 中 SPI 节点配置规范</h2>
+<h3 id="1-spi-控制器节点-ecspi3">1. SPI 控制器节点
+(<code>&amp;ecspi3</code>)</h3>
+<pre class="language-c"><code class="language-c">&amp;ecspi3 {
+    pinctrl-names = &quot;default&quot;;
+    pinctrl-0 = &lt;&amp;pinctrl_ecspi3&gt;;
+    cs-gpios = &lt;&amp;gpio1 20 GPIO_ACTIVE_LOW&gt;;
+    status = &quot;okay&quot;;
+
+    /* SPI 从机设备子节点 */
+    spi_screen: spi-screen@0 {
+        compatible = &quot;rkljq,spi-screen&quot;;
+        reg = &lt;0&gt;;                               /* 对应 cs-gpios 索引 0 */
+        spi-max-frequency = &lt;20000000&gt;;          /* 20 MHz 极速通信 */
+        dc-gpios = &lt;&amp;gpio1 4 GPIO_ACTIVE_HIGH&gt;;   /* 数据/命令切换引脚 */
+        rst-gpios = &lt;&amp;gpio4 20 GPIO_ACTIVE_HIGH&gt;; /* 硬件复位引脚 */
+        status = &quot;okay&quot;;
+    };
+};</code></pre>
+<hr />
+<h2 id="sec-3">三、4线制 SPI 彩屏硬件控制原理 (以 240x240 LCD 为例)</h2>
+<p>4线制 SPI 屏幕采用单向高速推挽总线：</p>
+<ol type="1">
+<li><strong>SCLK
+(时钟线)</strong>：硬件控制器产生极速时钟信号（本驱动设定为
+20MHz）；</li>
+<li><strong>MOSI
+(主机输出从机输入)</strong>：传输显存像素与指令字节；</li>
+<li><strong>DC (Data/Command 选通引脚)</strong>：
+<ul>
+<li><strong>低电平
+(<code>0</code>)</strong>：向屏幕芯片发送<strong>控制命令</strong>（如设置窗口、开显存）；</li>
+<li><strong>高电平
+(<code>1</code>)</strong>：向屏幕发送<strong>像素色彩数据</strong>（RGB565
+颜色阵列）；</li>
+</ul></li>
+<li><strong>RST
+(硬件复位引脚)</strong>：低电平脉冲复位屏幕内部控制器；</li>
+<li><strong>CS (片选引脚)</strong>：低电平使能选通。</li>
+</ol>
+<hr />
+<h2 id="sec-4">四、SPI 数据传输协议与通信时序 (spi_message / spi_transfer)</h2>
+<h3 id="1-struct-spi_transfer-与-struct-spi_message">1.
+<code>struct spi_transfer</code> 与 <code>struct spi_message</code></h3>
+<ul>
+<li><strong><code>spi_transfer</code></strong>：单次物理连续传输块，指定发送缓冲区
+<code>tx_buf</code>、接收缓冲区 <code>rx_buf</code>、数据长度
+<code>len</code>、位宽与速度；</li>
+<li><strong><code>spi_message</code></strong>：传输事务单元，可以将多个
+<code>spi_transfer</code> 串接在尾部，作为一个原子操作提交。</li>
+</ul>
+<pre class="language-c"><code class="language-c">struct spi_message m;
+struct spi_transfer xfer;
+
+memset(&amp;xfer, 0, sizeof(xfer));
+xfer.tx_buf = buf;
+xfer.len = total_bytes;
+
+spi_message_init(&amp;m);
+spi_message_add_tail(&amp;xfer, &amp;m);
+spi_sync(dev-&gt;spi_dev, &amp;m);</code></pre>
+<hr />
+<h2 id="sec-5">五、工业级 SPI 屏幕驱动核心黄金源码剖析 (spi_lcd.c)</h2>
+<pre class="language-c"><code class="language-c">#include &quot;spi_drv.h&quot;
+
+#define CMD_MODE    0
+#define DATA_MODE   1
+
+/* 1. SPI 发送命令与数据底层接口 */
+static int spi_screen_write_cmd(struct spi_dev* dev, uint8_t* cmd, uint32_t len) {
+    gpio_set_value(dev-&gt;dc_gpio, CMD_MODE);
+    return spi_write(dev-&gt;spi_dev, cmd, len);
+}
+
+static int spi_screen_write_data(struct spi_dev* dev, uint8_t* data, uint32_t len) {
+    gpio_set_value(dev-&gt;dc_gpio, DATA_MODE);
+    return spi_write(dev-&gt;spi_dev, data, len);
+}
+
+/* 2. 屏幕窗口设定 (ST7789V 240x240 窗口裁切) */
+static void spi_screen_set_window(struct spi_dev* dev, uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end) {
+    uint8_t d_x[4] = { (uint8_t)(x_start &gt;&gt; 8), (uint8_t)(x_start &amp; 0xFF), (uint8_t)(x_end &gt;&gt; 8), (uint8_t)(x_end &amp; 0xFF) };
+    uint8_t d_y[4] = { (uint8_t)(y_start &gt;&gt; 8), (uint8_t)(y_start &amp; 0xFF), (uint8_t)(y_end &gt;&gt; 8), (uint8_t)(y_end &amp; 0xFF) };
+
+    lcd_write_cmd(dev, 0x2A);
+    lcd_write_data_bytes(dev, d_x, 4);
+
+    lcd_write_cmd(dev, 0x2B);
+    lcd_write_data_bytes(dev, d_y, 4);
+
+    lcd_write_cmd(dev, 0x2C);
+}
+
+/* 3. 全屏 115200 字节显存刷屏加速 (240 * 240 * 2 字节) */
+static void spi_screen_clear(struct spi_dev* dev, uint16_t color) {
+    int i;
+    int total_bytes = 240 * 240 * 2; // 115200 bytes
+    uint8_t* buf;
+    struct spi_message m;
+    struct spi_transfer xfer;
+
+    buf = kmalloc(total_bytes, GFP_KERNEL);
+    if (!buf) {
+        dev_err(&amp;dev-&gt;spi_dev-&gt;dev, &quot;Failed to allocate 115200 bytes!
+&quot;);
+        return;
+    }
+
+    for (i = 0; i &lt; 240 * 240; i++) {
+        buf[2 * i]     = (uint8_t)(color &gt;&gt; 8);
+        buf[2 * i + 1] = (uint8_t)(color &amp; 0xFF);
+    }
+
+    spi_screen_set_window(dev, 0, 0, 239, 239);
+    gpio_set_value(dev-&gt;dc_gpio, DATA_MODE);
+
+    memset(&amp;xfer, 0, sizeof(xfer));
+    xfer.tx_buf = buf;
+    xfer.len = total_bytes;
+
+    spi_message_init(&amp;m);
+    spi_message_add_tail(&amp;xfer, &amp;m);
+    spi_sync(dev-&gt;spi_dev, &amp;m);
+
+    kfree(buf);
+}</code></pre>
+<hr />
+<h2 id="sec-6">六、Linux SPI 核心 API 全景百科全书</h2>
+<h3 id="1-module_spi_driver--spi_register_driver">1.
+<code>module_spi_driver</code> / <code>spi_register_driver</code></h3>
+<ul>
+<li><strong>函数原型</strong>：<code>int spi_register_driver(struct spi_driver *sdrv);</code></li>
+<li><strong>作用</strong>：向 Linux SPI
+总线注册驱动对象，展开后完成内核模块初始化与注销挂载。</li>
+</ul>
+<h3 id="2-spi_sync">2. <code>spi_sync</code></h3>
+<ul>
+<li><strong>函数原型</strong>：<code>int spi_sync(struct spi_device *spi, struct spi_message *message);</code></li>
+<li><strong>作用</strong>：同步阻塞提交 SPI
+传输事务，等待底层硬件传输完成并返回。进程上下文安全。</li>
+</ul>
+<h3 id="3-spi_write">3. <code>spi_write</code></h3>
+<ul>
+<li><strong>函数原型</strong>：<code>int spi_write(struct spi_device *spi, const void *buf, size_t len);</code></li>
+<li><strong>作用</strong>：快捷发送单块连续缓冲区，底层自动封装单
+<code>spi_transfer</code> 与 <code>spi_message</code>。</li>
+</ul>
+<h3 id="4-spi_set_drvdata--spi_get_drvdata">4.
+<code>spi_set_drvdata</code> / <code>spi_get_drvdata</code></h3>
+<ul>
+<li><strong>作用</strong>：将自定义私有结构体指针绑定至
+<code>spi-&gt;dev.driver_data</code>，实现驱动生命周期解耦。</li>
+</ul>
+<hr />
+<h2 id="sec-7">七、SPI 驱动开发高频避坑指南 (Top Pitfalls)</h2>
+<ol type="1">
+<li><strong>GCC 结构体赋值引发的 GOT 重定位错误 ⚠️</strong>：
+<ul>
+<li>显存超大批量刷屏时，直接在内核驱动中使用 <code>spi_write</code>
+宏可能会因为老版 GCC 内联结构体拷贝触发
+<code>_GLOBAL_OFFSET_TABLE_</code> 未定义符号；必须手动显式初始化
+<code>struct spi_transfer</code> 并调用 <code>spi_sync</code>。</li>
+</ul></li>
+<li><strong>DMA 缓存一致性与连续物理内存 ⚠️</strong>：
+<ul>
+<li>大块显存传输建议使用 <code>kmalloc(..., GFP_KERNEL)</code>
+申请连续虚拟与物理内存，杜绝使用栈内存做 SPI DMA 发送缓冲。</li>
+</ul></li>
+<li><strong>DC 引脚电平切换的时序窗口 ⚠️</strong>：
+<ul>
+<li>必须先将 DC
+引脚切换为指定电平（<code>gpio_set_value(dev-&gt;dc_gpio, ...)</code>），再调用
+<code>spi_write</code>
+发送字节，否则会导致从机时钟边沿提前采样到错误的数据模式。</li>
+</ul></li>
+</ol>
+<hr />
+<h2 id="sec-8">八、常用编译、设备树与板端测试指令速查</h2>
+<pre class="language-bash"><code class="language-bash"># 1. 编译模块
+make
+
+# 2. 板端加载
+insmod spi_lcd.ko
+
+# 3. 查看 SPI 从机设备与驱动匹配
+ls -l /dev/spi_screen
+dmesg | grep spi</code></pre>
+
+
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 3rem 0 1.5rem 0;">
+
+            <blockquote class="author-quote" style="border-left: 4px solid var(--accent); background: rgba(16, 185, 129, 0.06); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0;">
+                <p style="margin: 4px 0; color: #cbd5e1; font-family: 'Fira Code', monospace;">Author：李家琦 (Li Jiaqi)</p>
+                <p style="margin: 4px 0; color: var(--text-muted); font-size: 0.85rem; font-family: 'Fira Code', monospace;">UniQ-Embedded-Lib / Linux Driver Architecture</p>
+                <p style="margin: 4px 0; color: var(--text-muted); font-size: 0.85rem; font-family: 'Fira Code', monospace;">Date: 2026/09/08</p>
+            </blockquote>
+
+        </article>
+    </div>
+
+    <div class="music-player-widget">
+        <div class="player-controls">
+            <button id="prev-btn"><i class="fas fa-step-backward"></i></button>
+            <button id="play-btn"><i class="fas fa-play"></i></button>
+            <button id="next-btn"><i class="fas fa-step-forward"></i></button>
+            <button id="mute-btn"><i class="fas fa-volume-up"></i></button>
+        </div>
+        <div class="song-info"><span id="song-title">Loading...</span></div>
+        <audio id="bg-music"></audio>
+    </div>
+
+    <script>var ROOT_PATH = '../../';</script>
+    <script src="../../static/js/music.js"></script>
+    <script src="../../static/js/comment.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/keep-markup/prism-keep-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-makefile.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromCat = urlParams.get('from');
+            const backBtn = document.getElementById('back-btn');
+            if (fromCat) {
+                backBtn.href = `../../archive/archive.html?cat=${encodeURIComponent(fromCat)}`;
+            } else {
+                backBtn.href = `../../archive/archive.html?cat=linux`;
+            }
+        });
+
+        const sections = document.querySelectorAll('h2[id]');
+        const navLinks = document.querySelectorAll('.toc-list a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(a => {
+                a.classList.remove('active');
+                if (a.getAttribute('href') && a.getAttribute('href').includes(current)) {
+                    a.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

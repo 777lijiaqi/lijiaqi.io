@@ -47,6 +47,30 @@ document.addEventListener('DOMContentLoaded', function() {
             link: "linux/Input子系统：Platform设备模型-GPIO按键中断驱动.html"
         },
         {
+            title: "GPIO子系统：Platform设备模型-LED驱动",
+            category: "linux",
+            desc: "基于 NXP i.MX6ULL 与 Linux 4.1.15 内核，全景详解 Linux 标准字符设备框架、Platform 总线驱动模型、设备树 GPIO 子系统解析及 sysfs 用户空间控制。",
+            tags: ["Linux", "Driver", "GPIO", "Platform", "LED"],
+            icon: "fab fa-linux",
+            link: "linux/GPIO子系统与Platform设备模型-LED驱动.html"
+        },
+        {
+            title: "I2C子系统：I2C总线设备模型-MPU6050与DHT20驱动",
+            category: "linux",
+            desc: "深度剖析 Linux I2C 核心层、适配器与从设备驱动架构，详解 i2c_client、i2c_driver、i2c_transfer 传输协议，实战 MPU6050 六轴传感器与 DHT20 温湿度传感器开发。",
+            tags: ["Linux", "Driver", "I2C", "MPU6050", "DHT20"],
+            icon: "fab fa-linux",
+            link: "linux/I2C子系统与总线设备模型-MPU6050与DHT20驱动.html"
+        },
+        {
+            title: "SPI子系统：SPI总线设备模型-SPILCD屏幕驱动",
+            category: "linux",
+            desc: "全面解析 Linux SPI 总线拓扑架构、spi_master 控制器与 spi_device，详解 spi_message/spi_transfer 报文队列机制、GPIO 辅助引脚时序控制及 ST7789V LCD 屏驱动移植实战。",
+            tags: ["Linux", "Driver", "SPI", "LCD", "ST7789V"],
+            icon: "fab fa-linux",
+            link: "linux/SPI子系统与总线设备模型-SPILCD屏幕驱动.html"
+        },
+        {
             title: "Cortex-A 架构及 ARM 汇编详解",
             category: "arm",
             desc: "基于 ARM 官方文档，详解 Cortex-A 架构原理、寄存器、流水线及 ARMv7 指令集，包含 C 与汇编混合编程实例。",

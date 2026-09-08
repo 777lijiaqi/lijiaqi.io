@@ -1,0 +1,1779 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPIO子系统：Platform设备模型-LED驱动 | 知识文档</title>
+    <!-- 引入网站图标 -->
+    <link rel="icon" type="image/svg+xml" href="../../static/images/favicon.svg">
+    <!-- 引入字体 -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Orbitron:wght@400;700;900&family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <!-- 引入图标 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 代码高亮 (Prism Tomorrow 暗色主题) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+    <!-- 引入全局样式 -->
+    <link rel="stylesheet" href="../../static/css/style.css">
+
+    <style>
+        /* --- 本地覆盖样式 (文章专用) --- */
+        body {
+            padding-top: 80px;
+        }
+
+        .article-header {
+            background: rgba(11, 17, 32, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 5%;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: var(--primary);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            color: #fff;
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        .layout {
+            display: flex;
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+            gap: 40px;
+        }
+
+        article {
+            flex: 1;
+            background: rgba(30, 41, 59, 0.6);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            max-width: 950px;
+            min-width: 0;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        aside {
+            flex: 0 0 260px;
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+            display: none;
+        }
+
+        @media (min-width: 1100px) {
+            aside {
+                display: block;
+            }
+        }
+
+        h1.article-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            color: #fff;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.2rem;
+            font-family: 'Orbitron', sans-serif;
+            line-height: 1.4;
+        }
+
+        h1.article-title .subtitle {
+            font-size: 1.6rem;
+            color: var(--primary);
+            display: inline-block;
+            margin-top: 0.3rem;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            margin-top: 3.5rem;
+            margin-bottom: 1.2rem;
+            color: var(--primary);
+            border-left: 5px solid var(--primary);
+            padding-left: 15px;
+            font-family: 'Orbitron', sans-serif;
+            scroll-margin-top: 100px;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            margin-top: 2.2rem;
+            margin-bottom: 0.8rem;
+            color: #f1f5f9;
+            font-family: 'Fira Code', monospace;
+            scroll-margin-top: 100px;
+        }
+
+        h4, h5 {
+            color: var(--text-muted);
+            margin-top: 1.4rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        p, li {
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            font-family: 'Segoe UI', sans-serif;
+            line-height: 1.8;
+            text-align: justify;
+        }
+
+        strong {
+            color: var(--accent);
+        }
+
+        .target-info-card {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--primary);
+            border-radius: 8px;
+            padding: 18px 22px;
+            margin-bottom: 2.5rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .target-info-card p {
+            margin: 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: rgba(15, 23, 42, 0.6);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .table-responsive table {
+            width: 100%;
+            margin: 0;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            text-align: left;
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        th {
+            background-color: rgba(14, 165, 233, 0.15);
+            color: var(--primary);
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        td {
+            color: #cbd5e1;
+        }
+
+        blockquote {
+            border-left: 4px solid var(--accent);
+            background: rgba(16, 185, 129, 0.06);
+            padding: 1rem 1.2rem;
+            margin: 1.5rem 0;
+            color: #e2e8f0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        pre {
+            margin: 1.5rem 0 !important;
+            border-radius: 8px !important;
+            border: 1px solid var(--border) !important;
+            background: #0b1120 !important;
+            overflow-x: auto !important;
+            max-width: 100% !important;
+            white-space: pre !important;
+            word-wrap: normal !important;
+        }
+
+        code {
+            font-family: 'Fira Code', Consolas, monospace !important;
+        }
+
+        p code, li code {
+            background: rgba(14, 165, 233, 0.15);
+            color: #38bdf8;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            border: 1px solid rgba(14, 165, 233, 0.25);
+        }
+
+        .toc-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 10px;
+        }
+
+        .toc-list a {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            transition: 0.2s;
+            display: block;
+            border-left: 2px solid transparent;
+            padding-left: 10px;
+            text-decoration: none;
+            line-height: 1.4;
+        }
+
+        .toc-list a:hover,
+        .toc-list a.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="circuit-bg">
+        <div class="line v-line" style="--delay: 0s; --left: 10%;"></div>
+        <div class="line v-line" style="--delay: 5s; --left: 90%;"></div>
+        <div class="line h-line" style="--delay: 2s; --top: 20%;"></div>
+        <div class="line h-line" style="--delay: 7s; --top: 80%;"></div>
+    </div>
+
+    <header class="article-header">
+        <a id="back-btn" href="../../archive/archive.html?cat=linux" class="back-btn">
+            <i class="fas fa-chevron-left"></i> <span>Back to Archive</span>
+        </a>
+        <div style="font-family: 'Fira Code'; color: var(--text-muted); font-size: 0.9rem;">
+            system.read(mode=driver_doc)
+        </div>
+    </header>
+
+    <div class="layout">
+        <aside>
+            <div class="toc-title">DIRECTORY</div>
+            <ul class="toc-list">
+                <li><a href="#sec-1">一、Linux 驱动架构演进与全生命周期流转图</a></li>
+                <li><a href="#sec-2">二、驱动编程不同流派与架构选型对比</a></li>
+                <li><a href="#sec-3">三、全流程黄金代码模板 (两种主流写法完整对比)</a></li>
+                <li><a href="#sec-4">四、核心 API 对根文件系统 (/proc、/sys、/dev) 的影响全景映射</a></li>
+                <li><a href="#sec-5">五、C 语言指针参数传参大解密 (直接传变量 vs 取地址 &amp; 传参)</a></li>
+                <li><a href="#sec-6">六、驱动核心 API 全景百科全书 (参数/返回值/机制详解)</a></li>
+                <li><a href="#sec-7">七、驱动开发核心避坑指南 (Top Pitfalls)</a></li>
+                <li><a href="#sec-8">八、常用编译、设备树与板端测试指令速查</a></li>
+            </ul>
+        </aside>
+
+        <article>
+            <h1 class="article-title">
+                GPIO子系统：Platform设备模型<br>
+                <span class="subtitle">- LED驱动</span>
+            </h1>
+
+            <div class="target-info-card">
+                <p><i class="fas fa-microchip" style="color: var(--primary);"></i> <strong>目标硬件</strong>：野火 i.MX6ULL Pro 底板 (MCIMX6Y2CVM08AB / Cortex-A7)</p>
+                <p><i class="fab fa-linux" style="color: var(--accent);"></i> <strong>目标内核</strong>：Linux 4.1.15 (系统节拍：<code>CONFIG_HZ = 100</code>)</p>
+                <p><i class="fas fa-lightbulb" style="color: #f59e0b;"></i> <strong>物理引脚</strong>：RGB 三色 LED (GPIO1_IO04 红灯, GPIO4_IO20 绿灯, GPIO4_IO19 蓝灯)</p>
+            </div>
+
+</li>
+<li><a
+href="#二驱动编程不同流派与架构选型对比">二、驱动编程不同流派与架构选型对比</a>
+</li>
+<li><a
+href="#三全流程黄金代码模板-两种主流写法完整对比">三、全流程黄金代码模板
+(两种主流写法完整对比)</a>
+</li>
+<li><a
+href="#四核心-api-对根文件系统-proc-sys-dev-的影响全景映射">四、核心 API
+对根文件系统 (<code>/proc</code>、<code>/sys</code>、<code>/dev</code>)
+的影响全景映射</a></li>
+<li><a
+href="#五c-语言指针参数传参大解密-直接传变量-vs-取地址--传参">五、C
+语言指针参数传参大解密 (直接传变量 vs 取地址 <code>&amp;</code>
+传参)</a></li>
+<li><a
+href="#六驱动核心-api-全景百科全书-参数返回值机制详解">六、驱动核心 API
+全景百科全书 (参数/返回值/机制详解)</a>
+</li>
+<li><a
+href="#七驱动开发核心避坑指南-top-pitfalls">七、驱动开发核心避坑指南
+(Top Pitfalls)</a></li>
+<li><a
+href="#八常用编译设备树与板端测试指令速查">八、常用编译、设备树与板端测试指令速查</a></li>
+</ul>
+<hr />
+<h2
+
+id="sec-1">一、Linux 驱动架构演进与全生命周期流转图</h2>
+<h3 id="1-架构演进的三大阶段-why--what">1. 架构演进的三大阶段 (Why &amp;
+What)</h3>
+<pre class="language-text"><code class="language-text">【阶段一：传统纯字符设备驱动】
+  * 驱动与硬件信息硬编码在同一文件里；
+  * 加载驱动盲目假定硬件必定存在，在 init() 中无脑申请设备号并生成 /dev/xxx；
+  * 缺点：移植性极差，无硬件热插拔支持，修改引脚必须重新编译整个驱动。
+
+【阶段二：Platform 平台总线模型】
+  * 引入 Linux 统一设备模型（总线 Bus、设备 Device、驱动 Driver）；
+  * 设备端（led_pdev.c）负责提供物理硬件资源，驱动端（led_pdrv.c）负责控制逻辑；
+  * 依靠总线名字匹配，匹配成功触发 probe()；
+  * 缺点：板级硬件信息依然以 C 代码形式编译进内核，内核代码剧烈膨胀。
+
+【阶段三：现代设备树 + Pinctrl/GPIO 子系统（工业级标准）】
+  * 彻底消灭板级 .c 文件，硬件拓扑全部迁移至设备树（.dts/.dtb）；
+  * Pinctrl 子系统负责引脚复用（MUX）与电气属性（PAD/0x10B1）；
+  * GPIO 子系统负责高低电平控制与输入输出方向；
+  * 驱动代码只通过标准 API（如 of_get_named_gpio, gpio_set_value）操作硬件，完全消除物理寄存器地址！</code></pre>
+<hr />
+<h3 id="2-现代设备树驱动全生命周期流转图">2.
+现代设备树驱动全生命周期流转图</h3>
+<pre class="language-text"><code class="language-text">【阶段一：系统启动阶段 (Booting)】
+  Bootloader (U-Boot) 传递 .dtb 给 Linux 内核
+          │
+          ▼
+  内核解析设备树根节点下的设备，在内存中自动生成 struct platform_device 节点
+  （此时硬件设备端已自动就绪，静默等待驱动）
+
+【阶段二：驱动加载与匹配阶段 (insmod xxx.ko)】
+  module_platform_driver() 或 module_init()
+          │
+          ▼
+  platform_driver_register() ── 向 Platform 总线注册驱动
+          │
+          ▼
+  Platform 总线遍历 devices 链表，比对 of_device_id.compatible 属性
+          │
+          ├─► 匹配成功 (Match Success!)
+          ▼
+  内核 Driver Core 自动激活 Pinctrl（自动配置 MUX、PAD 电气属性、开启时钟）
+          │
+          ▼
+  内核自动触发执行驱动的 probe(pdev) 函数：
+          ├─► 1. of_get_named_gpio() 从 DTS 提取 GPIO 编号
+          ├─► 2. gpio_direction_output() 配置硬件默认电平 (硬件完全就绪)
+          ├─► 3. alloc_chrdev_region() 动态申请主次设备号
+          ├─► 4. cdev_init() + cdev_add() 注册并激活字符设备
+          ├─► 5. class_create() 在 /sys/class/ 下创建设备类
+          └─► 6. device_create() 广播 uevent，udev/mdev 自动在 /dev/ 下生成设备节点！
+
+【阶段三：应用层交互阶段 (用户空间系统调用)】
+  用户执行：echo 1 &gt; /dev/led_red
+          │
+          ▼
+  open(&quot;/dev/led_red&quot;)  ──► xxx_open()   : 从 inode 提取次设备号存入 filp-&gt;private_data
+  write(fd, buf, count) ──► xxx_write()  : copy_from_user 提取数据，根据次设备号调用对应 gpio_set_value()
+  close(fd)             ──► xxx_release(): 释放会话资源 (VFS 自动回收 filp 和 inode)
+
+【阶段四：驱动卸载与资源释放 (rmmod xxx)】
+  platform_driver_unregister() ── 触发执行驱动的 remove(pdev) 函数：
+          ├─► 1. device_destroy() 销毁 /dev/ 下的设备文件
+          ├─► 2. class_destroy() 销毁 /sys/class/ 下的类目录
+          ├─► 3. cdev_del() 从内核全局散列表中注销字符设备
+          ├─► 4. unregister_chrdev_region() 释放主次设备号
+          └─► 5. 驱动安全退出，彻底消除内存与资源泄漏！</code></pre>
+<hr />
+<h2 id="sec-2">二、驱动编程不同流派与架构选型对比</h2>
+<p>在驱动实际开发中，经常会根据业务场景采用不同的代码流派。以下为你彻底剖析两大核心维度的技术选型：</p>
+<h3
+id="1-内存管理选型全局静态变量法-vs-动态堆内存分配法-devm_kzalloc">1.
+内存管理选型：全局静态变量法 vs 动态堆内存分配法
+(<code>devm_kzalloc</code>)</h3>
+<div class="table-responsive"><table>
+<thead>
+<tr>
+<th style="text-align: left;">对比维度</th>
+<th style="text-align: left;"><strong>流派
+A：全局静态变量法（极简模式）</strong></th>
+<th style="text-align: left;"><strong>流派 B：动态堆分配法
+(<code>devm_kzalloc</code> 现代标准)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>定义语法</strong></td>
+<td
+style="text-align: left;"><code>static struct led_dev led_data;</code></td>
+<td
+style="text-align: left;"><code>struct led_dev *dev = devm_kzalloc(&amp;pdev-&gt;dev, ...);</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>内存位置</strong></td>
+<td style="text-align: left;">编译期由编译器分配在内核
+<strong><code>.bss</code> 全局数据区</strong></td>
+<td style="text-align: left;">运行期在 <code>probe()</code>
+匹配成功后分配在 <strong>内核堆内存（Heap）</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>是否需要 malloc</strong></td>
+<td style="text-align: left;">❌ <strong>不需要！</strong>
+模块加载时内存就已经存在。</td>
+<td style="text-align: left;">✅ 需要调用
+<code>devm_kzalloc()</code>，并做判空检查。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>是否需要 kfree</strong></td>
+<td style="text-align: left;">❌ 不需要。</td>
+<td style="text-align: left;">❌ <strong>不需要！</strong>
+<code>devm_</code>
+前缀代表内核资源托管，驱动卸载时内核<strong>全自动回收</strong>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>多实例支持</strong></td>
+<td style="text-align: left;">❌ <strong>只能支持 1
+个设备实例</strong>。<br>如果有 2 个相同硬件，第二次 probe
+会将全局变量冲刷覆盖！</td>
+<td style="text-align: left;">✅
+<strong>完美支持任意多个设备实例</strong>。<br>每接入一个新硬件，独立
+malloc 一份内存对象，互不干扰。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>适用场景</strong></td>
+<td style="text-align: left;">教学实验、板载唯一固定硬件（如板载固定 RGB
+灯）。</td>
+<td
+style="text-align: left;">工业级产品、复杂外设、支持多路相同芯片扩展板。</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3
+id="2-设备节点选型复合设备模式-dev_cnt1-vs-独立多实例节点模式-dev_cnt3">2.
+设备节点选型：复合设备模式 (<code>DEV_CNT=1</code>) vs
+独立多实例节点模式 (<code>DEV_CNT=3</code>)</h3>
+<div class="table-responsive"><table>
+<thead>
+<tr>
+<th style="text-align: left;">对比维度</th>
+<th style="text-align: left;"><strong>模式 1：复合设备模式
+(<code>DEV_CNT=1</code>)</strong></th>
+<th style="text-align: left;"><strong>模式 2：独立多设备节点模式
+(<code>DEV_CNT=3</code>)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>设备号数量</strong></td>
+<td style="text-align: left;">申请 <strong>1</strong>
+个次设备号（次设备号固定为 <code>0</code>）</td>
+<td style="text-align: left;">连续申请 <strong>3</strong>
+个次设备号（次设备号分别为 <code>0, 1, 2</code>）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>/dev/</code>
+下的文件</strong></td>
+<td style="text-align: left;">只有 <strong>1</strong>
+个文件：<code>/dev/led_rgb</code></td>
+<td style="text-align: left;">生成 <strong>3</strong>
+个文件：<code>/dev/led_red</code>, <code>/dev/led_green</code>,
+<code>/dev/led_blue</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>用户控制方式</strong></td>
+<td
+style="text-align: left;">写入不同指令到同一个文件：<br><code>echo 1 &gt; /dev/led_rgb</code>
+(红)<br><code>echo 2 &gt; /dev/led_rgb</code> (绿)</td>
+<td
+style="text-align: left;">直接写入对应的具体设备：<br><code>echo 1 &gt; /dev/led_red</code><br><code>echo 1 &gt; /dev/led_green</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>驱动内部逻辑</strong></td>
+<td style="text-align: left;"><code>write()</code> 内部解析字符串数值
+<code>1, 2, 3</code>，做 <code>switch-case</code>。</td>
+<td style="text-align: left;"><code>open()</code> 中通过
+<code>iminor(inode)</code> 提取 <code>0, 1, 2</code> 存入
+<code>private_data</code>，<code>write()</code> 按次设备号分流。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>适用场景</strong></td>
+<td style="text-align: left;">3
+色灯作为一个不可拆分的调色盘/状态指示灯整体。</td>
+<td style="text-align: left;">3
+颗灯分别承担不同独立功能（如电源灯、网口灯、报警灯）。</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="sec-3">三、全流程黄金代码模板 (两种主流写法完整对比)</h2>
+<hr />
+<h3 id="模板-a全局静态变量--独立多设备节点-dev_cnt3">模板
+A：全局静态变量 + 独立多设备节点 (<code>DEV_CNT=3</code>)</h3>
+<blockquote>
+<p><strong>特点</strong>：无需
+<code>kzalloc</code>，使用静态全局变量；同时生成
+<code>/dev/led_red</code>、<code>/dev/led_green</code>、<code>/dev/led_blue</code>
+3 个独立节点。</p>
+</blockquote>
+<pre class="language-c"><code class="language-c">#include &lt;linux/types.h&gt;
+#include &lt;linux/kernel.h&gt;
+#include &lt;linux/init.h&gt;
+#include &lt;linux/module.h&gt;
+#include &lt;linux/errno.h&gt;
+#include &lt;linux/fs.h&gt;
+#include &lt;linux/cdev.h&gt;
+#include &lt;linux/device.h&gt;
+#include &lt;linux/uaccess.h&gt;
+#include &lt;linux/platform_device.h&gt;
+#include &lt;linux/of.h&gt;
+#include &lt;linux/of_gpio.h&gt;
+#include &lt;linux/gpio.h&gt;
+
+#define DEV_NAME    &quot;led_rgb&quot;
+#define DEV_CNT     3  /* 申请 3 个次设备号: 0(红), 1(绿), 2(蓝) */
+
+/* 1. 全局静态结构体定义 */
+static struct led_chrdev_data {
+    struct cdev cdev;
+    dev_t dev;
+    dev_t major;
+    struct class *class;
+    struct device *devices[DEV_CNT];
+    int led_gpios[DEV_CNT]; /* 0:红, 1:绿, 2:蓝 */
+} led_data;
+
+/* 2. 文件操作方法 */
+static int led_chrdev_open(struct inode *inode, struct file *filp)
+{
+    /* 提取用户当前打开的是哪颗灯 (次设备号 0, 1, 2) */
+    int minor = iminor(inode);
+    filp-&gt;private_data = (void *)(long)minor; /* 接力棒传给 private_data */
+    return 0;
+}
+
+static ssize_t led_chrdev_write(struct file *filp, const char __user *buff, size_t size, loff_t *loff)
+{
+    int minor = (int)(long)filp-&gt;private_data; /* 提取次设备号 */
+    char val;
+
+    if (copy_from_user(&amp;val, buff, 1))
+        return -EFAULT;
+
+    /* 根据次设备号直接控制对应的 GPIO */
+    if (minor &gt;= 0 &amp;&amp; minor &lt; DEV_CNT) {
+        if (val == &#39;1&#39;)
+            gpio_set_value(led_data.led_gpios[minor], 0); /* 低电平点亮 */
+        else
+            gpio_set_value(led_data.led_gpios[minor], 1); /* 高电平熄灭 */
+    }
+
+    return size;
+}
+
+static int led_chrdev_close(struct inode *inode, struct file *filp)
+{
+    return 0;
+}
+
+static const struct file_operations led_chrdev_ops = {
+    .owner   = THIS_MODULE,
+    .open    = led_chrdev_open,
+    .write   = led_chrdev_write,
+    .release = led_chrdev_close,
+};
+
+/* 3. Probe 初始化函数 */
+static int led_chrdev_probe(struct platform_device *pdev)
+{
+    int ret = 0;
+    int i;
+    const char *names[3] = {&quot;led_red&quot;, &quot;led_green&quot;, &quot;led_blue&quot;};
+
+    /* 3.1 提取 GPIO 引脚 */
+    led_data.led_gpios[0] = of_get_named_gpio(pdev-&gt;dev.of_node, &quot;led_rgb_red&quot;, 0);
+    led_data.led_gpios[1] = of_get_named_gpio(pdev-&gt;dev.of_node, &quot;led_rgb_green&quot;, 0);
+    led_data.led_gpios[2] = of_get_named_gpio(pdev-&gt;dev.of_node, &quot;led_rgb_blue&quot;, 0);
+
+    /* 3.2 初始化硬件引脚为输出并默认熄灭 */
+    for (i = 0; i &lt; DEV_CNT; i++) {
+        if (led_data.led_gpios[i] &lt; 0) {
+            pr_err(&quot;Failed to get gpio for index %d\n&quot;, i);
+            return led_data.led_gpios[i];
+        }
+        gpio_direction_output(led_data.led_gpios[i], 1);
+    }
+
+    /* 3.3 动态申请 3 个设备号 */
+    ret = alloc_chrdev_region(&amp;led_data.dev, 0, DEV_CNT, DEV_NAME);
+    if (ret &lt; 0) {
+        pr_err(&quot;Failed to alloc chrdev region!\n&quot;);
+        return ret;
+    }
+    led_data.major = MAJOR(led_data.dev);
+
+    /* 3.4 注册 cdev 管理 3 个次设备 */
+    cdev_init(&amp;led_data.cdev, &amp;led_chrdev_ops);
+    led_data.cdev.owner = THIS_MODULE;
+    ret = cdev_add(&amp;led_data.cdev, led_data.dev, DEV_CNT);
+    if (ret &lt; 0) {
+        pr_err(&quot;Failed to add cdev!\n&quot;);
+        goto dev_add_err;
+    }
+
+    /* 3.5 创建设备类 /sys/class/led_rgb */
+    led_data.class = class_create(THIS_MODULE, DEV_NAME);
+    if (IS_ERR(led_data.class)) {
+        ret = PTR_ERR(led_data.class);
+        goto class_create_err;
+    }
+
+    /* 3.6 循环创建 3 个独立的设备节点 /dev/led_red, /dev/led_green, /dev/led_blue */
+    for (i = 0; i &lt; DEV_CNT; i++) {
+        led_data.devices[i] = device_create(led_data.class, NULL, 
+                                            MKDEV(led_data.major, i), 
+                                            NULL, names[i]);
+        if (IS_ERR(led_data.devices[i])) {
+            ret = PTR_ERR(led_data.devices[i]);
+            goto device_create_err;
+        }
+    }
+
+    pr_info(&quot;RGB LED (3 nodes) initialized successfully!\n&quot;);
+    return 0;
+
+/* 瀑布式错误回滚 */
+device_create_err:
+    for (i = 0; i &lt; DEV_CNT; i++) {
+        if (!IS_ERR_OR_NULL(led_data.devices[i]))
+            device_destroy(led_data.class, MKDEV(led_data.major, i));
+    }
+    class_destroy(led_data.class);
+class_create_err:
+    cdev_del(&amp;led_data.cdev);
+dev_add_err:
+    unregister_chrdev_region(led_data.dev, DEV_CNT);
+    return ret;
+}
+
+/* 4. Remove 注销函数 */
+static int led_chrdev_remove(struct platform_device *pdev)
+{
+    int i;
+    for (i = 0; i &lt; DEV_CNT; i++) {
+        gpio_set_value(led_data.led_gpios[i], 1); /* 关灯 */
+        device_destroy(led_data.class, MKDEV(led_data.major, i));
+    }
+    class_destroy(led_data.class);
+    cdev_del(&amp;led_data.cdev);
+    unregister_chrdev_region(led_data.dev, DEV_CNT);
+    return 0;
+}
+
+/* 5. 匹配表与平台驱动 */
+static const struct of_device_id led_rgb_match[] = {
+    { .compatible = &quot;rkljq,led_rgb&quot; },
+    { /* sentinel */ }
+};
+MODULE_DEVICE_TABLE(of, led_rgb_match);
+
+static struct platform_driver led_platform_driver = {
+    .probe  = led_chrdev_probe,
+    .remove = led_chrdev_remove,
+    .driver = {
+        .name           = &quot;rkljq-led-rgb-platform&quot;,
+        .owner          = THIS_MODULE,
+        .of_match_table = led_rgb_match,
+    },
+};
+
+module_platform_driver(led_platform_driver);
+
+MODULE_LICENSE(&quot;GPL v2&quot;);
+MODULE_AUTHOR(&quot;rkljq&quot;);</code></pre>
+<hr />
+<h3 id="模板-b现代动态分配-devm_kzalloc--面向对象模型">模板
+B：现代动态分配 (<code>devm_kzalloc</code>) + 面向对象模型</h3>
+<blockquote>
+<p><strong>特点</strong>：彻底告别全局变量，使用
+<code>devm_kzalloc</code> 动态分配；利用 <code>container_of</code>
+反推对象指针；具备高内聚、支持多实例与热插拔的企业级标准代码。</p>
+</blockquote>
+<pre class="language-c"><code class="language-c">#include &lt;linux/types.h&gt;
+#include &lt;linux/kernel.h&gt;
+#include &lt;linux/init.h&gt;
+#include &lt;linux/module.h&gt;
+#include &lt;linux/fs.h&gt;
+#include &lt;linux/cdev.h&gt;
+#include &lt;linux/device.h&gt;
+#include &lt;linux/uaccess.h&gt;
+#include &lt;linux/slab.h&gt;
+#include &lt;linux/platform_device.h&gt;
+#include &lt;linux/of.h&gt;
+#include &lt;linux/of_gpio.h&gt;
+#include &lt;linux/gpio.h&gt;
+
+#define DEV_NAME    &quot;led_rgb&quot;
+#define DEV_CNT     3
+
+/* 单灯子结构体 */
+struct single_led {
+    int gpio;
+    int minor;
+    const char *name;
+};
+
+/* 宿主大结构体 */
+struct rgb_led_dev {
+    dev_t devno;
+    int major;
+    struct cdev cdev;
+    struct class *class;
+    struct device *devices[DEV_CNT];
+    struct single_led leds[DEV_CNT];
+};
+
+static int led_open(struct inode *inode, struct file *filp)
+{
+    /* 1. 利用 container_of 从 inode-&gt;i_cdev 瞬间反推大结构体 */
+    struct rgb_led_dev *dev = container_of(inode-&gt;i_cdev, struct rgb_led_dev, cdev);
+    int minor = iminor(inode);
+
+    /* 2. 直接将对应单灯的子结构体指针赋给 private_data */
+    filp-&gt;private_data = &amp;dev-&gt;leds[minor];
+    return 0;
+}
+
+static ssize_t led_write(struct file *filp, const char __user *buf, size_t count, loff_t *ppos)
+{
+    struct single_led *led = filp-&gt;private_data;
+    char val;
+
+    if (copy_from_user(&amp;val, buf, 1))
+        return -EFAULT;
+
+    /* 直接操作当前灯的 GPIO，无需任何 switch 判断！ */
+    gpio_set_value(led-&gt;gpio, (val == &#39;1&#39;) ? 0 : 1);
+    return count;
+}
+
+static int led_release(struct inode *inode, struct file *filp)
+{
+    return 0;
+}
+
+static const struct file_operations led_fops = {
+    .owner   = THIS_MODULE,
+    .open    = led_open,
+    .write   = led_write,
+    .release = led_release,
+};
+
+static int led_probe(struct platform_device *pdev)
+{
+    struct rgb_led_dev *dev;
+    int ret, i;
+    const char *names[3] = {&quot;led_red&quot;, &quot;led_green&quot;, &quot;led_blue&quot;};
+    const char *dts_prop_names[3] = {&quot;led_rgb_red&quot;, &quot;led_rgb_green&quot;, &quot;led_rgb_blue&quot;};
+
+    /* 1. 动态在堆内存中申请大结构体 (内核资源托管，卸载时自动释放) */
+    dev = devm_kzalloc(&amp;pdev-&gt;dev, sizeof(struct rgb_led_dev), GFP_KERNEL);
+    if (!dev)
+        return -ENOMEM;
+
+    /* 2. 提取并初始化 3 颗灯 */
+    for (i = 0; i &lt; DEV_CNT; i++) {
+        dev-&gt;leds[i].gpio = of_get_named_gpio(pdev-&gt;dev.of_node, dts_prop_names[i], 0);
+        if (dev-&gt;leds[i].gpio &lt; 0)
+            return dev-&gt;leds[i].gpio;
+        dev-&gt;leds[i].minor = i;
+        dev-&gt;leds[i].name = names[i];
+        gpio_direction_output(dev-&gt;leds[i].gpio, 1);
+    }
+
+    /* 3. 动态申请设备号 */
+    ret = alloc_chrdev_region(&amp;dev-&gt;devno, 0, DEV_CNT, DEV_NAME);
+    if (ret &lt; 0)
+        return ret;
+    dev-&gt;major = MAJOR(dev-&gt;devno);
+
+    /* 4. 注册 cdev */
+    cdev_init(&amp;dev-&gt;cdev, &amp;led_fops);
+    dev-&gt;cdev.owner = THIS_MODULE;
+    ret = cdev_add(&amp;dev-&gt;cdev, dev-&gt;devno, DEV_CNT);
+    if (ret &lt; 0)
+        goto unregister_devid;
+
+    /* 5. 创建类与设备节点 */
+    dev-&gt;class = class_create(THIS_MODULE, DEV_NAME);
+    if (IS_ERR(dev-&gt;class)) {
+        ret = PTR_ERR(dev-&gt;class);
+        goto del_cdev;
+    }
+
+    for (i = 0; i &lt; DEV_CNT; i++) {
+        dev-&gt;devices[i] = device_create(dev-&gt;class, NULL, MKDEV(dev-&gt;major, i), NULL, names[i]);
+        if (IS_ERR(dev-&gt;devices[i])) {
+            ret = PTR_ERR(dev-&gt;devices[i]);
+            goto destroy_devices;
+        }
+    }
+
+    /* 6. 将大结构体挂载到 pdev 私有数据 (供 remove 使用) */
+    platform_set_drvdata(pdev, dev);
+    return 0;
+
+destroy_devices:
+    for (i = 0; i &lt; DEV_CNT; i++) {
+        if (!IS_ERR_OR_NULL(dev-&gt;devices[i]))
+            device_destroy(dev-&gt;class, MKDEV(dev-&gt;major, i));
+    }
+    class_destroy(dev-&gt;class);
+del_cdev:
+    cdev_del(&amp;dev-&gt;cdev);
+unregister_devid:
+    unregister_chrdev_region(dev-&gt;devno, DEV_CNT);
+    return ret;
+}
+
+static int led_remove(struct platform_device *pdev)
+{
+    struct rgb_led_dev *dev = platform_get_drvdata(pdev);
+    int i;
+
+    for (i = 0; i &lt; DEV_CNT; i++) {
+        gpio_set_value(dev-&gt;leds[i].gpio, 1);
+        device_destroy(dev-&gt;class, MKDEV(dev-&gt;major, i));
+    }
+    class_destroy(dev-&gt;class);
+    cdev_del(&amp;dev-&gt;cdev);
+    unregister_chrdev_region(dev-&gt;devno, DEV_CNT);
+    return 0;
+}
+
+static const struct of_device_id led_of_match[] = {
+    { .compatible = &quot;rkljq,led_rgb&quot; },
+    { /* sentinel */ }
+};
+MODULE_DEVICE_TABLE(of, led_of_match);
+
+static struct platform_driver led_platform_driver = {
+    .probe  = led_probe,
+    .remove = led_remove,
+    .driver = {
+        .name           = &quot;rkljq-led-rgb-oop&quot;,
+        .owner          = THIS_MODULE,
+        .of_match_table = led_of_match,
+    },
+};
+
+module_platform_driver(led_platform_driver);
+
+MODULE_LICENSE(&quot;GPL v2&quot;);
+MODULE_AUTHOR(&quot;rkljq&quot;);</code></pre>
+<hr />
+<h2 id="sec-4">四、核心 API 对根文件系统 (/proc、/sys、/dev) 的影响全景映射</h2>
+<p>调用不同的驱动 API
+时，内核在底层根文件系统中分别创建/修改了哪些节点？它们分别受什么参数影响？</p>
+<pre class="language-text"><code class="language-text">┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│                             Linux 驱动 API 与根文件系统映射全景图                              │
+└─────────────────────────────────────────────────────────────────────────────────────────────┘
+
+ 1. alloc_chrdev_region(&amp;devno, 0, 1, &quot;led_rgb&quot;)
+    │
+    └─► 作用于：/proc/devices
+        ├── 生成记录：240 led_rgb (记录主设备号分配情况)
+        └── 受影响参数：主设备号 (系统分配) + 第 4 个参数 name (&quot;led_rgb&quot;)
+
+ 2. cdev_add(&amp;cdev, devno, 1)
+    │
+    └─► 作用于：内核内部全局散列表 cdev_map (内存 Hash 表)
+        ├── 将 cdev 挂载到 cdev_map 中，建立 devno 与 file_operations 的绑定关系
+        └── 不直接在文件系统生成可见文件，但决定了后续打开设备节点时能否找到驱动！
+
+ 3. class_create(THIS_MODULE, &quot;led_rgb&quot;)
+    │
+    └─► 作用于：/sys/class/
+        ├── 生成目录：/sys/class/led_rgb/
+        └── 受影响参数：第 2 个参数 name (&quot;led_rgb&quot;)
+
+ 4. device_create(class, NULL, devno, NULL, &quot;led_red&quot;)
+    │
+    ├─► 1. 作用于：/sys/class/led_rgb/
+    │      └── 生成目录：/sys/class/led_rgb/led_red/
+    │          └── 内部生成 dev 文件，内容记录 &quot;240:0&quot;
+    │
+    └─► 2. 向用户态广播 uevent 消息 ──► udev/mdev 守护进程在后台被唤醒
+           │
+           └─► 最终作用于：/dev/
+               ├── 自动创建设备文件：/dev/led_red (类型: 字符设备, 240, 0)
+               └── 受影响参数：第 3 个参数 devno + 第 5 个参数格式化名字 (&quot;led_red&quot;)
+
+ 5. of_find_node_by_path(&quot;/led_rgb&quot;) / of_get_named_gpio()
+    │
+    └─► 数据来源于：/proc/device-tree/ (即 /sys/firmware/devicetree/base/)
+        └── 读取内核启动时解析好的设备树目录结构：/proc/device-tree/led_rgb/</code></pre>
+<h3 id="文件系统影响速查表">文件系统影响速查表</h3>
+<div class="table-responsive"><table>
+<thead>
+<tr>
+<th style="text-align: left;">API 函数</th>
+<th style="text-align: left;">影响的文件系统路径</th>
+<th style="text-align: left;">生成/修改的具体内容</th>
+<th style="text-align: left;">关键受控参数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td
+style="text-align: left;"><strong><code>alloc_chrdev_region</code></strong></td>
+<td
+style="text-align: left;"><strong><code>/proc/devices</code></strong></td>
+<td
+style="text-align: left;">在文件中追加一行：<code>主设备号 设备名</code></td>
+<td style="text-align: left;">第 4 个参数 <code>name</code></td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><strong><code>cdev_add</code></strong></td>
+<td style="text-align: left;"><strong>内核全局 <code>cdev_map</code>
+散列表</strong></td>
+<td style="text-align: left;">在内存中挂载字符设备，绑定
+<code>fops</code></td>
+<td style="text-align: left;">第 2 个参数 <code>dev</code>，第 3 个参数
+<code>count</code></td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><strong><code>class_create</code></strong></td>
+<td
+style="text-align: left;"><strong><code>/sys/class/&lt;name&gt;/</code></strong></td>
+<td style="text-align: left;">在 sysfs 中创建设备类目录</td>
+<td style="text-align: left;">第 2 个参数 <code>name</code></td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><strong><code>device_create</code></strong></td>
+<td style="text-align: left;"><strong>1.
+<code>/sys/class/&lt;cls&gt;/&lt;name&gt;/</code></strong><br><strong>2.
+<code>/dev/&lt;name&gt;</code></strong></td>
+<td style="text-align: left;">1. 创建 sysfs 属性目录与 <code>dev</code>
+记录<br>2. <strong>通过 uevent 自动在 <code>/dev/</code>
+下创建字符设备节点</strong></td>
+<td style="text-align: left;">第 3 个参数 <code>devt</code>，第 5 个参数
+<code>fmt</code> 名字</td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><strong><code>device_destroy</code></strong></td>
+<td style="text-align: left;"><strong>1.
+<code>/sys/class/&lt;cls&gt;/&lt;name&gt;/</code></strong><br><strong>2.
+<code>/dev/&lt;name&gt;</code></strong></td>
+<td style="text-align: left;">删除对应的 sysfs 属性目录，并触发 udev
+自动删除 <code>/dev/&lt;name&gt;</code> 设备文件</td>
+<td style="text-align: left;"><code>cls</code> 指针，<code>devt</code>
+设备号</td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><strong><code>class_destroy</code></strong></td>
+<td
+style="text-align: left;"><strong><code>/sys/class/&lt;name&gt;/</code></strong></td>
+<td style="text-align: left;">递归删除整个类目录</td>
+<td style="text-align: left;"><code>cls</code> 指针</td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><strong><code>unregister_chrdev_region</code></strong></td>
+<td
+style="text-align: left;"><strong><code>/proc/devices</code></strong></td>
+<td style="text-align: left;">从 <code>/proc/devices</code>
+中抹除对应的设备号登记记录</td>
+<td style="text-align: left;"><code>from</code>
+起始设备号，<code>count</code> 数量</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="sec-5">五、C 语言指针参数传参大解密 (直接传变量 vs 取地址 &amp; 传参)</h2>
+<p>在调用内核 API 时，许多初学者经常困惑：<strong>“为什么有的 API 传
+<code>dev-&gt;class</code>，有的却要加取地址符
+<code>&amp;dev-&gt;cdev</code>？到底什么时候直接传指针变量，什么时候传
+<code>&amp;</code> 实体地址？”</strong></p>
+<h3
+id="核心真相看你的变量定义是指针pointer还是实体entity">核心真相：看你的变量定义是“指针（Pointer）”还是“实体（Entity）”！</h3>
+<p>在 C 语言中，函数参数如果要求传入指针类型（如
+<code>struct xxx *</code> 或
+<code>dev_t *</code>），传参规则极其纯粹：</p>
+<pre class="language-text"><code class="language-text">【法则 1：如果你的变量本身就是指针类型 (如 struct class *class)】
+  * 它本身装的就是一个内存地址！
+  * 传参时直接写变量名：func(dev-&gt;class);  (❌ 严禁加 &amp;，写成 &amp;dev-&gt;class 会变成二级指针指针的地址！)
+
+【法则 2：如果你的变量是一个内嵌实体 (如 struct cdev cdev 或 dev_t devno)】
+  * 它本身是一个实体结构体或数值！
+  * 传参时必须使用 &amp; 取地址符：func(&amp;dev-&gt;cdev); 或 func(&amp;dev-&gt;devno);
+
+【法则 3：传出参数 (Out Parameter)】
+  * 函数需要往你的变量里写入计算结果 (如 alloc_chrdev_region 需要写入设备号)；
+  * 必须传变量的地址：alloc_chrdev_region(&amp;dev-&gt;devno, ...);</code></pre>
+<hr />
+<h3 id="核心驱动-api-传参形态终极速查表">核心驱动 API
+传参形态终极速查表</h3>
+<div class="table-responsive"><table>
+<thead>
+<tr>
+<th style="text-align: left;">API 函数</th>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">参数要求类型</th>
+<th style="text-align: left;">你的变量定义形态</th>
+<th style="text-align: left;">实际调用代码</th>
+<th style="text-align: left;">传参类型与理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td
+style="text-align: left;"><strong><code>alloc_chrdev_region</code></strong></td>
+<td style="text-align: left;"><code>dev</code></td>
+<td style="text-align: left;"><code>dev_t *</code></td>
+<td style="text-align: left;"><code>dev_t devno;</code>（实体数值）</td>
+<td
+style="text-align: left;"><strong><code>&amp;dev-&gt;devno</code></strong></td>
+<td style="text-align: left;"><strong>【传出参数】</strong>
+函数需要往里面写设备号，必须传实体地址 <code>&amp;</code>。</td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><strong><code>cdev_init</code></strong></td>
+<td style="text-align: left;"><code>cdev</code></td>
+<td style="text-align: left;"><code>struct cdev *</code></td>
+<td
+style="text-align: left;"><code>struct cdev cdev;</code>（内嵌实体）</td>
+<td
+style="text-align: left;"><strong><code>&amp;dev-&gt;cdev</code></strong></td>
+<td style="text-align: left;"><strong>【实体取地址】</strong>
+<code>cdev</code> 是内嵌实体，用 <code>&amp;</code>
+取出首地址传给函数就地初始化。</td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><strong><code>cdev_add</code></strong></td>
+<td style="text-align: left;"><code>p</code></td>
+<td style="text-align: left;"><code>struct cdev *</code></td>
+<td
+style="text-align: left;"><code>struct cdev cdev;</code>（内嵌实体）</td>
+<td
+style="text-align: left;"><strong><code>&amp;dev-&gt;cdev</code></strong></td>
+<td style="text-align: left;"><strong>【实体取地址】</strong>
+传入已初始化的 <code>cdev</code> 实体首地址。</td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><strong><code>cdev_add</code></strong></td>
+<td style="text-align: left;"><code>dev</code></td>
+<td style="text-align: left;"><code>dev_t</code></td>
+<td style="text-align: left;"><code>dev_t devno;</code>（实体数值）</td>
+<td
+style="text-align: left;"><strong><code>dev-&gt;devno</code></strong></td>
+<td style="text-align: left;"><strong>【直接传值】</strong>
+这里形参是值类型 <code>dev_t</code>（不是指针），直接传值。</td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><strong><code>class_create</code></strong></td>
+<td style="text-align: left;">返回值</td>
+<td style="text-align: left;"><code>struct class *</code></td>
+<td
+style="text-align: left;"><code>struct class *class;</code>（指针）</td>
+<td
+style="text-align: left;"><code>dev-&gt;class = class_create(...)</code></td>
+<td style="text-align: left;"><strong>【接收指针】</strong> 内核在堆中
+malloc 分配，返回指针存入变量。</td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><strong><code>device_create</code></strong></td>
+<td style="text-align: left;"><code>cls</code></td>
+<td style="text-align: left;"><code>struct class *</code></td>
+<td
+style="text-align: left;"><code>struct class *class;</code>（指针）</td>
+<td
+style="text-align: left;"><strong><code>dev-&gt;class</code></strong></td>
+<td style="text-align: left;"><strong>【直接传指针变量】</strong>
+变量本身就是指针，直接传变量名，<strong>绝不加
+<code>&amp;</code></strong>！</td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><strong><code>device_create</code></strong></td>
+<td style="text-align: left;"><code>devt</code></td>
+<td style="text-align: left;"><code>dev_t</code></td>
+<td style="text-align: left;"><code>dev_t devno;</code>（实体数值）</td>
+<td
+style="text-align: left;"><strong><code>dev-&gt;devno</code></strong> 或
+<strong><code>MKDEV(...)</code></strong></td>
+<td style="text-align: left;"><strong>【直接传值】</strong> 传入 32
+位设备号数值。</td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><strong><code>device_destroy</code></strong></td>
+<td style="text-align: left;"><code>cls</code></td>
+<td style="text-align: left;"><code>struct class *</code></td>
+<td
+style="text-align: left;"><code>struct class *class;</code>（指针）</td>
+<td
+style="text-align: left;"><strong><code>dev-&gt;class</code></strong></td>
+<td style="text-align: left;"><strong>【直接传指针变量】</strong>
+直接传入指针。</td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><strong><code>class_destroy</code></strong></td>
+<td style="text-align: left;"><code>cls</code></td>
+<td style="text-align: left;"><code>struct class *</code></td>
+<td
+style="text-align: left;"><code>struct class *class;</code>（指针）</td>
+<td
+style="text-align: left;"><strong><code>dev-&gt;class</code></strong></td>
+<td style="text-align: left;"><strong>【直接传指针变量】</strong>
+直接传入指针。</td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><strong><code>cdev_del</code></strong></td>
+<td style="text-align: left;"><code>p</code></td>
+<td style="text-align: left;"><code>struct cdev *</code></td>
+<td
+style="text-align: left;"><code>struct cdev cdev;</code>（内嵌实体）</td>
+<td
+style="text-align: left;"><strong><code>&amp;dev-&gt;cdev</code></strong></td>
+<td style="text-align: left;"><strong>【实体取地址】</strong> 取出
+<code>cdev</code> 实体地址传给注销函数。</td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><strong><code>unregister_chrdev_region</code></strong></td>
+<td style="text-align: left;"><code>from</code></td>
+<td style="text-align: left;"><code>dev_t</code></td>
+<td style="text-align: left;"><code>dev_t devno;</code>（实体数值）</td>
+<td
+style="text-align: left;"><strong><code>dev-&gt;devno</code></strong></td>
+<td style="text-align: left;"><strong>【直接传值】</strong>
+直接传入起始设备号数值。</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="sec-6">六、驱动核心 API 全景百科全书 (参数/返回值/机制详解)</h2>
+<hr />
+<h3 id="1-设备号管理-api">1. 设备号管理 API</h3>
+<h4 id="①-alloc_chrdev_region-动态申请设备号">①
+<code>alloc_chrdev_region</code> (动态申请设备号)</h4>
+<ul>
+<li><strong>函数原型</strong>：
+<pre class="language-c"><code class="language-c">int alloc_chrdev_region(dev_t *dev, unsigned baseminor, unsigned count, const char *name);</code></pre></li>
+<li><strong>参数详解</strong>：
+<ul>
+<li><strong><code>dev</code></strong>
+(<code>dev_t *</code>)：<strong>【传出参数】</strong>
+传入指针。申请成功后，内核将生成的 32 位复合设备号（高 12 位 Major + 低
+20 位 Minor）写入该指针指向的内存。</li>
+<li><strong><code>baseminor</code></strong>
+(<code>unsigned</code>)：请求的起始次设备号，通常填
+<code>0</code>。</li>
+<li><strong><code>count</code></strong>
+(<code>unsigned</code>)：连续申请的设备号数量。单个设备填
+<code>1</code>，若一个驱动管理 3 个独立 LED 则填 <code>3</code>。</li>
+<li><strong><code>name</code></strong>
+(<code>const char *</code>)：设备名称。该名称会显示在开发板的
+<code>/proc/devices</code> 列表中。</li>
+</ul></li>
+<li><strong>返回值与检查方式</strong>：
+<ul>
+<li><strong>成功</strong>：返回 <strong><code>0</code></strong>。</li>
+<li><strong>失败</strong>：返回
+<strong>负数错误码（<code>&lt; 0</code>）</strong>（如
+<code>-EBUSY</code> 表示设备号耗尽或冲突，<code>-ENOMEM</code>
+内存不足）。</li>
+<li><strong>检查范式</strong>：<code>if (ret &lt; 0) { return ret; }</code></li>
+</ul></li>
+<li><strong>注意事项</strong>：
+<ul>
+<li>严禁硬编码主设备号（避免与其他外设冲突），永远使用动态分配；</li>
+<li>分配成功后，必须使用 <code>MAJOR(dev)</code> 和
+<code>MINOR(dev)</code> 宏提取主次设备号。</li>
+</ul></li>
+</ul>
+<h4 id="②-unregister_chrdev_region-释放设备号">②
+<code>unregister_chrdev_region</code> (释放设备号)</h4>
+<ul>
+<li><strong>函数原型</strong>：
+<pre class="language-c"><code class="language-c">void unregister_chrdev_region(dev_t from, unsigned count);</code></pre></li>
+<li><strong>参数详解</strong>：
+<ul>
+<li><strong><code>from</code></strong>
+(<code>dev_t</code>)：要释放的起始设备号（值传递，直接传入
+<code>dev-&gt;devno</code>）。</li>
+<li><strong><code>count</code></strong>
+(<code>unsigned</code>)：要释放的设备号数量（必须与申请时的
+<code>count</code> 严格一致）。</li>
+</ul></li>
+<li><strong>注意事项</strong>：
+<ul>
+<li>只有在 <code>alloc_chrdev_region</code>
+成功后才能调用，若未申请成功就调用会导致内核警告。</li>
+</ul></li>
+</ul>
+<hr />
+<h3 id="2-字符设备核心对象-api-cdev">2. 字符设备核心对象 API
+(<code>cdev</code>)</h3>
+<h4 id="①-cdev_init-初始化字符设备结构体">① <code>cdev_init</code>
+(初始化字符设备结构体)</h4>
+<ul>
+<li><strong>函数原型</strong>：
+<pre class="language-c"><code class="language-c">void cdev_init(struct cdev *cdev, const struct file_operations *fops);</code></pre></li>
+<li><strong>参数详解</strong>：
+<ul>
+<li><strong><code>cdev</code></strong>
+(<code>struct cdev *</code>)：要初始化的字符设备对象指针（通常是自定义结构体中内嵌的
+<code>&amp;dev-&gt;cdev</code>）。</li>
+<li><strong><code>fops</code></strong>
+(<code>const struct file_operations *</code>)：该字符设备绑定的底层文件操作函数集指针。</li>
+</ul></li>
+<li><strong>底层机制与注意事项</strong>：
+<ul>
+<li><code>cdev_init</code> 源码第一行就是
+<code>memset(cdev, 0, sizeof *cdev)</code>；</li>
+<li><strong>避坑警告</strong>：严禁把申请到的 <code>devno</code>
+直接暂存在 <code>cdev.dev</code> 里再去调
+<code>cdev_init</code>，否则会被清零冲刷掉！必须在结构体中保留独立的
+<code>dev_t devno</code> 字段。</li>
+</ul></li>
+</ul>
+<h4 id="②-cdev_add-激活并注册字符设备">② <code>cdev_add</code>
+(激活并注册字符设备)</h4>
+<ul>
+<li><strong>函数原型</strong>：
+<pre class="language-c"><code class="language-c">int cdev_add(struct cdev *p, dev_t dev, unsigned count);</code></pre></li>
+<li><strong>参数详解</strong>：
+<ul>
+<li><strong><code>p</code></strong> (<code>struct cdev *</code>)：已通过
+<code>cdev_init()</code> 初始化就绪的 <code>cdev</code> 指针。</li>
+<li><strong><code>dev</code></strong>
+(<code>dev_t</code>)：该设备负责的起始设备号。</li>
+<li><strong><code>count</code></strong>
+(<code>unsigned</code>)：该设备绑定的次设备号数量（管理 3 个节点就填
+<code>3</code>）。</li>
+</ul></li>
+<li><strong>返回值与检查方式</strong>：
+<ul>
+<li><strong>成功</strong>：返回 <strong><code>0</code></strong>。</li>
+<li><strong>失败</strong>：返回
+<strong>负数错误码（<code>&lt; 0</code>）</strong>。</li>
+<li><strong>检查范式</strong>：<code>if (ret &lt; 0) { goto unregister_devid; }</code></li>
+</ul></li>
+<li><strong>底层机制与核心铁律</strong>：
+<ul>
+<li>将 <code>cdev</code> 挂入内核全局字符设备散列表
+<code>cdev_map</code> 中；</li>
+<li><strong>瞬间生效铁律</strong>：<code>cdev_add</code> 一旦返回
+0，设备立即对外暴露，系统调用 <code>open</code>
+随时会并发杀入！所有硬件与内部变量必须在此之前初始化完毕。</li>
+</ul></li>
+</ul>
+<h4 id="③-cdev_del-从内核注销字符设备">③ <code>cdev_del</code>
+(从内核注销字符设备)</h4>
+<ul>
+<li><strong>函数原型</strong>：
+<pre class="language-c"><code class="language-c">void cdev_del(struct cdev *p);</code></pre></li>
+<li><strong>参数详解</strong>：
+<ul>
+<li><strong><code>p</code></strong>
+(<code>struct cdev *</code>)：要注销的 <code>cdev</code> 指针。</li>
+</ul></li>
+<li><strong>底层机制</strong>：
+<ul>
+<li>从 <code>cdev_map</code> 散列表中移除，并减少引用计数。</li>
+</ul></li>
+</ul>
+<hr />
+<h3 id="3-设备类与设备节点自动创建-api-class--device">3.
+设备类与设备节点自动创建 API (<code>class</code> /
+<code>device</code>)</h3>
+<h4 id="①-class_create-创建-sysfs-设备类">① <code>class_create</code>
+(创建 sysfs 设备类)</h4>
+<ul>
+<li><strong>函数原型</strong>：
+<pre class="language-c"><code class="language-c">struct class *class_create(struct module *owner, const char *name);</code></pre></li>
+<li><strong>参数详解</strong>：
+<ul>
+<li><strong><code>owner</code></strong>
+(<code>struct module *</code>)：该类所属的模块，固定填
+<strong><code>THIS_MODULE</code></strong>。</li>
+<li><strong><code>name</code></strong>
+(<code>const char *</code>)：类名称。内核会在 <code>/sys/class/</code>
+目录下创建以该名字命名的文件夹（如
+<code>/sys/class/led_rgb/</code>）。</li>
+</ul></li>
+<li><strong>返回值与检查方式</strong>：
+<ul>
+<li><strong>成功</strong>：返回分配好的
+<strong><code>struct class *</code> 指针</strong>。</li>
+<li><strong>失败</strong>：返回 <strong>错误指针（Error
+Pointer）</strong>（<strong>绝不是 NULL！</strong>）。</li>
+<li><strong>检查范式（必须用 <code>IS_ERR</code>）</strong>：
+<pre class="language-c"><code class="language-c">dev-&gt;class = class_create(THIS_MODULE, DEV_NAME);
+if (IS_ERR(dev-&gt;class)) {
+    ret = PTR_ERR(dev-&gt;class); /* 提取具体错误码，如 -ENOMEM */
+    goto del_cdev;
+}</code></pre></li>
+</ul></li>
+</ul>
+<h4 id="②-class_destroy-销毁设备类">② <code>class_destroy</code>
+(销毁设备类)</h4>
+<ul>
+<li><strong>函数原型</strong>：
+<pre class="language-c"><code class="language-c">void class_destroy(struct class *cls);</code></pre></li>
+<li><strong>参数详解</strong>：
+<ul>
+<li><strong><code>cls</code></strong>
+(<code>struct class *</code>)：之前创建的类指针（如
+<code>dev-&gt;class</code>）。</li>
+</ul></li>
+<li><strong>底层机制</strong>：删除 <code>/sys/class/</code>
+下的对应目录并释放内存。</li>
+</ul>
+<h4 id="③-device_create-自动创建-devxxx-设备节点">③
+<code>device_create</code> (自动创建 <code>/dev/xxx</code>
+设备节点)</h4>
+<ul>
+<li><strong>函数原型</strong>：
+<pre class="language-c"><code class="language-c">struct device *device_create(struct class *cls, 
+                            struct device *parent, 
+                            dev_t devt, 
+                            void *drvdata, 
+                            const char *fmt, ...);</code></pre></li>
+<li><strong>参数详解</strong>：
+<ul>
+<li><strong><code>cls</code></strong>
+(<code>struct class *</code>)：该设备所属的类指针（传入
+<code>class_create</code> 返回的 <code>dev-&gt;class</code>）。</li>
+<li><strong><code>parent</code></strong>
+(<code>struct device *</code>)：父设备指针。独立字符设备无父设备，<strong>填
+<code>NULL</code></strong>；若在平台驱动中可填
+<code>&amp;pdev-&gt;dev</code>。</li>
+<li><strong><code>devt</code></strong> (<code>dev_t</code>)：设备号（如
+<code>dev-&gt;devno</code>），udev/mdev 靠它生成对应的设备节点号。</li>
+<li><strong><code>drvdata</code></strong>
+(<code>void *</code>)：私有数据指针，通常填
+<strong><code>NULL</code></strong>。</li>
+<li><strong><code>fmt, ...</code></strong>
+(<code>const char *</code>)：设备文件名（支持 printf 格式化），如
+<code>"led_red"</code> 或 <code>"led_rgb%d", i</code>。直接决定了
+<code>/dev/</code> 下生成的文件名！</li>
+</ul></li>
+<li><strong>返回值与检查方式</strong>：
+<ul>
+<li><strong>成功</strong>：返回 <strong><code>struct device *</code>
+指针</strong>。</li>
+<li><strong>失败</strong>：返回 <strong>错误指针</strong>。</li>
+<li><strong>检查范式</strong>：
+<pre class="language-c"><code class="language-c">dev-&gt;device = device_create(dev-&gt;class, NULL, dev-&gt;devno, NULL, DEV_NAME);
+if (IS_ERR(dev-&gt;device)) {
+    ret = PTR_ERR(dev-&gt;device);
+    goto destroy_class;
+}</code></pre></li>
+</ul></li>
+</ul>
+<h4 id="④-device_destroy-销毁-devxxx-设备节点">④
+<code>device_destroy</code> (销毁 <code>/dev/xxx</code> 设备节点)</h4>
+<ul>
+<li><strong>函数原型</strong>：
+<pre class="language-c"><code class="language-c">void device_destroy(struct class *cls, dev_t devt);</code></pre></li>
+<li><strong>参数详解</strong>：
+<ul>
+<li><strong><code>cls</code></strong>
+(<code>struct class *</code>)：所属类指针。</li>
+<li><strong><code>devt</code></strong>
+(<code>dev_t</code>)：要销毁的设备号。</li>
+</ul></li>
+</ul>
+<hr />
+<h3 id="4-内核错误指针处理机制-is_err--ptr_err--err_ptr">4.
+内核错误指针处理机制 (<code>IS_ERR</code> / <code>PTR_ERR</code> /
+<code>ERR_PTR</code>)</h3>
+<p>在内核中，返回指针的函数（如
+<code>class_create</code>、<code>device_create</code>、<code>devm_kzalloc</code>）如果失败，<strong>不会直接返回
+NULL，而是把负数错误码（如
+-ENOMEM）伪装成一个无效指针地址返回！</strong></p>
+<p>内核虚拟地址空间的最后
+4KB（<code>0xFFFFF000 ~ 0xFFFFFFFF</code>）被专门保留给错误码：</p>
+<pre class="language-c"><code class="language-c">/* 1. 判断指针是否是一个错误码指针 */
+bool IS_ERR(const void *ptr);
+
+/* 2. 将错误指针转换回正常的 int 负数错误码 (如 -12) */
+long PTR_ERR(const void *ptr);
+
+/* 3. 将 int 负数错误码封装成指针 (底层实现) */
+void *ERR_PTR(long error);</code></pre>
+<hr />
+<h3 id="5-设备树-open-firmware--of-解析-api">5. 设备树 (Open Firmware /
+OF) 解析 API</h3>
+<h4 id="①-of_get_named_gpio-从设备树获取-gpio-编号">①
+<code>of_get_named_gpio</code> (从设备树获取 GPIO 编号)</h4>
+<ul>
+<li><strong>函数原型</strong>：
+<pre class="language-c"><code class="language-c">int of_get_named_gpio(struct device_node *np, const char *propname, int index);</code></pre></li>
+<li><strong>参数详解</strong>：
+<ul>
+<li><strong><code>np</code></strong>
+(<code>struct device_node *</code>)：目标设备树节点指针（在 probe
+中直接取 <code>pdev-&gt;dev.of_node</code>）。</li>
+<li><strong><code>propname</code></strong>
+(<code>const char *</code>)：属性名字字符串（必须与设备树中的属性键名一字不差，如
+<code>"led_rgb_red"</code>）。</li>
+<li><strong><code>index</code></strong>
+(<code>int</code>)：<strong>引脚下标索引（从 0 开始）</strong>。
+<ul>
+<li>若属性里只有 1 个引脚（如
+<code>led_rgb_red = &lt;&amp;gpio1 4 0&gt;;</code>），填
+<strong><code>0</code></strong>；</li>
+<li>若属性是一个包含多个引脚的列表（如
+<code>gpios = &lt;...&gt;, &lt;...&gt;;</code>），通过
+<code>0, 1, 2</code> 分别提取第 1、2、3 个引脚。</li>
+</ul></li>
+</ul></li>
+<li><strong>返回值与检查方式</strong>：
+<ul>
+<li><strong>成功</strong>：返回 <strong>大于等于 0 的全局 GPIO
+编号</strong>（如 GPIO1_IO04 对应编号 4）。</li>
+<li><strong>失败</strong>：返回 <strong>负数错误码</strong>（如
+<code>-EINVAL</code>
+表示属性或索引越界不存在，<code>-EPROBE_DEFER</code> 表示 GPIO
+控制器尚未就绪）。</li>
+<li><strong>检查范式</strong>：<code>if (gpio &lt; 0) { return gpio; }</code></li>
+</ul></li>
+</ul>
+<h4 id="②-of_find_node_by_path-按绝对路径查找节点">②
+<code>of_find_node_by_path</code> (按绝对路径查找节点)</h4>
+<ul>
+<li><strong>函数原型</strong>：
+<pre class="language-c"><code class="language-c">struct device_node *of_find_node_by_path(const char *path);</code></pre></li>
+<li><strong>参数详解</strong>：
+<ul>
+<li><strong><code>path</code></strong>
+(<code>const char *</code>)：节点在设备树中的绝对路径（如
+<code>"/led_rgb"</code>）或别名（<code>aliases</code>）。</li>
+</ul></li>
+<li><strong>返回值</strong>：成功返回
+<code>struct device_node *</code>；失败返回 <code>NULL</code>。</li>
+<li><strong>注意事项</strong>：
+<ul>
+<li>找到节点后会增加引用计数；</li>
+<li><strong>在现代 Platform
+驱动中不推荐使用此函数</strong>，推荐直接使用
+<code>pdev-&gt;dev.of_node</code>！如果手动调用了
+<code>of_find_node_by_path</code>，使用完毕后必须调用
+<code>of_node_put(np)</code> 释放引用，否则会导致内存泄漏。</li>
+</ul></li>
+</ul>
+<hr />
+<h3 id="6-gpio-子系统操作-api">6. GPIO 子系统操作 API</h3>
+<h4 id="①-gpio_direction_output-设置-gpio-为输出模式并指定电平">①
+<code>gpio_direction_output</code> (设置 GPIO 为输出模式并指定电平)</h4>
+<ul>
+<li><strong>函数原型</strong>：
+<pre class="language-c"><code class="language-c">int gpio_direction_output(unsigned gpio, int value);</code></pre></li>
+<li><strong>参数详解</strong>：
+<ul>
+<li><strong><code>gpio</code></strong> (<code>unsigned</code>)：GPIO
+编号（传入 <code>of_get_named_gpio</code> 获取到的值）。</li>
+<li><strong><code>value</code></strong>
+(<code>int</code>)：初始输出电平。<code>0</code>
+输出低电平，<code>1</code> 输出高电平（LED 低电平点亮时，初始熄灭填
+<code>1</code>）。</li>
+</ul></li>
+<li><strong>返回值</strong>：成功返回
+<code>0</code>；失败返回负数错误码。</li>
+</ul>
+<h4 id="②-gpio_set_value-设置-gpio-输出高低电平">②
+<code>gpio_set_value</code> (设置 GPIO 输出高低电平)</h4>
+<ul>
+<li><strong>函数原型</strong>：
+<pre class="language-c"><code class="language-c">void gpio_set_value(unsigned gpio, int value);</code></pre></li>
+<li><strong>参数详解</strong>：
+<ul>
+<li><strong><code>gpio</code></strong> (<code>unsigned</code>)：GPIO
+编号。</li>
+<li><strong><code>value</code></strong>
+(<code>int</code>)：目标电平（<code>0</code> 低电平，<code>1</code>
+高电平）。</li>
+</ul></li>
+<li><strong>特点</strong>：速度极快，无返回值，通常在
+<code>write()</code> 函数中高频调用。</li>
+</ul>
+<h4 id="③-gpio_get_value-读取-gpio-当前输入电平">③
+<code>gpio_get_value</code> (读取 GPIO 当前输入电平)</h4>
+<ul>
+<li><strong>函数原型</strong>：
+<pre class="language-c"><code class="language-c">int gpio_get_value(unsigned gpio);</code></pre></li>
+<li><strong>返回值</strong>：返回 <code>0</code>
+表示当前为低电平；返回非 0 表示当前为高电平；返回负数表示出错。</li>
+</ul>
+<hr />
+<h3 id="7-platform-平台总线管理-api">7. Platform 平台总线管理 API</h3>
+<h4 id="①-platform_set_drvdata--platform_get_drvdata-驱动私有数据挂载">①
+<code>platform_set_drvdata</code> / <code>platform_get_drvdata</code>
+(驱动私有数据挂载)</h4>
+<ul>
+<li><strong>函数原型</strong>：
+<pre class="language-c"><code class="language-c">void platform_set_drvdata(struct platform_device *pdev, void *data);
+void *platform_get_drvdata(struct platform_device *pdev);</code></pre></li>
+<li><strong>作用与原理</strong>：
+<ul>
+<li>在 <code>probe()</code> 成功时，调用
+<code>platform_set_drvdata(pdev, dev)</code> 将私有结构体存入
+<code>pdev-&gt;dev.driver_data</code>；</li>
+<li>在 <code>remove()</code> 触发时，调用
+<code>struct rgb_led_dev *dev = platform_get_drvdata(pdev)</code>
+瞬间取回设备结构体，<strong>彻底消除全局变量！</strong></li>
+</ul></li>
+</ul>
+<h4 id="②-module_platform_driver-一键平台驱动注册宏">②
+<code>module_platform_driver</code> (一键平台驱动注册宏)</h4>
+<ul>
+<li><strong>语法</strong>：<code>module_platform_driver(led_platform_driver);</code></li>
+<li><strong>底层原理</strong>：
+<ul>
+<li>内核宏展开后，全自动生成标准的 <code>init</code>（调用
+<code>platform_driver_register</code>）和 <code>exit</code>（调用
+<code>platform_driver_unregister</code>）函数。</li>
+</ul></li>
+</ul>
+<hr />
+<h3 id="8-内存空间交互与结构体反推-api">8. 内存空间交互与结构体反推
+API</h3>
+<h4 id="①-copy_from_user-跨空间安全拷贝用户态-to-内核态">①
+<code>copy_from_user</code> (跨空间安全拷贝：用户态
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>→</mo><annotation encoding="application/x-tex">\to</annotation></semantics></math>
+内核态)</h4>
+<ul>
+<li><strong>函数原型</strong>：
+<pre class="language-c"><code class="language-c">unsigned long copy_from_user(void *to, const void __user *from, unsigned long n);</code></pre></li>
+<li><strong>参数详解</strong>：
+<ul>
+<li><strong><code>to</code></strong>
+(<code>void *</code>)：内核目标缓冲区指针。</li>
+<li><strong><code>from</code></strong>
+(<code>const void __user *</code>)：用户空间源指针。</li>
+<li><strong><code>n</code></strong>
+(<code>unsigned long</code>)：请求拷贝的字节数。</li>
+</ul></li>
+<li><strong>返回值</strong>：<strong>返回未能成功拷贝的剩余字节数</strong>。
+<ul>
+<li>成功：返回 <strong><code>0</code></strong>！</li>
+<li>失败：返回 <strong>大于 0
+的数值</strong>（表示有部分数据拷贝失败）。</li>
+</ul></li>
+<li><strong>检查范式</strong>：<code>if (copy_from_user(to, from, n)) { return -EFAULT; }</code></li>
+</ul>
+<h4 id="②-copy_to_user-跨空间安全拷贝内核态-to-用户态">②
+<code>copy_to_user</code> (跨空间安全拷贝：内核态
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>→</mo><annotation encoding="application/x-tex">\to</annotation></semantics></math>
+用户态)</h4>
+<ul>
+<li><strong>函数原型</strong>：
+<pre class="language-c"><code class="language-c">unsigned long copy_to_user(void __user *to, const void *from, unsigned long n);</code></pre></li>
+<li><strong>返回值</strong>：返回未能成功拷贝的剩余字节数（成功返回
+<code>0</code>，失败返回大于 0 的值）。</li>
+<li><strong>检查范式</strong>：<code>if (copy_to_user(to, from, n)) { return -EFAULT; }</code></li>
+</ul>
+<h4 id="③-container_of-宏通过成员反推外层大结构体首地址">③
+<code>container_of</code> (宏：通过成员反推外层大结构体首地址)</h4>
+<ul>
+<li><strong>宏原型</strong>：
+<pre class="language-c"><code class="language-c">container_of(ptr, type, member)</code></pre></li>
+<li><strong>参数详解</strong>：
+<ul>
+<li><strong><code>ptr</code></strong>：已知小成员的实际内存指针（如
+<code>inode-&gt;i_cdev</code>）。</li>
+<li><strong><code>type</code></strong>：外层宿主大结构体的<strong>数据类型名称</strong>（如
+<code>struct rgb_led_dev</code>，<strong>必须传类型，绝不能传变量</strong>）。</li>
+<li><strong><code>member</code></strong>：该小成员在大结构体定义里的<strong>字段名称</strong>（如
+<code>cdev</code>）。</li>
+</ul></li>
+<li><strong>计算原理</strong>：
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">大结构体首地址</mtext><mo>=</mo><mtext mathvariant="normal">ptr</mtext><mo>−</mo><mtext mathvariant="normal">offsetof(type, member)</mtext></mrow><annotation encoding="application/x-tex">\text{大结构体首地址} = \text{ptr} - \text{offsetof(type, member)}</annotation></semantics></math>
+利用结构体内存布局的固定编译期偏移量，精准反向推导出整个驱动对象首地址。</li>
+</ul>
+<hr />
+<h2 id="sec-7">七、驱动开发核心避坑指南 (Top Pitfalls)</h2>
+<ol type="1">
+<li><strong><code>cdev_add</code> 瞬间生效原则 ⚠️</strong>：
+<ul>
+<li>所有硬件引脚配置（GPIO、Pinctrl）、锁初始化（<code>mutex_init</code>）、私有内存申请必须在
+<code>cdev_add</code> 前完成！</li>
+</ul></li>
+<li><strong>指针 vs 实体分配原则 ⚠️</strong>：
+<ul>
+<li><code>struct cdev cdev</code> 必须作为实体内嵌在设备结构体中；</li>
+<li><code>struct class *</code> 和 <code>struct device *</code>
+必须是指针类型，由内核动态分配。</li>
+</ul></li>
+<li><strong>错误处理的“瀑布单程票”流淌原则 ⚠️</strong>：
+<ul>
+<li><code>goto</code> 标签内绝不写
+<code>return ret;</code>，必须按申请的倒序向下自然流淌（Fall-through），确保所有已申请的资源完整回滚。</li>
+</ul></li>
+<li><strong>设备树 compatible 字符串匹配 ⚠️</strong>：
+<ul>
+<li>驱动 <code>of_device_id</code> 中的 <code>.compatible</code>
+字符串必须与设备树节点中的 <code>compatible</code>
+<strong>一字不差（注意连字符与空格）</strong>，否则 <code>probe()</code>
+绝不会被调用。</li>
+</ul></li>
+<li><strong>严禁在 <code>release()</code> 中释放 <code>filp</code> 或
+<code>inode</code> ⚠️</strong>：
+<ul>
+<li>VFS 虚拟文件系统在 <code>release</code>
+返回后会自动销毁和回收它们，驱动只需清理自己 <code>open</code>
+时分配的资源。</li>
+</ul></li>
+</ol>
+<hr />
+<h2 id="sec-8">八、常用编译、设备树与板端测试指令速查</h2>
+<h3 id="1-设备树独立编译-在内核根目录下">1. 设备树独立编译
+(在内核根目录下)</h3>
+<pre class="language-bash"><code class="language-bash">make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- dtbs</code></pre>
+<h3 id="2-驱动模块编译-在驱动工作区">2. 驱动模块编译 (在驱动工作区)</h3>
+<pre class="language-bash"><code class="language-bash">make clean &amp;&amp; make</code></pre>
+<h3 id="3-开发板上板加载与验证">3. 开发板上板加载与验证</h3>
+<pre class="language-bash"><code class="language-bash"># 1. 加载驱动模块
+insmod led_rgb_drv.ko
+
+# 2. 查看平台驱动是否成功匹配并生成主设备号
+cat /proc/devices | grep led_rgb
+
+# 3. 检查 /dev 下是否自动生成了 3 个独立设备节点
+ls -l /dev/led_*
+
+# 4. 查看内核实时打印日志 (确认 probe 触发)
+dmesg | tail -n 20</code></pre>
+<h3 id="4-读写与点灯测试">4. 读写与点灯测试</h3>
+<pre class="language-bash"><code class="language-bash"># 单独点亮红灯
+echo 1 &gt; /dev/led_red
+
+# 单独点亮绿灯
+echo 1 &gt; /dev/led_green
+
+# 单独点亮蓝灯
+echo 1 &gt; /dev/led_blue
+
+# 全部熄灭
+echo 0 &gt; /dev/led_red
+echo 0 &gt; /dev/led_green
+echo 0 &gt; /dev/led_blue</code></pre>
+<h3 id="5-模块卸载">5. 模块卸载</h3>
+<pre class="language-bash"><code class="language-bash"># 卸载驱动 (自动触发 remove 清理所有节点与设备号)
+rmmod led_rgb_drv</code></pre>
+
+
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 3rem 0 1.5rem 0;">
+
+            <blockquote class="author-quote" style="border-left: 4px solid var(--accent); background: rgba(16, 185, 129, 0.06); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0;">
+                <p style="margin: 4px 0; color: #cbd5e1; font-family: 'Fira Code', monospace;">Author：李家琦 (Li Jiaqi)</p>
+                <p style="margin: 4px 0; color: var(--text-muted); font-size: 0.85rem; font-family: 'Fira Code', monospace;">UniQ-Embedded-Lib / Linux Driver Architecture</p>
+                <p style="margin: 4px 0; color: var(--text-muted); font-size: 0.85rem; font-family: 'Fira Code', monospace;">Date: 2026/09/08</p>
+            </blockquote>
+
+        </article>
+    </div>
+
+    <div class="music-player-widget">
+        <div class="player-controls">
+            <button id="prev-btn"><i class="fas fa-step-backward"></i></button>
+            <button id="play-btn"><i class="fas fa-play"></i></button>
+            <button id="next-btn"><i class="fas fa-step-forward"></i></button>
+            <button id="mute-btn"><i class="fas fa-volume-up"></i></button>
+        </div>
+        <div class="song-info"><span id="song-title">Loading...</span></div>
+        <audio id="bg-music"></audio>
+    </div>
+
+    <script>var ROOT_PATH = '../../';</script>
+    <script src="../../static/js/music.js"></script>
+    <script src="../../static/js/comment.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/keep-markup/prism-keep-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-makefile.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromCat = urlParams.get('from');
+            const backBtn = document.getElementById('back-btn');
+            if (fromCat) {
+                backBtn.href = `../../archive/archive.html?cat=${encodeURIComponent(fromCat)}`;
+            } else {
+                backBtn.href = `../../archive/archive.html?cat=linux`;
+            }
+        });
+
+        const sections = document.querySelectorAll('h2[id]');
+        const navLinks = document.querySelectorAll('.toc-list a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(a => {
+                a.classList.remove('active');
+                if (a.getAttribute('href') && a.getAttribute('href').includes(current)) {
+                    a.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
