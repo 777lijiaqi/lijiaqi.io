@@ -6,6 +6,30 @@ document.addEventListener('DOMContentLoaded', function() {
     /* --- 1. 资源数据源 --- */
     const resources = [
         {
+            title: "Linux Driver Mentor 智能体技能包 (linux-driver-mentor.7z)",
+            category: "agent_skill",
+            desc: "嵌入式 Linux 驱动开发教学导师 Agent Skill，支持总线模型解析、API 零截断源码拆解、并发与防御性编码审查。",
+            tags: ["Agent Skill", "Linux驱动", "7z压缩包"],
+            icon: "fas fa-robot",
+            link: "agent_skill/linux-driver-mentor.7z" 
+        },
+        {
+            title: "HWPOD Node 智能体技能包 (hwpod-node-skill.7z)",
+            category: "agent_skill",
+            desc: "HWPOD-NODE 硬件测试与边缘节点管理 Agent Skill，支持节点注册、交叉编译、固件烧录与串口诊断。",
+            tags: ["Agent Skill", "HWPOD", "7z压缩包"],
+            icon: "fas fa-microchip",
+            link: "agent_skill/hwpod-node-skill.7z" 
+        },
+        {
+            title: "Agent Skills 全技能整合包 (agent-skills-bundle.7z)",
+            category: "agent_skill",
+            desc: "包含当前所有已发布的 Agent Skills 完整技能集合，支持一键解压部署至 ~/.agents/skills/ 目录直接使用。",
+            tags: ["Agent Skill", "全集整合", "7z压缩包"],
+            icon: "fas fa-cubes",
+            link: "agent_skill/agent-skills-bundle.7z" 
+        },
+        {
             title: "DHT20温湿度传感器驱动",
             category: "stm32",
             desc: "基于HAL库的DHT20温湿度传感器驱动源码。",
@@ -98,13 +122,19 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 判断是否为外部链接 (以 http 开头)
             const isExternal = item.link.startsWith('http');
+            // 判断是否为直接下载资源 (.7z, .zip, .tar.gz, .pdf)
+            const isDownload = isExternal || item.link.match(/\.(7z|zip|tar\.gz|tar\.xz|pdf)$/i);
         
             if (isExternal) {
                 // 1. 外部链接 (GitHub下载)：直接用原链接，不加 ?from 参数
                 card.href = item.link;
                 card.target = "_blank"; // 在新窗口打开/下载
+            } else if (isDownload) {
+                // 2. 本地直接下载文件 (如 .7z 压缩包)
+                card.href = item.link;
+                card.setAttribute('download', '');
             } else {
-                // 2. 内部链接 (网页跳转)：加上 ?from 参数以便返回
+                // 3. 内部链接 (网页跳转)：加上 ?from 参数以便返回
                 card.href = `${item.link}?from=${encodeURIComponent(currentCategory)}`;
                 // 内部链接通常不需要 target="_blank"
             }
@@ -115,8 +145,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
             const tagsHtml = item.tags.map(tag => `<span class="doc-tag">#${tag}</span>`).join('');
         
-            // 根据是下载还是跳转，显示不同的箭头图标
-            const actionIcon = isExternal ? 'fa-download' : 'fa-chevron-right';
+            // 根据是下载还是跳转，显示不同的图标
+            const actionIcon = isDownload ? 'fa-download' : 'fa-chevron-right';
         
             card.innerHTML = `
                 <div class="doc-icon"><i class="${item.icon}"></i></div>
