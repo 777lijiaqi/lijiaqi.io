@@ -14,22 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
             link: "agent_skill/linux-driver-mentor.7z" 
         },
         {
-            title: "HWPOD Node 智能体技能包 (hwpod-node-skill.7z)",
-            category: "agent_skill",
-            desc: "HWPOD-NODE 硬件测试与边缘节点管理 Agent Skill，支持节点注册、交叉编译、固件烧录与串口诊断。",
-            tags: ["Agent Skill", "HWPOD", "7z压缩包"],
-            icon: "fas fa-microchip",
-            link: "agent_skill/hwpod-node-skill.7z" 
-        },
-        {
-            title: "Agent Skills 全技能整合包 (agent-skills-bundle.7z)",
-            category: "agent_skill",
-            desc: "包含当前所有已发布的 Agent Skills 完整技能集合，支持一键解压部署至 ~/.agents/skills/ 目录直接使用。",
-            tags: ["Agent Skill", "全集整合", "7z压缩包"],
-            icon: "fas fa-cubes",
-            link: "agent_skill/agent-skills-bundle.7z" 
-        },
-        {
             title: "DHT20温湿度传感器驱动",
             category: "stm32",
             desc: "基于HAL库的DHT20温湿度传感器驱动源码。",
