@@ -14,30 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
             link: "agent_skill/linux-driver-mentor.7z" 
         },
         {
-            title: "Linux GPIO LED 驱动源码包 (linux-led-driver.7z)",
-            category: "linuxdriver",
-            desc: "基于 Platform 平台总线与设备树/Pinctrl/GPIO 子系统的 RGB LED 字符设备驱动完整源码与构建 Makefile。",
-            tags: ["Linux驱动", "GPIO", "Platform", "LED", "7z"],
-            icon: "fas fa-lightbulb",
-            link: "linux_driver/linux-led-driver.7z" 
-        },
-        {
-            title: "Linux I2C 传感器驱动源码包 (linux-i2c-driver.7z)",
-            category: "linuxdriver",
-            desc: "包含 MPU6050 六轴运动传感器与 DHT20 温湿度传感器标准 I2C 字符设备驱动源码、头文件与构建 Makefile。",
-            tags: ["Linux驱动", "I2C", "MPU6050", "DHT20", "7z"],
-            icon: "fas fa-microchip",
-            link: "linux_driver/linux-i2c-driver.7z" 
-        },
-        {
-            title: "Linux SPI LCD 屏幕驱动源码包 (linux-spi-driver.7z)",
-            category: "linuxdriver",
-            desc: "基于 Linux SPI 总线模型与 spi_sync 协议的 SPI 彩屏初始化时序、全屏显存刷屏驱动源码与构建 Makefile。",
-            tags: ["Linux驱动", "SPI", "LCD", "ST7789V", "7z"],
-            icon: "fas fa-tv",
-            link: "linux_driver/linux-spi-driver.7z" 
-        },
-        {
             title: "DHT20温湿度传感器驱动",
             category: "stm32",
             desc: "基于HAL库的DHT20温湿度传感器驱动源码。",
